@@ -9,12 +9,14 @@
 **Option A — Native Linux:** Open the terminal (Ctrl+Alt+T on Ubuntu).
 
 **Option B — WSL on Windows:**
-```
+
+```bash
 wsl --install
 ```
+
 Restart, set username/password. Launch "Ubuntu" from Start Menu.
 
-**Option C — Online:** Use [replit.com](https://replit.com) or [webminal.org](https://www.webminal.org).
+**Option C — Online:** [webminal.org](https://www.webminal.org).
 
 ## 1.1 Navigation Commands
 
@@ -37,8 +39,9 @@ $ cd               # also goes to home
 ### `ls` — List Directory Contents
 
 ```bash
+$ cd /
 $ ls
-Desktop  Documents  Downloads
+home  dev  tmp
 
 $ ls -l
 total 12
@@ -136,6 +139,7 @@ Line 3
 $ wc sample.txt
  3  6 24 sample.txt
 ```
+
 Output: lines, words, bytes.
 
 ### `sort`
@@ -224,8 +228,6 @@ $ find . -name "*.txt"       # find all .txt files
 ./sample.txt
 ./data.txt
 ./fruits.txt
-
-$ diff sample.txt data.txt   # compare two files
 ```
 
 ---
@@ -239,12 +241,14 @@ $ nano hello.sh
 ```
 
 Write:
+
 ```bash
 #!/bin/bash
 echo "Hello, OS Lab!"
 ```
 
 Run:
+
 ```bash
 $ chmod +x hello.sh
 $ ./hello.sh
@@ -265,6 +269,7 @@ echo "You are $age years old."
 ```
 
 **Output:**
+
 ```
 Welcome, Student
 Enter your age: 20
@@ -284,6 +289,7 @@ echo "Remainder: $((a % b))"
 ```
 
 **Output:**
+
 ```
 Enter two numbers: 15 4
 Sum: 19
@@ -310,6 +316,7 @@ fi
 ```
 
 **Output:**
+
 ```
 Enter a number: -5
 -5 is negative
@@ -330,6 +337,7 @@ fi
 ```
 
 **Output:**
+
 ```
 Enter a number: 7
 7 is odd
@@ -350,6 +358,7 @@ fi
 ```
 
 **Output:**
+
 ```
 Enter three numbers: 10 25 18
 Largest: 25
@@ -367,6 +376,7 @@ done
 ```
 
 **Output:**
+
 ```
 Number: 1
 Number: 2
@@ -390,6 +400,7 @@ echo "Sum of first $n natural numbers: $sum"
 ```
 
 **Output:**
+
 ```
 Enter N: 10
 Sum of first 10 natural numbers: 55
@@ -407,6 +418,7 @@ done
 ```
 
 **Output:**
+
 ```
 Count: 1
 Count: 2
@@ -428,6 +440,7 @@ echo "Factorial of $num is: $fact"
 ```
 
 **Output:**
+
 ```
 Enter a number: 5
 Factorial of 5 is: 120
@@ -451,6 +464,7 @@ echo ""
 ```
 
 **Output:**
+
 ```
 Enter number of terms: 8
 Fibonacci sequence:
@@ -481,6 +495,7 @@ fi
 ```
 
 **Output:**
+
 ```
 Enter a number: 17
 17 is prime
@@ -500,6 +515,7 @@ fi
 ```
 
 **Output:**
+
 ```
 Enter a string: madam
 'madam' is a palindrome
@@ -516,6 +532,7 @@ done
 ```
 
 **Output:**
+
 ```
 Enter a number: 7
 7 x 1 = 7
@@ -538,6 +555,7 @@ echo "Sum = $result"
 ```
 
 **Output:**
+
 ```
 Sum = 30
 ```
@@ -559,6 +577,7 @@ esac
 ```
 
 **Output:**
+
 ```
 Enter two numbers: 12 4
 1.Add 2.Subtract 3.Multiply 4.Divide
@@ -581,6 +600,7 @@ done
 ```
 
 **Output:**
+
 ```
 First fruit: Apple
 All fruits: Apple Banana Cherry Date
@@ -665,6 +685,7 @@ systemd-private
 ```
 
 **Key functions:**
+
 - `opendir(path)` — opens a directory stream.
 - `readdir(dir)` — reads next entry, returns `struct dirent*` with `d_name` field.
 - `closedir(dir)` — closes the directory stream.
@@ -743,6 +764,7 @@ $ ./myls_l
 ```
 
 **Additional functions used:**
+
 - `stat(path, &st)` — fills `struct stat` with file metadata (size, permissions, owner, timestamps).
 - `getpwuid(uid)` — converts user ID to username.
 - `getgrgid(gid)` — converts group ID to group name.
@@ -792,6 +814,7 @@ int main(int argc, char *argv[]) {
 ### Compile and Run
 
 Create a test file first:
+
 ```bash
 $ cat > testfile.txt
 The operating system manages hardware.
@@ -799,6 +822,7 @@ A process is a running program.
 The OS provides abstraction.
 Memory management is a key function of OS.
 ```
+
 (Press Ctrl+D to save)
 
 ```bash
@@ -812,6 +836,7 @@ $ ./mygrep "process" testfile.txt
 ```
 
 **Key functions:**
+
 - `fopen(filename, "r")` — opens file for reading.
 - `fgets(line, size, fp)` — reads one line at a time into buffer.
 - `strstr(line, pattern)` — returns pointer to first occurrence of pattern in line, or NULL if not found.
@@ -909,6 +934,7 @@ A process is a running program.
 ```
 
 **Options implemented:**
+
 - `-i` — case-insensitive matching using `tolower()`.
 - `-c` — prints only count of matching lines.
 - `-v` — inverts match (prints lines that do NOT contain the pattern).
@@ -919,13 +945,13 @@ A process is a running program.
 
 Unlike C library functions (`fopen`, `fgets`, `fprintf`), UNIX I/O system calls (`open`, `read`, `write`, `close`, `lseek`) interact directly with the kernel. They use integer **file descriptors** instead of `FILE*` pointers.
 
-| System Call | Purpose | Header |
-|---|---|---|
-| `open(path, flags, mode)` | Open/create a file, returns fd | `<fcntl.h>` |
-| `read(fd, buf, n)` | Read n bytes into buf | `<unistd.h>` |
-| `write(fd, buf, n)` | Write n bytes from buf | `<unistd.h>` |
-| `close(fd)` | Close file descriptor | `<unistd.h>` |
-| `lseek(fd, offset, whence)` | Move file pointer | `<unistd.h>` |
+| System Call                 | Purpose                        | Header       |
+| --------------------------- | ------------------------------ | ------------ |
+| `open(path, flags, mode)`   | Open/create a file, returns fd | `<fcntl.h>`  |
+| `read(fd, buf, n)`          | Read n bytes into buf          | `<unistd.h>` |
+| `write(fd, buf, n)`         | Write n bytes from buf         | `<unistd.h>` |
+| `close(fd)`                 | Close file descriptor          | `<unistd.h>` |
+| `lseek(fd, offset, whence)` | Move file pointer              | `<unistd.h>` |
 
 **Standard file descriptors:** 0 = stdin, 1 = stdout, 2 = stderr.
 
@@ -1440,6 +1466,7 @@ Done.
 ```
 
 **Synchronization explained:**
+
 - `sem_t empty` (init = BUFFER_SIZE) — counts free slots. Producer waits if buffer full.
 - `sem_t full` (init = 0) — counts filled slots. Consumer waits if buffer empty.
 - `pthread_mutex_t mutex` — ensures only one thread accesses the buffer at a time.
@@ -1454,6 +1481,7 @@ Done.
 In paging, memory is divided into fixed-size **pages** (logical) and **frames** (physical). A **page table** maps each page number to a frame number.
 
 **Formula:**
+
 - Page Number = Logical Address / Page Size
 - Offset = Logical Address % Page Size
 - Physical Address = (Frame Number × Page Size) + Offset
@@ -1657,6 +1685,7 @@ int main() {
 ### Compile and Run
 
 **Valid access:**
+
 ```bash
 $ gcc -o segmentation segmentation.c
 $ ./segmentation
@@ -1675,6 +1704,7 @@ Physical Address: 2150
 ```
 
 **Out-of-bounds access:**
+
 ```bash
 $ ./segmentation
 Enter number of segments: 3
@@ -1690,10 +1720,10 @@ Error: Segmentation Fault! Offset 250 >= Limit 200
 
 ## 6.4 Paging vs Segmentation — Quick Comparison
 
-| Aspect | Paging | Segmentation |
-|---|---|---|
-| Division | Fixed-size pages | Variable-size segments |
-| Address | Page number + offset | Segment number + offset |
-| Fragmentation | Internal (unused space within page) | External (gaps between segments) |
-| Table | Page table (page → frame) | Segment table (base + limit) |
-| User view | Transparent to programmer | Matches logical program structure |
+| Aspect        | Paging                              | Segmentation                      |
+| ------------- | ----------------------------------- | --------------------------------- |
+| Division      | Fixed-size pages                    | Variable-size segments            |
+| Address       | Page number + offset                | Segment number + offset           |
+| Fragmentation | Internal (unused space within page) | External (gaps between segments)  |
+| Table         | Page table (page → frame)           | Segment table (base + limit)      |
+| User view     | Transparent to programmer           | Matches logical program structure |
