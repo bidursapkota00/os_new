@@ -255,7 +255,7 @@ $ ./hello.sh
 Hello, OS Lab!
 ```
 
-- Use `explorer.exe .` to open file explorer then open folder in vscode using `code .`
+- Use `explorer.exe .` to open file explorer then open folder in vscode using open with vscode.
 - `#!/bin/bash` is the **shebang** — it tells the system which interpreter to use.
 
 ## 2.2 Variables and User Input
@@ -699,94 +699,6 @@ Hello from UNIX system calls!
 
 **lseek whence:** `SEEK_SET` (from start), `SEEK_CUR` (from current), `SEEK_END` (from end).
 
-## 4.2 Copy File Using System Calls
-
-### Code: `filecopy.c`
-
-```c
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        write(2, "Usage: ./filecopy <src> <dst>\n", 29);
-        return 1;
-    }
-
-    int src = open(argv[1], O_RDONLY);
-    if (src == -1) { perror("open src"); return 1; }
-
-    int dst = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-    if (dst == -1) { perror("open dst"); close(src); return 1; }
-
-    char buf[1024];
-    int n;
-    while ((n = read(src, buf, sizeof(buf))) > 0) {
-        write(dst, buf, n);
-    }
-
-    close(src);
-    close(dst);
-    printf("File copied: %s -> %s\n", argv[1], argv[2]);
-    return 0;
-}
-```
-
-### Compile and Run
-
-```bash
-$ echo "Operating System Lab" > source.txt
-$ gcc -o filecopy filecopy.c
-$ ./filecopy source.txt dest.txt
-File copied: source.txt -> dest.txt
-$ cat dest.txt
-Operating System Lab
-```
-
-## 4.3 Get File Information Using `stat()` System Call
-
-### Code: `filestat.c`
-
-```c
-#include <stdio.h>
-#include <sys/stat.h>
-#include <time.h>
-
-int main(int argc, char *argv[]) {
-    if (argc != 2) { printf("Usage: %s <file>\n", argv[0]); return 1; }
-
-    struct stat st;
-    if (stat(argv[1], &st) == -1) { perror("stat"); return 1; }
-
-    printf("File: %s\n", argv[1]);
-    printf("Size: %ld bytes\n", (long)st.st_size);
-    printf("Inode: %ld\n", (long)st.st_ino);
-    printf("Links: %ld\n", (long)st.st_nlink);
-    printf("Permissions: %o\n", st.st_mode & 0777);
-    printf("Last modified: %s", ctime(&st.st_mtime));
-
-    if (S_ISREG(st.st_mode)) printf("Type: Regular file\n");
-    else if (S_ISDIR(st.st_mode)) printf("Type: Directory\n");
-
-    return 0;
-}
-```
-
-### Compile and Run
-
-```bash
-$ gcc -o filestat filestat.c
-$ ./filestat source.txt
-File: source.txt
-Size: 21 bytes
-Inode: 524301
-Links: 1
-Permissions: 644
-Last modified: Tue May 13 10:30:00 2026
-Type: Regular file
-```
-
 ## 4.4 Create a Child Process Using `fork()`
 
 ### Code: `forkdemo.c`
@@ -824,45 +736,6 @@ Parent: PID = 12345, Child PID = 12346
 ```
 
 **Key:** `fork()` returns 0 in child, child's PID in parent. `wait()` makes parent wait for child to finish.
-
-## 4.5 Execute a Program Using `exec()`
-
-### Code: `execdemo.c`
-
-```c
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/wait.h>
-
-int main() {
-    pid_t pid = fork();
-
-    if (pid == 0) {
-        printf("Child: running 'ls -l' via exec\n");
-        execlp("ls", "ls", "-l", NULL);
-        perror("exec failed");  /* only reached if exec fails */
-    } else {
-        wait(NULL);
-        printf("Parent: child finished.\n");
-    }
-    return 0;
-}
-```
-
-### Compile and Run
-
-```bash
-$ gcc -o execdemo execdemo.c
-$ ./execdemo
-Child: running 'ls -l' via exec
-total 48
--rwxr-xr-x 1 student student 16832 May 13 10:35 execdemo
--rw-r--r-- 1 student student   310 May 13 10:35 execdemo.c
-...
-Parent: child finished.
-```
-
-**Key:** `execlp()` replaces the child process image with a new program. The child never returns from exec unless it fails.
 
 ---
 
