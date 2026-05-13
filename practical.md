@@ -255,7 +255,8 @@ $ ./hello.sh
 Hello, OS Lab!
 ```
 
-`#!/bin/bash` is the **shebang** — it tells the system which interpreter to use.
+- Use `explorer.exe .` to open file explorer then open folder in vscode using `code .`
+- `#!/bin/bash` is the **shebang** — it tells the system which interpreter to use.
 
 ## 2.2 Variables and User Input
 
