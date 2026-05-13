@@ -28,13 +28,13 @@ The OS provides orderly and controlled allocation of processors, memories, and I
 - **Time multiplexing:** Multiple programs take turns using a resource. Examples include CPU scheduling (each process gets time slices) and printer queues (print jobs are processed in order).
 - **Space multiplexing:** A resource is divided among multiple programs simultaneously. Examples include memory partitioning (each process gets a portion of RAM) and disk space allocation.
 
-The OS manages conflicting requests for resources and keeps track of resource usage. The kernel runs in **kernel mode** (supervisor mode) with complete hardware access, while user programs run in **user mode** with restricted instruction access — instructions that affect machine control or I/O are forbidden to user-mode programs.
+The OS manages conflicting requests for resources and keeps track of resource usage. The kernel runs in **kernel mode** (supervisor mode) with complete hardware access, while user programs run in **user mode** with restricted instruction access. Instructions that affect machine control or I/O are forbidden to user-mode programs.
 
 ## 1.3 History of Operating System
 
 ### First Generation (1945–55): Vacuum Tubes
 
-No operating systems existed. A single programmer designed, built, programmed, operated, and maintained each machine. Programming was done in absolute machine language using plugboards — programmers physically wired the program into the computer using cables and switches. Programs were simple numerical calculations such as tables of sines, cosines, and logarithms.
+No operating systems existed. A single programmer designed, built, programmed, operated, and maintained each machine. Programming was done in absolute machine language using plugboards. Programmers physically wired the program into the computer using cables and switches. Programs were simple numerical calculations such as tables of sines, cosines, and logarithms.
 
 ### Second Generation (1955–65): Transistors and Batch Systems
 
@@ -42,7 +42,7 @@ Clear separation between designers, builders, operators, and programmers emerged
 
 ### Third Generation (1965–80): ICs and Multiprogramming
 
-Introduction of Integrated Circuits (ICs) provided major price/performance advantages. IBM System/360 was a family of software-compatible machines with different performance levels, and its OS/360 had to work on all models — resulting in an enormous, complex system with thousands of bugs.
+Introduction of Integrated Circuits (ICs) provided major price/performance advantages. IBM System/360 was a family of software-compatible machines with different performance levels, and its OS/360 had to work on all models. This resulted in an enormous, complex system with thousands of bugs.
 
 - **Multiprogramming:** Memory was partitioned into sections with a different job in each partition. While one job waits for I/O, another can use the CPU, greatly improving CPU utilization.
 - **Spooling (Simultaneous Peripheral Operations On-Line):** Jobs were read from cards onto disk and loaded into memory when a partition becomes available.
@@ -85,7 +85,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 **1. Kernel:** The core of the OS. It receives commands from the shell, processes them, coordinates system resources, interacts with hardware (CPU, RAM, disk), and returns results. Functions include process management, memory management, virtual memory management, file system management, and security enforcement.
 
-**2. Shell:** Acts as a command interpreter — the interface between the user and the kernel. It receives commands from the user, translates them into a form the kernel can understand, and forwards the request for execution. In Windows, the command prompt (cmd) uses the Windows API (DLL functions), which internally invokes system calls.
+**2. Shell:** Acts as a command interpreter. It is the interface between the user and the kernel. It receives commands from the user, translates them into a form the kernel can understand, and forwards the request for execution. In Windows, the command prompt (cmd) uses the Windows API (DLL functions), which internally invokes system calls.
 
 **3. Utilities:** System programs that provide useful functionality beyond the kernel and shell, such as file management tools (copy, move, delete), text editors, compilers, and system monitoring tools. They use system calls to interact with the kernel.
 
@@ -117,7 +117,7 @@ Only the essential functions (IPC, basic scheduling, low-level memory management
 
 ### Nanokernel
 
-An ultra-minimalist kernel that provides only the most fundamental hardware abstraction — interrupt handling, basic hardware access, and context switching. Almost all OS services (including memory management and scheduling) are delegated to user-space processes. The extremely small footprint makes it ideal for resource-constrained and real-time environments. Examples: EROS, KeyKOS.
+An ultra-minimalist kernel that provides only the most fundamental hardware abstraction, which includes interrupt handling, basic hardware access, and context switching. Almost all OS services (including memory management and scheduling) are delegated to user-space processes. The extremely small footprint makes it ideal for resource-constrained and real-time environments. Examples: EROS, KeyKOS.
 
 ### Layered Kernel
 
@@ -125,17 +125,17 @@ The OS is organized into layers, from hardware at the bottom to the user interfa
 
 ### Hybrid Kernel
 
-Combines the speed of a monolithic kernel with the modularity of a microkernel. Many services (device drivers, file systems) run in kernel space for performance, but the system is designed with a modular, layered structure for better organization and flexibility. Examples: Windows NT (all modern Windows), macOS (XNU kernel — combines Mach microkernel with BSD components).
+Combines the speed of a monolithic kernel with the modularity of a microkernel. Many services (device drivers, file systems) run in kernel space for performance, but the system is designed with a modular, layered structure for better organization and flexibility. Examples: Windows NT (all modern Windows), macOS (XNU kernel, which combines Mach microkernel with BSD components).
 
 ### Exokernel
 
-Provides applications direct access to hardware resources. The kernel only handles **protection and resource allocation** — it ensures applications use only the resources assigned to them. No abstractions (files, processes, sockets) are enforced by the kernel; applications define their own abstractions tailored to their needs (e.g., a streaming app can create a video-optimized file structure). This minimizes overhead. Examples: MIT Exokernel, Nemesis.
+Provides applications direct access to hardware resources. The kernel only handles **protection and resource allocation**. It ensures applications use only the resources assigned to them. No abstractions (files, processes, sockets) are enforced by the kernel; applications define their own abstractions tailored to their needs (e.g., a streaming app can create a video-optimized file structure). This minimizes overhead. Examples: MIT Exokernel, Nemesis.
 
 ## 1.7 System Calls, Shell Commands, Shell Programming
 
 ### System Calls
 
-A system call is how a user program requests a service from the OS kernel. It provides the essential interface between a process and the operating system. System calls are needed because user-mode programs cannot directly execute privileged instructions — they must request the kernel (running in kernel mode) to perform operations on their behalf.
+A system call is how a user program requests a service from the OS kernel. It provides the essential interface between a process and the operating system. System calls are needed because user-mode programs cannot directly execute privileged instructions. They must request the kernel (running in kernel mode) to perform operations on their behalf.
 
 **Services provided by system calls:**
 
@@ -146,9 +146,9 @@ A system call is how a user program requests a service from the OS kernel. It pr
 - Protection
 - Communication (inter-process communication)
 
-**Example — `read(fd, &buffer, nbytes)`:**
+**Example of `read(fd, &buffer, nbytes)`:**
 
-- `fd`: File descriptor — an integer ID representing the specific file to read from (previously opened).
+- `fd`: File descriptor. It is an integer ID representing the specific file to read from (previously opened).
 - `&buffer`: Memory address (pointer) where the data read from disk should be stored.
 - `nbytes`: Number of bytes the program wants to read.
 - The call returns the number of bytes actually read, which may be smaller than `nbytes` if end-of-file is encountered.
@@ -192,7 +192,7 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 
 ## 1.8 POSIX Standard
 
-POSIX (Portable Operating System Interface) is a family of standards specified by the IEEE (IEEE Std 1003) to maintain compatibility between operating systems. Its primary purpose is to ensure **application portability** — allowing software written for one POSIX-compliant OS to be ported to another with little or no modification.
+POSIX (Portable Operating System Interface) is a family of standards specified by the IEEE (IEEE Std 1003) to maintain compatibility between operating systems. Its primary purpose is to ensure **application portability**, allowing software written for one POSIX-compliant OS to be ported to another with little or no modification.
 
 **What POSIX defines:**
 
@@ -228,7 +228,7 @@ MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for stor
 | Maximum disk size  | 2 TB                                                         | Up to 9.4 ZB (zettabytes)                             |
 | Maximum partitions | 4 primary (use extended/logical for more)                    | 128 partitions (no extended needed)                   |
 | Data storage       | All partition/boot data in one sector (first sector of disk) | Redundant copies of headers/tables across the disk    |
-| Reliability        | Vulnerable — corruption of single sector can break the drive | High — includes CRC error-checking and backup headers |
+| Reliability        | Vulnerable. Corruption of single sector can break the drive  | High. Includes CRC error-checking and backup headers  |
 | Standard           | Older (introduced 1983)                                      | Modern (part of UEFI standard)                        |
 
 ### UEFI vs Legacy BIOS Boot

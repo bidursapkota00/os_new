@@ -11,9 +11,9 @@ Concurrency refers to the ability of a system to handle multiple processes at th
 - **Independent processes** do not share data or information with each other. They compete for system resources such as CPU time and I/O devices.
 - **Cooperating processes** share data and need to exchange information with each other. A cooperating process can affect or be affected by other processes. Example: a compiler producing output for an assembler.
 
-**Execution models:** In a single-processor system, process execution is interleaved (pseudo-parallelism) — true parallelism is not achieved. In multiprocessor systems, processes can execute truly in parallel on different CPUs.
+**Execution models:** In a single-processor system, process execution is interleaved (pseudo-parallelism) and true parallelism is not achieved. In multiprocessor systems, processes can execute truly in parallel on different CPUs.
 
-**Problems in concurrent processing:** (1) Sharing of global resources — uncontrolled access to shared variables leads to inconsistent results. (2) Optimal resource allocation — a process may receive a resource but get suspended before using it, potentially leading to deadlock. (3) Locating programming errors — results are non-deterministic and not easily reproducible, making debugging extremely difficult.
+**Problems in concurrent processing:** (1) Sharing of global resources, where uncontrolled access to shared variables leads to inconsistent results. (2) Optimal resource allocation, where a process may receive a resource but get suspended before using it, potentially leading to deadlock. (3) Locating programming errors, because results are non-deterministic and not easily reproducible, making debugging extremely difficult.
 
 ### Inter-Process Communication (IPC)
 
@@ -21,9 +21,9 @@ IPC refers to mechanisms that allow processes to exchange data and information. 
 
 **Shared Memory:** Processes share a common memory region to exchange information. The shared memory resides in the address space of the creating process; other processes must attach it to their own address spaces. This is fast but requires explicit synchronization to avoid race conditions. One process can accidentally corrupt data used by another.
 
-**Message Passing:** Processes communicate by exchanging messages through the OS — no shared memory is needed. Processes must first establish a communication link. The sending process calls `send(destination, message)` and the receiving process calls `receive(sender, message)`. The OS handles transmission. Message passing is ideal for distributed systems.
+**Message Passing:** Processes communicate by exchanging messages through the OS, so no shared memory is needed. Processes must first establish a communication link. The sending process calls `send(destination, message)` and the receiving process calls `receive(sender, message)`. The OS handles transmission. Message passing is ideal for distributed systems.
 
-**Buffering:** Messages reside in temporary queues. **Zero capacity** — sender must wait for receiver (synchronous/blocking). **Bounded capacity** — sender blocks when the queue is full, receiver blocks when empty. **Unbounded capacity** — sender never blocks (asynchronous/non-blocking).
+**Buffering:** Messages reside in temporary queues. **Zero capacity** means the sender must wait for receiver (synchronous/blocking). **Bounded capacity** means the sender blocks when the queue is full, and the receiver blocks when empty. **Unbounded capacity** means the sender never blocks (asynchronous/non-blocking).
 
 ### Race Condition
 
@@ -31,7 +31,7 @@ IPC refers to mechanisms that allow processes to exchange data and information. 
 
 A race condition occurs when two or more processes access shared data simultaneously and the final result depends on the precise timing of which process runs when, leading to unpredictable and incorrect behavior.
 
-**Print Spooler Example:** Two shared variables exist — `out` (next file to print) and `in` (next free slot). Process A reads `in` as 7 and stores it locally. Before A can update `in`, a clock interrupt switches to process B, which also reads `in` as 7. B writes its filename into slot 7 and sets `in` to 8. When A resumes, it overwrites slot 7 with its own filename and also sets `in` to 8. The spooler appears consistent, but B's file will never be printed.
+**Print Spooler Example:** Two shared variables exist: `out` (next file to print) and `in` (next free slot). Process A reads `in` as 7 and stores it locally. Before A can update `in`, a clock interrupt switches to process B, which also reads `in` as 7. B writes its filename into slot 7 and sets `in` to 8. When A resumes, it overwrites slot 7 with its own filename and also sets `in` to 8. The spooler appears consistent, but B's file will never be printed.
 
 **Counter Example:** If `counter = 5` and producer executes `counter++` while consumer concurrently executes `counter--`, the result could be 4, 5, or 6 instead of the correct value 5. This happens because each high-level statement translates to multiple machine instructions (load, modify, store) that can interleave.
 
@@ -52,11 +52,11 @@ A critical region is a section of code where shared resources (common variables,
 
 ### Approaches to Mutual Exclusion
 
-**Disabling Interrupts:** On a single processor, a process disables interrupts upon entering its critical region and re-enables them before leaving. With interrupts disabled, no clock interrupt occurs and the CPU cannot switch to another process. However, a buggy process could disable interrupts and never re-enable them, crashing the system. On multiprocessor systems, disabling interrupts on one CPU does not affect others — they can still access shared memory.
+**Disabling Interrupts:** On a single processor, a process disables interrupts upon entering its critical region and re-enables them before leaving. With interrupts disabled, no clock interrupt occurs and the CPU cannot switch to another process. However, a buggy process could disable interrupts and never re-enable them, crashing the system. On multiprocessor systems, disabling interrupts on one CPU does not affect others, and they can still access shared memory.
 
-**Lock Variables:** A shared variable (initially 0) is checked before entering the critical region. If 0, the process sets it to 1 and enters; if 1, it waits. This has the same flaw as the spooler problem — two processes can read the lock as 0 before either sets it to 1, both entering their critical regions simultaneously.
+**Lock Variables:** A shared variable (initially 0) is checked before entering the critical region. If 0, the process sets it to 1 and enters; if 1, it waits. This has the same flaw as the spooler problem. Two processes can read the lock as 0 before either sets it to 1, both entering their critical regions simultaneously.
 
-**Strict Alternation:** A `turn` variable tracks whose turn it is. Process 0 enters when `turn == 0`, process 1 enters when `turn == 1`. Each process sets `turn` to the other upon exit. This works but violates the progress requirement — if one process is much slower or in its non-critical region, it blocks the other process.
+**Strict Alternation:** A `turn` variable tracks whose turn it is. Process 0 enters when `turn == 0`, process 1 enters when `turn == 1`. Each process sets `turn` to the other upon exit. This works but violates the progress requirement. If one process is much slower or in its non-critical region, it blocks the other process.
 
 **Peterson's Solution:**
 
@@ -64,11 +64,11 @@ A critical region is a section of code where shared resources (common variables,
 
 A classic software-based solution for two processes that satisfies mutual exclusion, progress, and bounded waiting. It uses two shared variables: `int turn` (indicates whose turn it is) and `boolean flag[2]` (indicates if a process is ready to enter).
 
-When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving priority to the other process). It then waits while `flag[j] == true && turn == j`. This ensures that if both processes try to enter simultaneously, only one succeeds — the one whose turn it is. When a process exits, it sets `flag[i] = false`.
+When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving priority to the other process). It then waits while `flag[j] == true && turn == j`. This ensures that if both processes try to enter simultaneously, only one succeeds, which is the one whose turn it is. When a process exits, it sets `flag[i] = false`.
 
-**Test and Set Lock (TSL) — Hardware-Based:** Uses a special atomic hardware instruction `TestAndSet()` that reads a lock variable and sets it to 1 in a single indivisible operation. A process calls `TestAndSet(&lock)` — if the old value was 0, the process enters the critical region; if 1, it loops (busy waits). Because the instruction is atomic, no interleaving can occur between the read and the set.
+**Test and Set Lock (TSL), Hardware-Based:** Uses a special atomic hardware instruction `TestAndSet()` that reads a lock variable and sets it to 1 in a single indivisible operation. A process calls `TestAndSet(&lock)`. If the old value was 0, the process enters the critical region; if 1, it loops (busy waits). Because the instruction is atomic, no interleaving can occur between the read and the set.
 
-**Busy Waiting (Spin-Locking):** All the above solutions involve busy waiting — a process continuously tests a condition in a loop, wasting CPU time. Alternatively, a process can block itself and go to a waiting queue until it is woken up.
+**Busy Waiting (Spin-Locking):** All the above solutions involve busy waiting, where a process continuously tests a condition in a loop, wasting CPU time. Alternatively, a process can block itself and go to a waiting queue until it is woken up.
 
 ### Semaphores
 
@@ -85,13 +85,13 @@ A semaphore is a variable used to solve the critical section problem and achieve
 
 ### Message Passing
 
-(Covered under IPC in Section 3.1.) Message passing allows processes to communicate without shared memory. Two primitives are used: `send(destination, message)` and `receive(sender, message)`. The OS manages message transmission. Communication links can be direct (naming the process) or indirect (using mailboxes/ports). Message passing is also a solution for race conditions — since no shared memory is involved, no conflict arises.
+(Covered under IPC in Section 3.1.) Message passing allows processes to communicate without shared memory. Two primitives are used: `send(destination, message)` and `receive(sender, message)`. The OS manages message transmission. Communication links can be direct (naming the process) or indirect (using mailboxes/ports). Message passing is also a solution for race conditions because no shared memory is involved, so no conflict arises.
 
 ### Monitors
 
 A monitor is a high-level synchronization construct that provides mutual exclusion automatically. It encapsulates shared data, the procedures that operate on that data, and synchronization code into a single module.
 
-**Rules:** A procedure defined within a monitor can access only variables declared locally within the monitor and its formal parameters. Local variables of a monitor can be accessed only by its local procedures. The monitor construct ensures that **only one process at a time can be active within the monitor** — if another process calls a monitor procedure while one is already active, it blocks and waits in an entry queue.
+**Rules:** A procedure defined within a monitor can access only variables declared locally within the monitor and its formal parameters. Local variables of a monitor can be accessed only by its local procedures. The monitor construct ensures that **only one process at a time can be active within the monitor**. If another process calls a monitor procedure while one is already active, it blocks and waits in an entry queue.
 
 **Condition Variables:** Declared as `condition x, y;`. They support two operations:
 
@@ -110,9 +110,9 @@ A buffer of `n` slots exists. The **Producer** inserts data into empty slots. Th
 
 **Solution using three semaphores:**
 
-- `mutex` — binary semaphore initialized to **1** (mutual exclusion for buffer access).
-- `empty` — counting semaphore initialized to **n** (tracks empty slots).
-- `full` — counting semaphore initialized to **0** (tracks filled slots).
+- `mutex`: binary semaphore initialized to **1** (mutual exclusion for buffer access).
+- `empty`: counting semaphore initialized to **n** (tracks empty slots).
+- `full`: counting semaphore initialized to **0** (tracks filled slots).
 
 ```
 Producer:                          Consumer:
@@ -132,13 +132,13 @@ The producer waits if no empty slots (`wait(empty)`), acquires the lock (`wait(m
 
 > **Explain solution of Reader-Writer problem using semaphore with its respective pseudo-code implementations. [5 marks] (Model Question)**
 
-A database is shared among concurrent processes. **Readers** only read data — multiple readers can read simultaneously without adverse effects. **Writers** update data — a writer must have exclusive access (no other reader or writer may access the database simultaneously).
+A database is shared among concurrent processes. **Readers** only read data, and multiple readers can read simultaneously without adverse effects. **Writers** update data, and a writer must have exclusive access (no other reader or writer may access the database simultaneously).
 
 **Solution using two semaphores and an integer variable:**
 
-- `mutex` — semaphore initialized to **1** (protects `readcount`).
-- `wrt` — semaphore initialized to **1** (provides exclusive access for writers, shared between readers and writers).
-- `readcount` — integer initialized to **0** (tracks current number of readers).
+- `mutex`: semaphore initialized to **1** (protects `readcount`).
+- `wrt`: semaphore initialized to **1** (provides exclusive access for writers, shared between readers and writers).
+- `readcount`: integer initialized to **0** (tracks current number of readers).
 
 ```
 Writer:                            Reader:
@@ -167,7 +167,7 @@ Five philosophers sit around a table, each alternating between thinking and eati
 
 **Semaphore-Based Solution:** Each fork is represented by a semaphore initialized to 1. A philosopher calls `wait(fork[i])` and `wait(fork[(i+1)%5])` to pick up forks, and `signal()` on both to put them down.
 
-**Deadlock condition:** If all five philosophers become hungry simultaneously and each grabs their right fork first, all fork semaphores become 0. When each philosopher then tries to grab the left fork, all are delayed forever — a circular wait (deadlock).
+**Deadlock condition:** If all five philosophers become hungry simultaneously and each grabs their right fork first, all fork semaphores become 0. When each philosopher then tries to grab the left fork, all are delayed forever in a circular wait (deadlock).
 
 **Remedies to avoid deadlock:**
 
@@ -183,7 +183,7 @@ Five philosophers sit around a table, each alternating between thinking and eati
 
 A deadlock is a situation where a set of processes is permanently blocked because each process is holding a resource and waiting for a resource held by another process in the set. It represents a circular wait condition where no process can proceed.
 
-**Starvation vs Deadlock:** Starvation occurs when a process waits indefinitely because other processes are continuously given preference — the process could potentially run, but the scheduler never selects it. A starved process might eventually proceed (e.g., through aging), while a deadlocked process will never proceed without external intervention.
+**Starvation vs Deadlock:** Starvation occurs when a process waits indefinitely because other processes are continuously given preference. The process could potentially run, but the scheduler never selects it. A starved process might eventually proceed (e.g., through aging), while a deadlocked process will never proceed without external intervention.
 
 **Livelock:** Processes are not blocked but still cannot make progress. They continuously change state in response to each other, consuming CPU but performing useless work. Example: two processes repeatedly acquire and release their first resource, each backing off "politely" when they find the other's resource is unavailable. Solution: introduce randomness in retry timing or set maximum retry attempts.
 
@@ -210,13 +210,13 @@ Deadlock prevention ensures that at least one of the four necessary conditions c
 
 ### Deadlock Ignorance (Ostrich Algorithm)
 
-The ostrich algorithm handles deadlocks by simply ignoring them — pretending they do not occur. This approach is used by most general-purpose operating systems (Windows, Linux, macOS) because deadlocks are rare in practice, and the overhead of continuous prevention/detection outweighs the cost of occasional manual intervention (killing a frozen process or rebooting). This is not suitable for safety-critical systems (flight control, medical devices) where continuous reliable operation is essential.
+The ostrich algorithm handles deadlocks by simply ignoring them, pretending they do not occur. This approach is used by most general-purpose operating systems (Windows, Linux, macOS) because deadlocks are rare in practice, and the overhead of continuous prevention/detection outweighs the cost of occasional manual intervention (killing a frozen process or rebooting). This is not suitable for safety-critical systems (flight control, medical devices) where continuous reliable operation is essential.
 
 ### Deadlock Avoidance
 
 Deadlock avoidance requires additional information about future resource requests. The system dynamically examines the resource-allocation state before granting each request to ensure the system never enters an unsafe state. Unlike prevention, avoidance does not restrict how requests are made.
 
-**Safe State:** A state is safe if there exists a **safe sequence** — an ordering ⟨P₁, P₂, ..., Pₙ⟩ of all processes such that for each Pᵢ, the resources it still needs can be satisfied by currently available resources plus resources held by all Pⱼ where j < i. If no such sequence exists, the state is **unsafe**. An unsafe state is not necessarily a deadlock, but it means the system cannot guarantee deadlock avoidance.
+**Safe State:** A state is safe if there exists a **safe sequence**, which is an ordering ⟨P₁, P₂, ..., Pₙ⟩ of all processes such that for each Pᵢ, the resources it still needs can be satisfied by currently available resources plus resources held by all Pⱼ where j < i. If no such sequence exists, the state is **unsafe**. An unsafe state is not necessarily a deadlock, but it means the system cannot guarantee deadlock avoidance.
 
 **Banker's Algorithm:**
 
@@ -287,12 +287,12 @@ Once detected, the system must break the circular wait.
 
 **Process Termination:**
 
-- **Abort all deadlocked processes** — simple but drastic; all computation is lost.
-- **Abort one process at a time** — terminate processes one by one until the deadlock cycle is broken. Higher overhead since detection must re-run after each termination.
+- **Abort all deadlocked processes:** This is simple but drastic; all computation is lost.
+- **Abort one process at a time:** Terminate processes one by one until the deadlock cycle is broken. Higher overhead since detection must re-run after each termination.
 
 **Criteria for selecting a victim:** lowest priority, shortest computation time so far, most additional time needed, fewest resources used (or most resources held to free up more), batch processes over interactive ones.
 
-**Resource Preemption:** Take resources from some processes and give them to others. The preempted process must be rolled back — either total rollback (restart from the beginning) or partial rollback (to a state before it acquired the preempted resource). The same process may repeatedly be chosen as a victim, causing starvation — include a cost factor (number of rollbacks) to prevent this.
+**Resource Preemption:** Take resources from some processes and give them to others. The preempted process must be rolled back, either through total rollback (restart from the beginning) or partial rollback (to a state before it acquired the preempted resource). The same process may repeatedly be chosen as a victim, causing starvation. Including a cost factor (number of rollbacks) can prevent this.
 
 **Checkpoint and Rollback:** A process periodically saves its state (memory contents, register values, resource allocation). If rollback is needed, the process is restored to a previous checkpoint instead of restarting entirely. More frequent checkpoints mean less work lost but higher overhead.
 
@@ -307,7 +307,7 @@ Two-phase locking (2PL) is a concurrency control protocol primarily used in data
 - **Growing Phase:** A transaction may acquire locks but may not release any. The number of locks only increases.
 - **Shrinking Phase:** A transaction may release locks but may not acquire new ones. The number of locks only decreases.
 
-2PL does not prevent deadlock — because transactions accumulate locks during the growing phase, circular wait can easily arise. Prevention strategies include: always locking resources in a fixed order, acquiring all locks atomically at the start, or using timeouts with rollback and restart.
+2PL does not prevent deadlock. Because transactions accumulate locks during the growing phase, circular wait can easily arise. Prevention strategies include: always locking resources in a fixed order, acquiring all locks atomically at the start, or using timeouts with rollback and restart.
 
 ### Communication Deadlock
 

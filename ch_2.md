@@ -4,7 +4,7 @@
 
 ### Process
 
-A process is a **program in execution**. A process consists of program code along with the current activity represented by the program counter value. Each process requires system resources — processor time, memory space, files, and I/O devices — to complete its task. Instructions in a process execute in a sequential manner. Multiple processes can exist simultaneously in a system.
+A process is a **program in execution**. A process consists of program code along with the current activity represented by the program counter value. Each process requires system resources such as processor time, memory space, files, and I/O devices to complete its task. Instructions in a process execute in a sequential manner. Multiple processes can exist simultaneously in a system.
 
 A **program** is a passive entity (an executable file stored on disk), while a **process** is an active entity with a program counter specifying the next instruction and associated resources. A program becomes a process when its executable file is loaded into memory.
 
@@ -12,14 +12,14 @@ A **program** is a passive entity (an executable file stored on disk), while a *
 
 > **Describe the various states of the process. [3 marks] (2082 Bhadra)**
 
-**Two-State Process Model:** The simplest model considers two states — **Running** (process is executing on CPU) and **Not Running** (process is waiting in a queue). A dispatcher gives CPU control to a process (Not Running → Running), and a higher-priority process or I/O request can preempt the current process (Running → Not Running).
+**Two-State Process Model:** The simplest model considers two states: **Running** (process is executing on CPU) and **Not Running** (process is waiting in a queue). A dispatcher gives CPU control to a process (Not Running → Running), and a higher-priority process or I/O request can preempt the current process (Running → Not Running).
 
 **Five-State Process Model:** A more practical model defines five states:
 
 - **New:** Process has just been created. The OS is setting up necessary data structures (PCB, PID, priority, owner). Not yet admitted to the pool of executable processes.
 - **Ready:** Process is loaded in RAM and prepared to execute. It is waiting only for CPU availability. All ready processes are kept in a **ready queue**.
 - **Running:** Process is currently being executed on the CPU. Only one process per CPU core can be in this state at any time.
-- **Blocked (Waiting):** Process cannot execute until some event occurs — completion of an I/O operation, availability of a resource, or a signal from another process.
+- **Blocked (Waiting):** Process cannot execute until some event occurs, such as completion of an I/O operation, availability of a resource, or a signal from another process.
 - **Exit (Terminated):** Process has been released from the pool of executable processes. It either completed successfully or terminated due to an error. Resources are being deallocated.
 
 **State Transitions:** New → Ready (admitted), Ready → Running (dispatched), Running → Ready (preempted or time quantum expired), Running → Blocked (I/O or event wait), Blocked → Ready (I/O or event completed), Running → Exit (completed or aborted).
@@ -53,7 +53,7 @@ Context switching enables the processor to switch between multiple processes eff
 
 **Short-Term Scheduler (CPU Scheduler):** Runs very frequently. Selects the next process from the ready queue for processor allocation. Must execute quickly to minimize scheduling overhead.
 
-**Dispatcher:** The module that gives control of the CPU to the process selected by the short-term scheduler. It performs the actual context switch — loading the context of the selected process from its PCB.
+**Dispatcher:** The module that gives control of the CPU to the process selected by the short-term scheduler. It performs the actual context switch by loading the context of the selected process from its PCB.
 
 ### Scheduling Criteria
 
@@ -81,7 +81,7 @@ Context switching enables the processor to switch between multiple processes eff
 
 ### 2.2.1 First Come First Serve (FCFS)
 
-FCFS is the simplest scheduling algorithm. Processes execute in the exact order they arrive in the ready queue. It is **non-preemptive** — a running process cannot be interrupted. Implementation uses a simple FIFO queue. No priority calculations are needed. However, average waiting time often becomes quite long, and a single long process can delay all subsequent processes (the **convoy effect**).
+FCFS is the simplest scheduling algorithm. Processes execute in the exact order they arrive in the ready queue. It is **non-preemptive**, meaning a running process cannot be interrupted. Implementation uses a simple FIFO queue. No priority calculations are needed. However, average waiting time often becomes quite long, and a single long process can delay all subsequent processes (the **convoy effect**).
 
 > **For given process, draw a Gantt Chart and calculate average waiting time for FCFS. [5 marks] (Model Question)**
 
@@ -104,7 +104,7 @@ Average WT = (0+1+5+7+10)/5 = **4.6 ms**. Average TAT = (3+7+9+12+12)/5 = **8.6 
 
 ### 2.2.2 Shortest Job First (SJF)
 
-SJF prioritizes the process with the smallest estimated execution time. It is **non-preemptive** — the running process completes before the next is selected. It provides the optimal (minimum) average waiting time for a given set of processes. However, it requires accurate prediction of burst time, and **starvation** can occur if short processes continuously arrive, starving long processes indefinitely.
+SJF prioritizes the process with the smallest estimated execution time. It is **non-preemptive**, meaning the running process completes before the next is selected. It provides the optimal (minimum) average waiting time for a given set of processes. However, it requires accurate prediction of burst time, and **starvation** can occur if short processes continuously arrive, starving long processes indefinitely.
 
 **Example:** Given processes P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
 
@@ -136,7 +136,7 @@ Gantt Chart: | P1  | P1| P2  | P5 | P3   | P2    | P4    |
               0     2   3     8   10      14      17      22
 ```
 
-Wait — let's trace carefully:
+Let us trace carefully:
 
 - t=0: Only P1(rem=3). Run P1.
 - t=2: P2 arrives(rem=6). P1 rem=1. P1 shorter → continue P1.
@@ -237,11 +237,11 @@ Gantt Chart: | A            | B        | C       | D         |
 
 Average TAT = (12+18+22+26)/4 = **19.5 ms**. Average WT = (0+10+15+17)/4 = **10.5 ms**.
 
-### 2.2.6 Completely Fair Scheduler (CFS) — Used in Linux
+### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
 CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2007) until kernel 6.6 (2023), when it was replaced by the EEVDF scheduler. Designed by Ingo Molnár, CFS replaced the earlier O(1) scheduler.
 
-**Core Concept — Virtual Runtime (vruntime):** Instead of using fixed time slices, CFS tracks how much CPU time each process has consumed using a metric called `vruntime`. CFS aims to keep the vruntime of all runnable tasks as close to each other as possible. The process with the **smallest vruntime** (i.e., the one that has received the least CPU time relative to its weight) is always selected next.
+**Core Concept, Virtual Runtime (vruntime):** Instead of using fixed time slices, CFS tracks how much CPU time each process has consumed using a metric called `vruntime`. CFS aims to keep the vruntime of all runnable tasks as close to each other as possible. The process with the **smallest vruntime** (i.e., the one that has received the least CPU time relative to its weight) is always selected next.
 
 **Red-Black Tree:** CFS stores all runnable tasks in a **red-black tree** (a self-balancing binary search tree), ordered by vruntime. The task with the smallest vruntime is always at the leftmost node. Selecting the next task is O(log N), making CFS highly scalable.
 
@@ -301,4 +301,4 @@ A thread is a **single sequence of execution within a process**. Multiple thread
 
 **Processor Affinity:** The tendency of threads to execute on the same processor repeatedly. A warm cache on a processor contains data from previous thread execution; migrating a thread invalidates cached data. **Soft affinity** allows migration but prefers the same processor. **Hard affinity** prohibits migration entirely.
 
-**Load Balancing:** Distributes work evenly across all processors. **Push migration** moves processes from overloaded to idle processors proactively. **Pull migration** occurs when an idle processor takes processes from a busy one. Load balancing conflicts with processor affinity — a balance between distribution and cache performance is necessary.
+**Load Balancing:** Distributes work evenly across all processors. **Push migration** moves processes from overloaded to idle processors proactively. **Pull migration** occurs when an idle processor takes processes from a busy one. Load balancing conflicts with processor affinity, so a balance between distribution and cache performance is necessary.
