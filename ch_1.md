@@ -75,6 +75,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 **IoT and Embedded OS:** Lightweight operating systems designed for devices with specific, dedicated functions. IoT OS focuses on connectivity and data exchange between interconnected devices. Embedded OS controls specific hardware within a larger machine (e.g., appliances, automotive systems). They are small in footprint, fast, reliable, and usually do not allow user-installed applications. Examples: FreeRTOS, Contiki, VxWorks, Embedded Linux.
 
 **Real-Time OS (RTOS):** Designed for systems with strict time constraints where processing must complete within a specific deadline.
+
 - **Hard Real-Time:** Missing a deadline is catastrophic (e.g., airbag systems, missile guidance, pacemakers).
 - **Soft Real-Time:** Deadlines are important but occasional misses are tolerable (e.g., multimedia streaming, video conferencing).
 
@@ -137,6 +138,7 @@ Provides applications direct access to hardware resources. The kernel only handl
 A system call is how a user program requests a service from the OS kernel. It provides the essential interface between a process and the operating system. System calls are needed because user-mode programs cannot directly execute privileged instructions — they must request the kernel (running in kernel mode) to perform operations on their behalf.
 
 **Services provided by system calls:**
+
 - Process creation and management
 - Main memory management
 - File access, directory and file system management
@@ -145,12 +147,14 @@ A system call is how a user program requests a service from the OS kernel. It pr
 - Communication (inter-process communication)
 
 **Example — `read(fd, &buffer, nbytes)`:**
+
 - `fd`: File descriptor — an integer ID representing the specific file to read from (previously opened).
 - `&buffer`: Memory address (pointer) where the data read from disk should be stored.
 - `nbytes`: Number of bytes the program wants to read.
 - The call returns the number of bytes actually read, which may be smaller than `nbytes` if end-of-file is encountered.
 
 **System Call Mechanism (Steps):**
+
 1. Push parameters onto the stack.
 2. Call the library procedure (e.g., `read()`).
 3. Library puts the system call number in a CPU register.
@@ -166,6 +170,7 @@ A system call is how a user program requests a service from the OS kernel. It pr
 Shell commands are tools used to interact with the OS via the command-line interface. They are either built into the shell (builtins like `cd`, `echo`) or exist as standalone executable programs.
 
 Common categories:
+
 - **File/Directory Management:** `ls` (list), `cd` (change directory), `pwd` (print working directory), `mkdir`, `rm`, `cp`, `mv`
 - **Text/Data Processing:** `cat` (display file), `grep` (search patterns), `sort`, `awk`
 - **Process Management:** `ps` (list processes), `top` (monitor), `kill` (terminate)
@@ -177,19 +182,20 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 
 **Types of shells:**
 
-| Shell | Full Name | Key Characteristics |
-| ----- | --------- | ------------------- |
-| sh | Bourne Shell | Original Unix shell; compact, fast, portable; lacks interactive features |
-| bash | Bourne-Again Shell | Default on most Linux; superset of sh; adds command-line editing, job control, history |
-| csh | C Shell | Syntax similar to C language; introduced command history and aliases |
-| ksh | Korn Shell | Combines features of sh and csh; powerful scripting and interactive use |
-| zsh | Z Shell | Highly customizable; advanced tab completion, plugins, themes; default on macOS |
+| Shell | Full Name          | Key Characteristics                                                                    |
+| ----- | ------------------ | -------------------------------------------------------------------------------------- |
+| sh    | Bourne Shell       | Original Unix shell; compact, fast, portable; lacks interactive features               |
+| bash  | Bourne-Again Shell | Default on most Linux; superset of sh; adds command-line editing, job control, history |
+| csh   | C Shell            | Syntax similar to C language; introduced command history and aliases                   |
+| ksh   | Korn Shell         | Combines features of sh and csh; powerful scripting and interactive use                |
+| zsh   | Z Shell            | Highly customizable; advanced tab completion, plugins, themes; default on macOS        |
 
 ## 1.8 POSIX Standard
 
 POSIX (Portable Operating System Interface) is a family of standards specified by the IEEE (IEEE Std 1003) to maintain compatibility between operating systems. Its primary purpose is to ensure **application portability** — allowing software written for one POSIX-compliant OS to be ported to another with little or no modification.
 
 **What POSIX defines:**
+
 - **System Interfaces (API):** Standard C library functions for process management, file I/O, threading (pthreads), and signal handling.
 - **Command-Line Shell:** A standard shell environment for command execution and scripting.
 - **Utilities:** A set of common command-line tools (`ls`, `cd`, `echo`, `grep`, etc.) that behave the same on any compliant system.
@@ -207,6 +213,7 @@ Linux, macOS, and BSD variants are highly POSIX-compliant. POSIX compliance is e
 A bootloader is a small program responsible for initiating the system startup process. When a computer is powered on, the firmware (BIOS or UEFI) initializes the hardware. Since the OS is stored on non-volatile storage and is not yet in RAM, the bootloader locates the OS kernel on the storage device, loads it into RAM, and hands over control to the OS.
 
 **Common bootloaders:**
+
 - **GRUB (GRand Unified Bootloader):** Default on most Linux distributions. Supports multiple file systems, multi-booting, and both legacy BIOS and UEFI systems.
 - **Windows Boot Manager (BOOTMGR):** Standard bootloader for modern Windows (Vista onward). Reads the Boot Configuration Data (BCD) store to identify available operating systems.
 - **NTLDR:** Legacy bootloader for Windows NT through Windows XP. Used `boot.ini` for configuration. Replaced by BOOTMGR.
@@ -216,17 +223,18 @@ A bootloader is a small program responsible for initiating the system startup pr
 
 MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for storing partition information on a storage drive.
 
-| Feature | MBR | GPT |
-| ------- | --- | --- |
-| Maximum disk size | 2 TB | Up to 9.4 ZB (zettabytes) |
-| Maximum partitions | 4 primary (use extended/logical for more) | 128 partitions (no extended needed) |
-| Data storage | All partition/boot data in one sector (first sector of disk) | Redundant copies of headers/tables across the disk |
-| Reliability | Vulnerable — corruption of single sector can break the drive | High — includes CRC error-checking and backup headers |
-| Standard | Older (introduced 1983) | Modern (part of UEFI standard) |
+| Feature            | MBR                                                          | GPT                                                   |
+| ------------------ | ------------------------------------------------------------ | ----------------------------------------------------- |
+| Maximum disk size  | 2 TB                                                         | Up to 9.4 ZB (zettabytes)                             |
+| Maximum partitions | 4 primary (use extended/logical for more)                    | 128 partitions (no extended needed)                   |
+| Data storage       | All partition/boot data in one sector (first sector of disk) | Redundant copies of headers/tables across the disk    |
+| Reliability        | Vulnerable — corruption of single sector can break the drive | High — includes CRC error-checking and backup headers |
+| Standard           | Older (introduced 1983)                                      | Modern (part of UEFI standard)                        |
 
 ### UEFI vs Legacy BIOS Boot
 
 **Legacy BIOS (Basic Input/Output System):**
+
 - Older firmware standard stored in a ROM chip on the motherboard.
 - Uses MBR partitioning. Reads the first sector of the boot drive (MBR) to find the bootloader.
 - Limited to booting from drives up to 2 TB.
@@ -234,6 +242,7 @@ MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for stor
 - Boot process: Power On → BIOS POST → Read MBR → Execute Bootloader → Load OS.
 
 **UEFI (Unified Extensible Firmware Interface):**
+
 - Modern firmware standard designed to replace legacy BIOS.
 - Uses GPT partitioning. Stores bootloader files in a special EFI System Partition (ESP).
 - Supports drives larger than 2 TB and boots faster.
