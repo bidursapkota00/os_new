@@ -11,7 +11,10 @@
 **Option B — WSL on Windows:**
 
 ```bash
+wsl --install
+# reboot
 wsl --install -d Ubuntu
+# password: 12345678
 ```
 
 Restart, set username/password. Launch "Ubuntu" from Start Menu.
@@ -255,7 +258,8 @@ $ ./hello.sh
 Hello, OS Lab!
 ```
 
-- Use `explorer.exe .` to open file explorer then open folder in vscode using open with vscode.
+- Use `code .` to open folder in vscode.
+- OR: Use `explorer.exe .` to open file explorer then open folder in vscode using open with vscode.
 - `#!/bin/bash` is the **shebang** — it tells the system which interpreter to use.
 
 ## 2.2 Variables and User Input
