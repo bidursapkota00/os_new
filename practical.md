@@ -173,7 +173,34 @@ $ grep -c "hello" data.txt       # count matches
 1
 ```
 
-## 1.5 Permissions with `chmod`
+## 1.5 awk (Text Processing)
+
+The `awk` command processes text line by line and splits each line into fields separated by whitespace. `$1` refers to the first field, `$2` to the second, and so on. `$0` represents the entire line.
+
+```bash
+$ echo -e "Alice 90\nBob 85\nCharlie 78" > scores.txt
+
+$ awk '{print $1}' scores.txt        # print first field (names)
+Alice
+Bob
+Charlie
+
+$ awk '{print $1, $2+10}' scores.txt # print name and score+10
+Alice 100
+Bob 95
+Charlie 88
+
+$ awk '$2 >= 85 {print $1, $2}' scores.txt  # filter rows where score >= 85
+Alice 90
+Bob 85
+
+$ awk -F":" '{print $1}' /etc/passwd  # use colon as delimiter, print usernames
+root
+student
+...
+```
+
+## 1.6 Permissions with `chmod`
 
 ```bash
 $ ls -l sample.txt
@@ -190,7 +217,87 @@ $ ls -l sample.txt
 
 **Permission numbers:** r=4, w=2, x=1. So 755 = rwx(7) r-x(5) r-x(5).
 
-## 1.6 I/O Redirection and Pipes
+### `chown` (Change Ownership)
+
+The `chown` command changes the owner and/or group of a file or directory. Only the root user (or using `sudo`) can change file ownership.
+
+```bash
+$ ls -l sample.txt
+-rwxr-xr-x 1 student student 24 May 13 10:05 sample.txt
+
+$ sudo chown root sample.txt          # change owner to root
+$ ls -l sample.txt
+-rwxr-xr-x 1 root student 24 May 13 10:05 sample.txt
+
+$ sudo chown student:staff sample.txt  # change owner and group
+$ ls -l sample.txt
+-rwxr-xr-x 1 student staff 24 May 13 10:05 sample.txt
+
+$ sudo chown -R student:student oslab/ # change ownership recursively
+```
+
+## 1.7 Process Management
+
+### `ps` (Process Status)
+
+The `ps` command displays information about running processes.
+
+```bash
+$ ps                          # show processes in current terminal
+  PID TTY          TIME CMD
+ 1234 pts/0    00:00:00 bash
+ 5678 pts/0    00:00:00 ps
+
+$ ps aux                      # show all processes with details
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1  16956  4392 ?        Ss   10:00   0:01 /sbin/init
+student   1234  0.0  0.0   7236  3984 pts/0    Ss   10:01   0:00 bash
+...
+
+$ ps aux | grep bash          # filter for bash processes
+student   1234  0.0  0.0   7236  3984 pts/0    Ss   10:01   0:00 bash
+```
+
+### `top` (Real-Time Process Monitor)
+
+The `top` command provides a live, updating view of system processes sorted by CPU usage. Press `q` to quit.
+
+```bash
+$ top
+top - 10:15:00 up 1:00, 1 user, load average: 0.15, 0.10, 0.05
+Tasks: 120 total,   1 running, 119 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  2.3 us,  1.0 sy,  0.0 ni, 96.5 id,  0.2 wa,  0.0 hi,  0.0 si
+MiB Mem:   7980.0 total,  5230.0 free,  1200.0 used,  1550.0 buff/cache
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 1001 student   20   0  450000  30000  20000 S   2.0   0.4   0:05.12 firefox
+    1 root      20   0   16956   4392   3200 S   0.0   0.1   0:01.00 init
+...
+```
+
+### `kill` (Terminate a Process)
+
+The `kill` command sends a signal to a process to terminate it. You need the PID (Process ID) which can be found using `ps` or `top`.
+
+```bash
+$ sleep 100 &                  # start a background process
+[1] 9876
+
+$ ps aux | grep sleep
+student   9876  0.0  0.0   5476   580 pts/0    S    10:15   0:00 sleep 100
+
+$ kill 9876                    # send default SIGTERM (graceful stop)
+[1]+  Terminated              sleep 100
+
+$ sleep 200 &
+[1] 9900
+$ kill -9 9900                 # send SIGKILL (force kill, cannot be ignored)
+[1]+  Killed                  sleep 200
+```
+
+**Common signals:** `kill PID` sends SIGTERM (signal 15) which allows the process to clean up before exiting. `kill -9 PID` sends SIGKILL (signal 9) which forces immediate termination.
+
+## 1.8 I/O Redirection and Pipes
 
 ```bash
 $ echo "OS practical" > output.txt       # write (overwrite)
@@ -209,7 +316,7 @@ banana
 cherry
 ```
 
-## 1.7 Other Useful Commands
+## 1.9 Other Useful Commands
 
 ```bash
 $ whoami
