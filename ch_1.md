@@ -223,13 +223,13 @@ A bootloader is a small program responsible for initiating the system startup pr
 
 MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for storing partition information on a storage drive.
 
-| Feature            | MBR                                                          | GPT                                                   |
-| ------------------ | ------------------------------------------------------------ | ----------------------------------------------------- |
-| Maximum disk size  | 2 TB                                                         | Up to 9.4 ZB (zettabytes)                             |
-| Maximum partitions | 4 primary (use extended/logical for more)                    | 128 partitions (no extended needed)                   |
-| Data storage       | All partition/boot data in one sector (first sector of disk) | Redundant copies of headers/tables across the disk    |
-| Reliability        | Vulnerable. Corruption of single sector can break the drive  | High. Includes CRC error-checking and backup headers  |
-| Standard           | Older (introduced 1983)                                      | Modern (part of UEFI standard)                        |
+| MBR                                                                                  | GPT                                                                     |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| Supports a maximum disk size of 2 TB                                                 | Supports disks up to 9.4 ZB (zettabytes)                                |
+| Allows only 4 primary partitions (extended/logical partitions are needed for more)   | Allows up to 128 partitions without requiring extended partitions       |
+| Stores all partition and boot data in a single sector (the first sector of the disk) | Stores redundant copies of partition headers and tables across the disk |
+| Corruption of the single data sector can make the entire drive unbootable            | Includes CRC error-checking and backup headers for high reliability     |
+| An older standard introduced in 1983                                                 | A modern standard that is part of the UEFI specification                |
 
 ### UEFI vs Legacy BIOS Boot
 
