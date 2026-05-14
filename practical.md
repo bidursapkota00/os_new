@@ -1,4 +1,4 @@
-# Operating System — Practical Guide
+# Operating System Practical Guide
 
 ---
 
@@ -6,9 +6,9 @@
 
 ## Setup
 
-**Option A — Native Linux:** Open the terminal (Ctrl+Alt+T on Ubuntu).
+**Option A (Native Linux):** Open the terminal (Ctrl+Alt+T on Ubuntu).
 
-**Option B — WSL on Windows:**
+**Option B (WSL on Windows):**
 
 ```bash
 wsl --install
@@ -19,18 +19,18 @@ wsl --install -d Ubuntu
 
 Restart, set username/password. Launch "Ubuntu" from Start Menu.
 
-**Option C — Online:** [webminal.org](https://www.webminal.org).
+**Option C (Online):** [webminal.org](https://www.webminal.org).
 
 ## 1.1 Navigation Commands
 
-### `pwd` — Print Working Directory
+### `pwd` (Print Working Directory)
 
 ```bash
 $ pwd
 /home/student
 ```
 
-### `cd` — Change Directory
+### `cd` (Change Directory)
 
 ```bash
 $ cd /tmp          # go to /tmp
@@ -39,7 +39,7 @@ $ cd ~             # go to home directory
 $ cd               # also goes to home
 ```
 
-### `ls` — List Directory Contents
+### `ls` (List Directory Contents)
 
 ```bash
 $ cd /
@@ -65,7 +65,7 @@ drwxr-xr-x 23 root root 4096 May 13 10:00 ..
 
 ## 1.2 File and Directory Management
 
-### `mkdir` — Make Directory
+### `mkdir` (Make Directory)
 
 ```bash
 $ mkdir oslab
@@ -78,7 +78,7 @@ oslab/week1:
 notes
 ```
 
-### `touch` — Create Empty File
+### `touch` (Create Empty File)
 
 ```bash
 $ touch oslab/hello.txt
@@ -86,28 +86,28 @@ $ ls oslab
 hello.txt  week1
 ```
 
-### `cp` — Copy
+### `cp` (Copy)
 
 ```bash
 $ cp oslab/hello.txt oslab/hello_backup.txt
 $ cp -r oslab/week1 oslab/week2    # copy directory recursively
 ```
 
-### `mv` — Move / Rename
+### `mv` (Move or Rename)
 
 ```bash
 $ mv oslab/hello_backup.txt oslab/week1/    # move file
 $ mv oslab/hello.txt oslab/greet.txt        # rename
 ```
 
-### `rm` — Remove
+### `rm` (Remove)
 
 ```bash
 $ rm oslab/greet.txt                # delete file
 $ rm -r oslab/week2                 # delete directory recursively
 ```
 
-### `rmdir` — Remove Empty Directory
+### `rmdir` (Remove Empty Directory)
 
 ```bash
 $ rmdir oslab/week1/notes
@@ -115,7 +115,7 @@ $ rmdir oslab/week1/notes
 
 ## 1.3 File Viewing Commands
 
-### `cat` — Display Entire File
+### `cat` (Display Entire File)
 
 ```bash
 $ echo -e "Line 1\nLine 2\nLine 3" > sample.txt
@@ -136,7 +136,7 @@ $ tail -1 sample.txt
 Line 3
 ```
 
-### `wc` — Word Count
+### `wc` (Word Count)
 
 ```bash
 $ wc sample.txt
@@ -155,7 +155,7 @@ banana
 cherry
 ```
 
-## 1.4 grep — Search Patterns
+## 1.4 grep (Search Patterns)
 
 ```bash
 $ echo -e "hello world\nHello OS\ngoodbye" > data.txt
@@ -173,7 +173,7 @@ $ grep -c "hello" data.txt       # count matches
 1
 ```
 
-## 1.5 Permissions — `chmod`
+## 1.5 Permissions with `chmod`
 
 ```bash
 $ ls -l sample.txt
@@ -260,7 +260,7 @@ Hello, OS Lab!
 
 - Use `code .` to open folder in vscode.
 - OR: Use `explorer.exe .` to open file explorer then open folder in vscode using open with vscode.
-- `#!/bin/bash` is the **shebang** — it tells the system which interpreter to use.
+- `#!/bin/bash` is the **shebang** line. It tells the system which interpreter to use.
 
 ## 2.2 Variables and User Input
 
@@ -371,7 +371,7 @@ Largest: 25
 
 ## 2.5 Loops
 
-### For Loop — Print 1 to 5
+### For Loop: Print 1 to 5
 
 ```bash
 #!/bin/bash
@@ -390,7 +390,7 @@ Number: 4
 Number: 5
 ```
 
-### While Loop — Sum of First N Natural Numbers
+### While Loop: Sum of First N Natural Numbers
 
 ```bash
 #!/bin/bash
@@ -807,7 +807,7 @@ P3	2	8	6	14
 Avg WT = 3.33, Avg TAT = 8.67
 ```
 
-## 5.2 SJF (Shortest Job First) — Non-Preemptive
+## 5.2 SJF (Shortest Job First), Non-Preemptive
 
 ### Code: `sjf.c`
 
@@ -1032,16 +1032,16 @@ Done.
 
 **Synchronization explained:**
 
-- `sem_t empty` (init = BUFFER_SIZE) — counts free slots. Producer waits if buffer full.
-- `sem_t full` (init = 0) — counts filled slots. Consumer waits if buffer empty.
-- `pthread_mutex_t mutex` — ensures only one thread accesses the buffer at a time.
-- `sem_wait()` decrements (blocks if 0). `sem_post()` increments (wakes a blocked thread).
+- `sem_t empty` is initialized to BUFFER_SIZE and counts free slots. The producer waits if the buffer is full.
+- `sem_t full` is initialized to 0 and counts filled slots. The consumer waits if the buffer is empty.
+- `pthread_mutex_t mutex` ensures only one thread accesses the buffer at a time.
+- `sem_wait()` decrements the semaphore and blocks if the value is 0. `sem_post()` increments the semaphore and wakes a blocked thread.
 
 ---
 
-# Practical 6: Memory Management — Paging and Segmentation
+# Practical 6: Memory Management (Paging and Segmentation)
 
-## 6.1 Paging — Logical to Physical Address Translation
+## 6.1 Paging: Logical to Physical Address Translation
 
 In paging, memory is divided into fixed-size **pages** (logical) and **frames** (physical). A **page table** maps each page number to a frame number.
 
@@ -1192,7 +1192,7 @@ Total Page Faults: 9
 Hit Ratio: 0.10
 ```
 
-## 6.3 Segmentation — Logical to Physical Address Translation
+## 6.3 Segmentation: Logical to Physical Address Translation
 
 In segmentation, memory is divided into variable-size **segments**. Each segment has a **base** (starting physical address) and a **limit** (maximum size). If offset ≥ limit, a segmentation fault occurs.
 
@@ -1283,7 +1283,7 @@ Enter offset: 250
 Error: Segmentation Fault! Offset 250 >= Limit 200
 ```
 
-## 6.4 Paging vs Segmentation — Quick Comparison
+## 6.4 Paging vs Segmentation
 
 | Aspect        | Paging                              | Segmentation                      |
 | ------------- | ----------------------------------- | --------------------------------- |
