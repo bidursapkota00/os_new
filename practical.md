@@ -17,6 +17,8 @@ wsl --install -d Ubuntu
 # password: 12345678
 ```
 
+`--install` enables WSL and installs the default Linux distribution. `-d Ubuntu` specifies Ubuntu as the distribution to install.
+
 Restart, set username/password. Launch "Ubuntu" from Start Menu.
 
 **Option C (Online):** [webminal.org](https://www.webminal.org).
@@ -38,6 +40,8 @@ $ cd ..            # go up one level
 $ cd ~             # go to home directory
 $ cd               # also goes to home
 ```
+
+`/tmp` is the target directory path. `..` refers to the parent directory. `~` is a shortcut for the current user's home directory.
 
 ### `ls` (List Directory Contents)
 
@@ -61,6 +65,8 @@ drwxrwxrwt 2 root root 4096 May 13 10:00 .
 drwxr-xr-x 23 root root 4096 May 13 10:00 ..
 ```
 
+`-l` shows detailed (long) format including permissions, owner, size, and date. `-a` shows all files including hidden ones (names starting with `.`). `-la` combines both flags. `/tmp` after the command specifies which directory to list.
+
 **Understanding `ls -l` output:** `-rwxr-xr-x` → type(`-`=file, `d`=dir) + owner(`rwx`) + group(`r-x`) + others(`r-x`).
 
 ## 1.2 File and Directory Management
@@ -78,6 +84,8 @@ oslab/week1:
 notes
 ```
 
+`-p` creates parent directories as needed. Without `-p`, the command fails if the parent directory does not exist. `-R` in `ls -R` lists contents recursively, showing all subdirectories and their contents.
+
 ### `touch` (Create Empty File)
 
 ```bash
@@ -93,6 +101,8 @@ $ cp oslab/hello.txt oslab/hello_backup.txt
 $ cp -r oslab/week1 oslab/week2    # copy directory recursively
 ```
 
+The first argument is the source file and the second is the destination. `-r` copies directories recursively, including all files and subdirectories inside them.
+
 ### `mv` (Move or Rename)
 
 ```bash
@@ -100,12 +110,16 @@ $ mv oslab/hello_backup.txt oslab/week1/    # move file
 $ mv oslab/hello.txt oslab/greet.txt        # rename
 ```
 
+The first argument is the source and the second is the destination. If the destination is a directory, the file is moved into it. If the destination is a new filename in the same directory, the file is renamed.
+
 ### `rm` (Remove)
 
 ```bash
 $ rm oslab/greet.txt                # delete file
 $ rm -r oslab/week2                 # delete directory recursively
 ```
+
+Without flags, `rm` deletes only files. `-r` removes directories and all their contents recursively.
 
 ### `rmdir` (Remove Empty Directory)
 
@@ -125,6 +139,8 @@ Line 2
 Line 3
 ```
 
+In the `echo` command, `-e` enables interpretation of escape characters like `\n` (newline). `>` redirects the output into a file, creating it if it does not exist.
+
 ### `head` and `tail`
 
 ```bash
@@ -135,6 +151,8 @@ Line 2
 $ tail -1 sample.txt
 Line 3
 ```
+
+`-2` in `head -2` displays the first 2 lines of the file. `-1` in `tail -1` displays the last 1 line. Without the number flag, both commands default to 10 lines.
 
 ### `wc` (Word Count)
 
@@ -173,6 +191,8 @@ $ grep -c "hello" data.txt       # count matches
 1
 ```
 
+The first argument is the search pattern and the second is the file to search in. `-i` makes the search case-insensitive. `-n` shows the line number before each matching line. `-c` prints only the count of matching lines instead of the lines themselves.
+
 ## 1.5 awk (Text Processing)
 
 The `awk` command processes text line by line and splits each line into fields separated by whitespace. `$1` refers to the first field, `$2` to the second, and so on. `$0` represents the entire line.
@@ -200,6 +220,8 @@ student
 ...
 ```
 
+The pattern inside single quotes is the awk program. `$1`, `$2` etc. refer to the first, second fields of each line. `$0` is the entire line. `-F":"` sets the field separator to colon instead of the default whitespace. A condition before `{...}` like `$2 >= 85` filters which lines to process.
+
 ## 1.6 Permissions with `chmod`
 
 ```bash
@@ -214,6 +236,8 @@ $ chmod u-x,g+w sample.txt       # symbolic mode
 $ ls -l sample.txt
 -rw-rwr-x 1 student student 24 May 13 10:05 sample.txt
 ```
+
+`755` is the octal permission mode where each digit represents owner, group, and others. In symbolic mode, `u` is the owner (user), `g` is the group, and `o` is others. `+` adds a permission and `-` removes it. `r` is read, `w` is write, and `x` is execute.
 
 **Permission numbers:** r=4, w=2, x=1. So 755 = rwx(7) r-x(5) r-x(5).
 
@@ -236,6 +260,8 @@ $ ls -l sample.txt
 $ sudo chown -R student:student oslab/ # change ownership recursively
 ```
 
+`sudo` runs the command with root (superuser) privileges. The format is `chown owner:group filename`. `-R` applies the change recursively to all files and subdirectories inside the specified directory.
+
 ## 1.7 Process Management
 
 ### `ps` (Process Status)
@@ -257,6 +283,8 @@ student   1234  0.0  0.0   7236  3984 pts/0    Ss   10:01   0:00 bash
 $ ps aux | grep bash          # filter for bash processes
 student   1234  0.0  0.0   7236  3984 pts/0    Ss   10:01   0:00 bash
 ```
+
+Without flags, `ps` shows only processes in the current terminal session. `a` shows processes from all users, `u` shows detailed user-oriented output (CPU, memory, etc.), and `x` includes processes not attached to a terminal. `| grep bash` pipes the output through grep to filter for lines containing "bash".
 
 ### `top` (Real-Time Process Monitor)
 
@@ -295,7 +323,7 @@ $ kill -9 9900                 # send SIGKILL (force kill, cannot be ignored)
 [1]+  Killed                  sleep 200
 ```
 
-**Common signals:** `kill PID` sends SIGTERM (signal 15) which allows the process to clean up before exiting. `kill -9 PID` sends SIGKILL (signal 9) which forces immediate termination.
+`&` at the end of a command runs it in the background, returning control to the terminal. The number after `kill` is the PID (Process ID) of the process to terminate. `-9` specifies the signal number, where 9 is SIGKILL (force kill). Without `-9`, `kill` sends SIGTERM (signal 15) which allows the process to clean up before exiting.
 
 ## 1.8 I/O Redirection and Pipes
 
@@ -315,6 +343,8 @@ apple
 banana
 cherry
 ```
+
+`>` redirects output to a file and overwrites it if it already exists. `>>` appends output to the end of the file without overwriting. `|` (pipe) sends the output of one command as input to the next command. `<` redirects input from a file, so `sort < fruits.txt` reads from fruits.txt instead of keyboard input. `-l` in `wc -l` counts only the number of lines.
 
 ## 1.9 Other Useful Commands
 
@@ -339,6 +369,8 @@ $ find . -name "*.txt"       # find all .txt files
 ./data.txt
 ./fruits.txt
 ```
+
+`man` followed by a command name opens its manual page. In `find`, `.` specifies the directory to search in (current directory). `-name "*.txt"` matches files whose name ends with `.txt`, where `*` is a wildcard for any characters.
 
 ---
 
