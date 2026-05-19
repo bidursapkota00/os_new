@@ -206,6 +206,12 @@ An OS performs two essentially unrelated functions: providing application progra
 
 ---
 
+# 1.1 Introduction to Operating Systems
+
+![Operating System](images/ch_1/os.png)
+
+---
+
 # 1.2 OS as an Extended Machine and Resource Manager
 
 > **How does an operating system provide abstraction to user level application from underlying hardware? Explain. [4 marks] (2082 Bhadra)**
@@ -378,6 +384,14 @@ All core functions (process management, memory management, file systems, device 
 
 # 1.6 Types of OS Kernel
 
+### Layered Kernel
+
+The OS is organized into layers, from hardware at the bottom to the user interface at the top. Each layer depends only on the layer directly below it. This structure makes debugging easier because problems can be traced to a specific layer, but it increases overhead since data must pass through multiple layers. Privilege decreases from inner (low) layers to outer (high) layers. Example: THE operating system (by Dijkstra).
+
+---
+
+# 1.6 Types of OS Kernel
+
 ### Microkernel
 
 Only the essential functions (IPC, basic scheduling, low-level memory management) remain inside the kernel. Most services (file systems, device drivers, networking) run in user space. Failures in one service do not crash the whole system, and it is easier to add, remove, or modify services. Communication happens through message passing, which creates overhead and makes microkernels slower than monolithic ones. Examples: MINIX 3, QNX, L4.
@@ -388,15 +402,7 @@ Only the essential functions (IPC, basic scheduling, low-level memory management
 
 ### Nanokernel
 
-An ultra-minimalist kernel that provides only the most fundamental hardware abstraction, which includes interrupt handling, basic hardware access, and context switching. Almost all OS services (including memory management and scheduling) are delegated to user-space processes. The extremely small footprint makes it ideal for resource-constrained and real-time environments. Examples: EROS, KeyKOS.
-
----
-
-# 1.6 Types of OS Kernel
-
-### Layered Kernel
-
-The OS is organized into layers, from hardware at the bottom to the user interface at the top. Each layer depends only on the layer directly below it. This structure makes debugging easier because problems can be traced to a specific layer, but it increases overhead since data must pass through multiple layers. Privilege decreases from inner (low) layers to outer (high) layers. Example: THE operating system (by Dijkstra).
+An ultra-minimalist kernel that provides only the most fundamental hardware abstraction, which includes interrupt handling, basic hardware access and context switching. Almost all OS services (including memory management and scheduling) are delegated to user-space processes. The extremely small footprint makes it ideal for resource-constrained and real-time environments. Examples: EROS, KeyKOS.
 
 ---
 
@@ -449,6 +455,12 @@ A system call is how a user program requests a service from the OS kernel. It pr
 - `&buffer`: Memory address (pointer) where the data read from disk should be stored.
 - `nbytes`: Number of bytes the program wants to read.
 - The call returns the number of bytes actually read, which may be smaller than `nbytes` if end-of-file is encountered.
+
+---
+
+# 1.7 System Calls, Shell Commands, Shell Programming
+
+![System Call](images/ch_1/system-call.png)
 
 ---
 
