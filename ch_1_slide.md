@@ -613,13 +613,12 @@ A bootloader is a small program responsible for initiating the system startup pr
 
 ### MBR vs GPT
 
-MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for storing partition information on a storage drive.
+MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Table) are two methods for storing partition information on a storage drive.
 
 | MBR                                                                                  | GPT                                                                     |
 | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
 | Supports a maximum disk size of 2 TB                                                 | Supports disks up to 9.4 ZB (zettabytes)                                |
 | Allows only 4 primary partitions (extended/logical partitions are needed for more)   | Allows up to 128 partitions without requiring extended partitions       |
-
 
 ---
 
@@ -630,6 +629,53 @@ MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for stor
 | Stores all partition and boot data in a single sector (the first sector of the disk) | Stores redundant copies of partition headers and tables across the disk |
 | Corruption of the single data sector can make the entire drive unbootable            | Includes CRC error-checking and backup headers for high reliability     |
 | An older standard introduced in 1983                                                 | A modern standard that is part of the UEFI specification                |
+
+---
+
+# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+
+![MBR](images/ch_1/mbr.png)
+
+---
+
+# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+
+### MBR
+
+- Sector 0 of the disk is called the MBR (Master Boot Record).
+- The MBR is used to boot the computer.
+- The end of the MBR contains the partition table.
+- The partition table gives the starting and ending addresses of each partition.
+- One of the partitions in the table is marked as active.
+- When the computer is booted, the BIOS reads in and executes the MBR.
+
+---
+
+# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+
+### MBR
+
+- The first thing the MBR program does is locate the active partition.
+- Then it reads in the active partition's first block, called the boot block.
+- The boot block program is then executed.
+- The program in the boot block loads the operating system contained in that partition.
+
+---
+
+# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+
+### MBR
+
+- For uniformity, every partition starts with a boot block.
+- This is true even if the partition does not contain a bootable operating system. Contains tiny code that prints: Error: No bootable device found. Press any key to reboot.
+- Super block contains information like file system type (ext4, ntfs,), individual block size, etc.
+- Free space management block contains information like bitmap vector, linked list.
+
+---
+
+# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+
+![GPT](images/ch_1/gpt.png)
 
 ---
 
@@ -665,9 +711,11 @@ MBR (Master Boot Record) and GPT (GUID Partition Table) are two methods for stor
 
 **UEFI (Unified Extensible Firmware Interface):**
 
-- Features a graphical setup interface, **Secure Boot** (verifies bootloader signatures to prevent malware from loading during startup), and network boot capabilities.
+- Features a graphical setup interface, Secure Boot (verifies bootloader signatures to prevent malware from loading during startup), and network boot capabilities.
 - When you power on a computer, UEFI runs a POST check, reads the EFI System Partition on a GPT disk, executes the bootloader, and loads the operating system.
 
 <br>
 
 Many modern UEFI motherboards include a CSM (Compatibility Support Module) that can emulate legacy BIOS mode, allowing them to boot from MBR-partitioned disks.
+
+
