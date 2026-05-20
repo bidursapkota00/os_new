@@ -360,7 +360,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 # 1.5 Operating System Components
 
-**1. Kernel:** The core of the OS. It receives commands from the shell, processes them, coordinates system resources, interacts with hardware (CPU, RAM, disk), and returns results. Functions include process management, memory management, virtual memory management, file system management, and security enforcement.
+**1. Kernel:** The core of the OS. It receives commands from the shell, processes them, coordinates system resources, interacts with hardware (CPU, RAM, disk), and returns results. Functions include process management, memory management, file system management, and security enforcement.
 
 **2. Shell:** Acts as a command interpreter. It is the interface between the user and the kernel. It receives commands from the user, translates them into a form the kernel can understand, and forwards the request for execution. In Windows, the command prompt (cmd) uses the Windows API (DLL functions), which internally invokes system calls.
 
@@ -368,7 +368,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 # 1.5 Operating System Components
 
-**3. Utilities:** System programs that provide useful functionality beyond the kernel and shell, such as file management tools (copy, move, delete), text editors, compilers, and system monitoring tools. They use system calls to interact with the kernel.
+**3. Utilities:** Utilities are ready-made programs that help you do useful tasks on the computer. They are NOT part of the core OS logic (like scheduling or memory management), but they are important tools that come with the OS. Provide useful functionality such as file management tools (copy, move, delete), text editors, compilers, and system monitoring tools. They use system calls to interact with the kernel.
 
 **4. Applications:** User-level programs that perform specific tasks (web browsers, word processors, media players). Applications interact with the OS through system calls or higher-level APIs provided by the OS.
 
