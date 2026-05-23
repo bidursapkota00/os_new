@@ -1,0 +1,207 @@
+@page {
+  size: 210mm 297mm;
+}
+
+/* RIGHT-HAND (odd) pages — binding on the LEFT */
+@page :right {
+  margin: 20mm 20mm 20mm 20mm;
+
+  @top-right {
+    content: "Advanced Computer Programming By Bidur Sapkota";
+    font-family: "Arial", "Segoe UI", sans-serif;
+    font-size: 8pt;
+    color: #777;
+  }
+
+  @bottom-right {
+    content: counter(page);
+    font-family: "Arial", "Segoe UI", sans-serif;
+    font-size: 8pt;
+    color: #000;
+  }
+}
+
+/* LEFT-HAND (even) pages — binding on the RIGHT */
+@page :left {
+  margin: 20mm 20mm 20mm 20mm;
+
+  @top-right {
+    content: "Advanced Computer Programming By Bidur Sapkota";
+    font-family: "Arial", "Segoe UI", sans-serif;
+    font-size: 8pt;
+    color: #777;
+  }
+
+  @bottom-right {
+    content: counter(page);
+    font-family: "Arial", "Segoe UI", sans-serif;
+    font-size: 8pt;
+    color: #000;
+  }
+}
+
+body {
+  font-family:
+    "Segoe UI", "-apple-system", "BlinkMacSystemFont", "Arial", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.65;
+  color: #111;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-family: "Segoe UI", "-apple-system", "Arial", sans-serif;
+  font-size: 24pt;
+  font-weight: 700;
+  color: #000;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  page-break-before: always;
+  letter-spacing: -0.5px;
+}
+
+h1:first-of-type {
+  page-break-before: avoid;
+}
+
+h2 {
+  font-family: "Segoe UI", "-apple-system", "Arial", sans-serif;
+  font-size: 15pt;
+  font-weight: 600;
+  color: #000;
+  margin-top: 26px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-family: "Segoe UI", "-apple-system", "Arial", sans-serif;
+  font-size: 12.5pt;
+  font-weight: 600;
+  color: #000;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-family: "Segoe UI", "-apple-system", "Arial", sans-serif;
+  font-size: 11pt;
+  font-weight: 600;
+  color: #000;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+p {
+  margin: 0 0 14px 0;
+  text-align: justify;
+}
+
+.codehilite {
+  padding: 14px 18px;
+  margin: 16px 0;
+  page-break-inside: auto;
+  break-inside: auto;
+}
+
+.codehilite pre {
+  margin: 0;
+  padding: 0;
+  font-family: "Consolas", "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 9pt;
+  line-height: 1.5;
+  page-break-inside: auto;
+  break-inside: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+code {
+  font-family: "Consolas", "Menlo", "Monaco", "Courier New", monospace;
+  font-size: 9pt;
+  background-color: #f1f1f4; /* A neutral gray specifically for inline code */
+  padding: 2px 6px;
+}
+
+.codehilite code {
+  background: transparent;
+  padding: 0;
+}
+
+blockquote {
+  background: #f8f9fa;
+  margin: 16px 0;
+  padding: 14px 18px;
+  font-size: 10pt;
+  font-style: italic;
+  color: #333;
+  page-break-inside: avoid;
+  p {
+    margin: 0;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 9.5pt;
+  page-break-inside: auto;
+}
+
+th {
+  padding: 10px 12px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  border: 1px solid #e1e4e8;
+  color: #000;
+}
+
+td {
+  padding: 9px 12px;
+  border: 1px solid #e1e4e8;
+  vertical-align: top;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+ul,
+ol {
+  margin: 8px 0 16px 0;
+  padding-left: 24px;
+}
+
+li {
+  margin-bottom: 6px;
+  font-size: 10.5pt;
+}
+
+a {
+  color: #0052cc;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- IMAGES ---------- */
+img {
+  max-width: 100%;
+  max-height: 240mm;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #eaecef;
+  margin: 32px 0;
+}
+
+strong {
+  font-weight: 700;
+  color: #000;
+}
