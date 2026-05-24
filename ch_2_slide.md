@@ -2,6 +2,7 @@
 marp: true
 theme: default
 paginate: true
+math: mathjax
 style: |
   * {
     box-sizing: border-box;
@@ -339,7 +340,63 @@ FCFS is the simplest scheduling algorithm. Processes execute in the exact order 
 
 ### 2.2.1 First Come First Serve (FCFS)
 
-> **For given processes, draw a Gantt Chart and calculate average waiting time for FCFS. [5 marks] (Model Question)**
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for FCFS. [5 marks] (Model Question)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 10              |
+| P2      | 1                 | 6               |
+| P3      | 3                 | 2               |
+| P4      | 5                 | 4               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P4  |
+              0     10    16    18    22
+```
+
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 10  | 10  | 10        | 0         |
+| P2        | 1   | 6   | 16  | 15        | 9         |
+| P3        | 3   | 2   | 18  | 15        | 13        |
+| P4        | 5   | 4   | 22  | 17        | 13        |
+| **Total** |     |     |     | **57**    | **35**    |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{10+15+15+17}{4}$
+
+$= 14.25 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{0+9+13+13}{4}$
+
+$= 8.75 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.1 First Come First Serve (FCFS)
+
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for FCFS. [5 marks] (Model Question)**
 
 ---
 
@@ -357,24 +414,49 @@ FCFS is the simplest scheduling algorithm. Processes execute in the exact order 
 
 # 2.2 Scheduling Algorithms
 
+<style scoped>
+ td, th {
+  font-size: 26pt
+ }
+</style>
+
 ```text
 Gantt Chart: | P1  | P2  | P3  | P4  | P5  |
               0     3     9     13    18   20
 ```
 
-| Process | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
-| ------- | --- | --- | --- | --------- | --------- |
-| P1      | 0   | 3   | 3   | 3         | 0         |
-| P2      | 2   | 6   | 9   | 7         | 1         |
-| P3      | 4   | 4   | 13  | 9         | 5         |
-| P4      | 6   | 5   | 18  | 12        | 7         |
-| P5      | 8   | 2   | 20  | 12        | 10        |
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 3   | 3   | 3         | 0         |
+| P2        | 2   | 6   | 9   | 7         | 1         |
+| P3        | 4   | 4   | 13  | 9         | 5         |
+| P4        | 6   | 5   | 18  | 12        | 7         |
+| P5        | 8   | 2   | 20  | 12        | 10        |
+| **Total** |     |     |     | **43**    | **23**    |
 
 ---
 
 # 2.2 Scheduling Algorithms
 
-Average WT = (0+1+5+7+10)/5 = **4.6 ms**. Average TAT = (3+7+9+12+12)/5 = **8.6 ms**.
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{3+7+9+12+12}{5}$
+
+$= 8.6 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{0+1+5+7+10}{5}$
+
+$= 4.6 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ### 2.2.2 Shortest Job First (SJF)
 
@@ -382,9 +464,9 @@ SJF prioritizes the process with the smallest estimated execution time. It is no
 
 **Example:** Given processes P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
 
-```
-Gantt Chart: | P1 | P2     | P5 | P3   | P4    |
-              0    3        9   11      15      20
+```text
+Gantt Chart: | P1  | P2  | P5  | P3   | P4  |
+              0     3     9     11     15    20
 ```
 
 At t=0, only P1 available → run P1. At t=3, only P2 available → run P2. At t=9, P3(4), P4(5), P5(2) available → pick P5 (shortest). At t=11, P3(4) vs P4(5) → pick P3. Then P4 runs.
