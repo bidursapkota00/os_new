@@ -184,6 +184,12 @@ A program is a passive entity (an executable file stored on disk), while a proce
 
 # 2.1 Process Description, States and Control
 
+![Two State Process Model](images/ch_2/two-state-process-model.png)
+
+---
+
+# 2.1 Process Description, States and Control
+
 **Five-State Process Model:** A more practical model defines five states:
 
 - **New:** Process has just been created. The OS is setting up necessary data structures (PCB, PID, priority, owner). Not yet admitted to the pool of executable processes.
@@ -196,6 +202,12 @@ A program is a passive entity (an executable file stored on disk), while a proce
 # 2.1 Process Description, States and Control
 
 - **Exit (Terminated):** Process has been released from the pool of executable processes. It either completed successfully or terminated due to an error. Resources are being deallocated.
+
+---
+
+# 2.1 Process Description, States and Control
+
+![Five State Process Model](images/ch_2/five-state-process-model.png)
 
 ---
 
@@ -231,6 +243,12 @@ The PCB is a data structure maintained by the OS for each process. It stores all
 - **PCB Pointers:** Pointers that link this PCB to other PCBs, used to create queues such as the ready queue.
 - **List of Open Files:** Files the process is currently using, so the OS can close them properly if the process finishes or crashes.
 - **I/O Status Information:** List of I/O devices allocated to the process and status of pending I/O requests.
+
+---
+
+# 2.1 Process Description, States and Control
+
+![PCB](images/ch_2/pcb.png)
 
 ---
 
@@ -313,7 +331,7 @@ Context switching enables the processor to switch between multiple processes eff
 
 ### 2.2.1 First Come First Serve (FCFS)
 
-FCFS is the simplest scheduling algorithm. Processes execute in the exact order they arrive in the ready queue. It is **non-preemptive**, meaning a running process cannot be interrupted. Implementation uses a simple FIFO queue. No priority calculations are needed. However, average waiting time often becomes quite long, and a single long process can delay all subsequent processes (the **convoy effect**).
+FCFS is the simplest scheduling algorithm. Processes execute in the exact order they arrive in the ready queue. It is non-preemptive, meaning a running process cannot be interrupted. Implementation uses a simple FIFO queue. No priority calculations are needed. However, average waiting time often becomes quite long, and a single long process can delay all subsequent processes (the convoy effect).
 
 ---
 
@@ -321,28 +339,46 @@ FCFS is the simplest scheduling algorithm. Processes execute in the exact order 
 
 ### 2.2.1 First Come First Serve (FCFS)
 
-> **For given process, draw a Gantt Chart and calculate average waiting time for FCFS. [5 marks] (Model Question)**
+> **For given processes, draw a Gantt Chart and calculate average waiting time for FCFS. [5 marks] (Model Question)**
 
-**Example:** Given processes P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
+---
 
-```
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 3               |
+| P2      | 2                 | 6               |
+| P3      | 4                 | 4               |
+| P4      | 6                 | 5               |
+| P5      | 8                 | 2               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+```text
 Gantt Chart: | P1  | P2  | P3  | P4  | P5  |
               0     3     9     13    18   20
 ```
 
-| Process | AT  | BT  | CT  | TAT | WT  |
-| ------- | --- | --- | --- | --- | --- |
-| P1      | 0   | 3   | 3   | 3   | 0   |
-| P2      | 2   | 6   | 9   | 7   | 1   |
-| P3      | 4   | 4   | 13  | 9   | 5   |
-| P4      | 6   | 5   | 18  | 12  | 7   |
-| P5      | 8   | 2   | 20  | 12  | 10  |
+| Process | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| ------- | --- | --- | --- | --------- | --------- |
+| P1      | 0   | 3   | 3   | 3         | 0         |
+| P2      | 2   | 6   | 9   | 7         | 1         |
+| P3      | 4   | 4   | 13  | 9         | 5         |
+| P4      | 6   | 5   | 18  | 12        | 7         |
+| P5      | 8   | 2   | 20  | 12        | 10        |
+
+---
+
+# 2.2 Scheduling Algorithms
 
 Average WT = (0+1+5+7+10)/5 = **4.6 ms**. Average TAT = (3+7+9+12+12)/5 = **8.6 ms**.
 
 ### 2.2.2 Shortest Job First (SJF)
 
-SJF prioritizes the process with the smallest estimated execution time. It is **non-preemptive**, meaning the running process completes before the next is selected. It provides the optimal (minimum) average waiting time for a given set of processes. However, it requires accurate prediction of burst time, and **starvation** can occur if short processes continuously arrive, starving long processes indefinitely.
+SJF prioritizes the process with the smallest estimated execution time. It is non-preemptive, meaning the running process completes before the next is selected. It provides the optimal (minimum) average waiting time for a given set of processes. However, it requires accurate prediction of burst time, and starvation can occur if short processes continuously arrive, starving long processes indefinitely.
 
 **Example:** Given processes P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
 
