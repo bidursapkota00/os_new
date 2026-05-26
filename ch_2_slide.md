@@ -462,69 +462,257 @@ $= 4.6 \text{ ms}$
 
 SJF prioritizes the process with the smallest estimated execution time. It is non-preemptive, meaning the running process completes before the next is selected. It provides the optimal (minimum) average waiting time for a given set of processes. However, it requires accurate prediction of burst time, and starvation can occur if short processes continuously arrive, starving long processes indefinitely.
 
-**Example:** Given processes P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.2 Shortest Job First (SJF)
+
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for SJF. [5 marks] (Model Question)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 7               |
+| P2      | 2                 | 4               |
+| P3      | 4                 | 1               |
+| P4      | 5                 | 4               |
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ```text
-Gantt Chart: | P1  | P2  | P5  | P3   | P4  |
-              0     3     9     11     15    20
+Gantt Chart: | P1  | P3  | P2  | P4  |
+              0     7     8     12    16
 ```
 
-At t=0, only P1 available → run P1. At t=3, only P2 available → run P2. At t=9, P3(4), P4(5), P5(2) available → pick P5 (shortest). At t=11, P3(4) vs P4(5) → pick P3. Then P4 runs.
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 7   | 7   | 7         | 0         |
+| P2        | 2   | 4   | 12  | 10        | 6         |
+| P3        | 4   | 1   | 8   | 4         | 3         |
+| P4        | 5   | 4   | 16  | 11        | 7         |
+| **Total** |     |     |     | **32**    | **16**    |
 
-| Process | AT  | BT  | CT  | TAT | WT  |
-| ------- | --- | --- | --- | --- | --- |
-| P1      | 0   | 3   | 3   | 3   | 0   |
-| P2      | 2   | 6   | 9   | 7   | 1   |
-| P5      | 8   | 2   | 11  | 3   | 1   |
-| P3      | 4   | 4   | 15  | 11  | 7   |
-| P4      | 6   | 5   | 20  | 14  | 9   |
+---
 
-Average WT = (0+1+1+7+9)/5 = **3.6 ms**. Average TAT = (3+7+3+11+14)/5 = **7.6 ms**.
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{32}{4}$
+
+$= 8 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{16}{4}$
+
+$= 4 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.2 Shortest Job First (SJF)
+
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for SJF. [5 marks] (Model Question)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 3               |
+| P2      | 2                 | 6               |
+| P3      | 4                 | 4               |
+| P4      | 6                 | 5               |
+| P5      | 8                 | 2               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 26pt
+ }
+</style>
+
+```text
+Gantt Chart: | P1  | P2  | P5  | P3  | P4  |
+              0     3     9     11    15   20
+```
+
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 3   | 3   | 3         | 0         |
+| P2        | 2   | 6   | 9   | 7         | 1         |
+| P3        | 4   | 4   | 15  | 11        | 7         |
+| P4        | 6   | 5   | 20  | 14        | 9         |
+| P5        | 8   | 2   | 11  | 3         | 1         |
+| **Total** |     |     |     | **38**    | **18**    |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{38}{5}$
+
+$= 7.6 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{18}{5}$
+
+$= 3.6 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ### 2.2.3 Shortest Remaining Time (SRT / SRTF)
 
-SRT is the **preemptive version of SJF**. The process with the shortest remaining execution time receives the processor. When a new process arrives with a burst time shorter than the remaining time of the currently running process, the running process is preempted. It provides better response time than non-preemptive SJF. However, context switching overhead increases and long processes face potential starvation.
+SRT is the preemptive version of SJF. The process with the shortest remaining execution time receives the processor. When a new process arrives with a burst time shorter than the remaining time of the currently running process, the running process is preempted. It provides better response time than non-preemptive SJF. However, context switching overhead increases and long processes face potential starvation.
 
-**Example:** Given P1(AT=0, BT=3), P2(AT=2, BT=6), P3(AT=4, BT=4), P4(AT=6, BT=5), P5(AT=8, BT=2):
+---
 
-```
-Gantt Chart: | P1  | P1| P2  | P5 | P3   | P2    | P4    |
-              0     2   3     8   10      14      17      22
-```
+# 2.2 Scheduling Algorithms
 
-Let us trace carefully:
+### 2.2.3 Shortest Remaining Time (SRT / SRTF)
 
-- t=0: Only P1(rem=3). Run P1.
-- t=2: P2 arrives(rem=6). P1 rem=1. P1 shorter → continue P1.
-- t=3: P1 finishes. P2(rem=6). Run P2.
-- t=4: P3 arrives(rem=4). P2 rem=5. P3(4) < P2(5) → preempt P2, run P3.
-- t=6: P4 arrives(rem=5). P3 rem=2. P3(2) shortest → continue P3.
-- t=8: P3 finishes. P5 arrives(rem=2). P2(rem=5), P4(rem=5), P5(rem=2). Run P5.
-- t=10: P5 finishes. P2(rem=5), P4(rem=5). Tie → FCFS, run P2.
-- t=15: P2 finishes. Run P4.
-- t=20: P4 finishes.
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for SRTF. [5 marks] (Model Question)**
 
-```
-Gantt Chart: | P1 | P3 | P5 | P2    | P4    |
-              0  3  4  8 10     15      20
-```
+---
 
-Corrected Gantt:
+# 2.2 Scheduling Algorithms
 
-```
-| P1   | P2| P3 | P5 | P2     | P4    |
- 0      3  4     8   10       15      20
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 7               |
+| P2      | 2                 | 4               |
+| P3      | 4                 | 1               |
+| P4      | 5                 | 4               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P2  | P4  | P1  |
+              0     2     4     5     7     11    16
 ```
 
-| Process | AT  | BT  | CT  | TAT | WT  |
-| ------- | --- | --- | --- | --- | --- |
-| P1      | 0   | 3   | 3   | 3   | 0   |
-| P2      | 2   | 6   | 15  | 13  | 7   |
-| P3      | 4   | 4   | 8   | 4   | 0   |
-| P4      | 6   | 5   | 20  | 14  | 9   |
-| P5      | 8   | 2   | 10  | 2   | 0   |
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT | RT=StartTime-AT |
+| --------- | --- | --- | --- | --------- | --------- | --------------- |
+| P1        | 0   | 3   | 16  | 16        | 9         | 0               |
+| P2        | 2   | 6   | 7   | 5         | 1         | 0               |
+| P3        | 4   | 4   | 5   | 1         | 0         | 0               |
+| P4        | 6   | 5   | 11  | 6         | 2         | 2               |
+| **Total** |     |     |     | **28**    | **12**    |                 |
 
-Average WT = (0+7+0+9+0)/5 = **3.2 ms**. Average TAT = (3+13+4+14+2)/5 = **7.2 ms**.
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{28}{4}$
+
+$= 7 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{12}{4}$
+
+$= 3 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.3 Shortest Remaining Time (SRT / SRTF)
+
+> **For given processes, draw a Gantt Chart and calculate average turn around time and average waiting time for SRTF. [5 marks] (Model Question)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 3               |
+| P2      | 2                 | 6               |
+| P3      | 4                 | 4               |
+| P4      | 6                 | 5               |
+| P5      | 8                 | 2               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 26pt
+ }
+</style>
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P5  | P2  | P4  |
+              0     3     4     8     10    15    20
+```
+
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT | RT=StartTime-AT |
+| --------- | --- | --- | --- | --------- | --------- | --------------- |
+| P1        | 0   | 3   | 3   | 3         | 0         | 0               |
+| P2        | 2   | 6   | 15  | 13        | 7         | 1               |
+| P3        | 4   | 4   | 8   | 4         | 0         | 0               |
+| P4        | 6   | 5   | 20  | 14        | 9         | 9               |
+| P5        | 8   | 2   | 10  | 2         | 0         | 0               |
+| **Total** |     |     |     | **36**    | **16**    |                 |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{36}{5}$
+
+$= 7.2 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{16}{5}$
+
+$= 3.2 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ### 2.2.4 Round Robin (RR)
 
