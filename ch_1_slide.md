@@ -360,7 +360,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 # 1.5 Operating System Components
 
-**1. Kernel:** The core of the OS. It receives commands from the shell, processes them, coordinates system resources, interacts with hardware (CPU, RAM, disk), and returns results. Functions include process management, memory management, file system management, and security enforcement.
+**1. Kernel:** The innermost core of the OS that runs in privileged (kernel) space, giving it direct, unrestricted access to hardware. Unlike other OS components, it does not just coordinate; it controls the CPU, RAM, and devices at the lowest level. It exposes this power to programs through system calls. Core responsibilities include process scheduling, memory allocation, device driver management, and security/access control.
 
 **2. Shell:** Acts as a command interpreter. It is the interface between the user and the kernel. It receives commands from the user, translates them into a form the kernel can understand, and forwards the request for execution. In Windows, the command prompt (cmd) uses the Windows API (DLL functions), which internally invokes system calls.
 
@@ -487,7 +487,6 @@ A system call is how a user program requests a service from the OS kernel. It pr
 8. Library returns to the user program.
 9. Clean up the stack.
 
-
 ---
 
 # 1.7 System Calls, Shell Commands, Shell Programming
@@ -500,7 +499,6 @@ Common categories:
 
 1. **File/Directory Management:** `ls` (list), `cd` (change directory), `pwd` (print working directory), `mkdir`, `rm`, `cp`, `mv`
 2. **Text/Data Processing:** `cat` (display file), `grep` (search patterns), `sort`, `awk`
-
 
 ---
 
@@ -523,9 +521,9 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 
 **Types of shells:**
 
-| Shell | Full Name          | Key Characteristics                                                                    |
-| ----- | ------------------ | -------------------------------------------------------------------------------------- |
-| sh    | Bourne Shell       | Original Unix shell; compact, fast, portable; lacks interactive features               |
+| Shell | Full Name    | Key Characteristics                                                      |
+| ----- | ------------ | ------------------------------------------------------------------------ |
+| sh    | Bourne Shell | Original Unix shell; compact, fast, portable; lacks interactive features |
 
 ---
 
@@ -540,7 +538,6 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 | bash  | Bourne-Again Shell | Default on most Linux; superset of sh; adds command-line editing, job control, history |
 | csh   | C Shell            | Syntax similar to C language; introduced command history and aliases                   |
 
-
 ---
 
 # 1.7 System Calls, Shell Commands, Shell Programming
@@ -549,10 +546,10 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 
 **Types of shells:**
 
-| Shell | Full Name          | Key Characteristics                                                                    |
-| ----- | ------------------ | -------------------------------------------------------------------------------------- |
-| ksh   | Korn Shell         | Combines features of sh and csh; powerful scripting and interactive use                |
-| zsh   | Z Shell            | Highly customizable; advanced tab completion, plugins, themes; default on macOS        |
+| Shell | Full Name  | Key Characteristics                                                             |
+| ----- | ---------- | ------------------------------------------------------------------------------- |
+| ksh   | Korn Shell | Combines features of sh and csh; powerful scripting and interactive use         |
+| zsh   | Z Shell    | Highly customizable; advanced tab completion, plugins, themes; default on macOS |
 
 ---
 
@@ -615,10 +612,10 @@ A bootloader is a small program responsible for initiating the system startup pr
 
 MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Table) are two methods for storing partition information on a storage drive.
 
-| MBR                                                                                  | GPT                                                                     |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| Supports a maximum disk size of 2 TB                                                 | Supports disks up to 9.4 ZB (zettabytes)                                |
-| Allows only 4 primary partitions (extended/logical partitions are needed for more)   | Allows up to 128 partitions without requiring extended partitions       |
+| MBR                                                                                | GPT                                                               |
+| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Supports a maximum disk size of 2 TB                                               | Supports disks up to 9.4 ZB (zettabytes)                          |
+| Allows only 4 primary partitions (extended/logical partitions are needed for more) | Allows up to 128 partitions without requiring extended partitions |
 
 ---
 
@@ -717,5 +714,3 @@ MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Ta
 <br>
 
 Many modern UEFI motherboards include a CSM (Compatibility Support Module) that can emulate legacy BIOS mode, allowing them to boot from MBR-partitioned disks.
-
-

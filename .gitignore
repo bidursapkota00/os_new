@@ -3,3 +3,4 @@
 *.pptx
 venv/
 merged.md
+.DS_Store

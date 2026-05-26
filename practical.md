@@ -355,13 +355,6 @@ student
 $ date
 Tue May 13 10:10:00 NPT 2026
 
-$ cal
-      May 2026
-Su Mo Tu We Th Fr Sa
-                1  2
- 3  4  5  6  7  8  9
-...
-
 $ man ls                     # manual page for ls (press q to quit)
 
 $ find . -name "*.txt"       # find all .txt files
