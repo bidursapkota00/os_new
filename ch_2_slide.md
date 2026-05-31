@@ -716,71 +716,414 @@ $= 3.2 \text{ ms}$
 
 ### 2.2.4 Round Robin (RR)
 
-> **Schedule the following set of processes according to Round Robin algorithm (Time quantum: 4). Draw Gantt Chart and find average turnaround time and waiting time. [3 marks] (2082 Bhadra)**
-
-Round Robin is designed for **time-sharing systems**. A fixed **time quantum** defines the maximum execution duration for each process turn. The ready queue operates as a circular queue. When a process's quantum expires, a timer interrupt moves it to the rear of the ready queue, and the next process gets the CPU. It is inherently **preemptive** and ensures fair distribution of CPU time.
+Round Robin is designed for time-sharing systems. A fixed time quantum defines the maximum execution duration for each process turn. The ready queue operates as a circular queue. When a process's quantum expires, a timer interrupt moves it to the rear of the ready queue, and the next process gets the CPU. It is inherently preemptive and ensures fair distribution of CPU time.
 
 **Time Quantum Selection:** A small quantum increases context switching overhead. A large quantum reduces responsiveness and degrades toward FCFS behavior. The optimal quantum balances overhead with responsiveness (typically 10–100 ms).
 
-**Example (2082 Bhadra):** A(AT=0, BT=12), B(AT=2, BT=8), C(AT=5, BT=7), D(AT=10, BT=9). Time Quantum = 4.
+---
 
-Ready queue trace (newly arriving processes enter before the preempted process re-enters):
+# 2.2 Scheduling Algorithms
 
-- t=0: A arrives. Run A[0–4]. Rem=8. Queue after: B, A.
-- t=4: Run B[4–8]. Rem=4. C arrived at 5. Queue after: C, A, B.
-- t=8: Run C[8–12]. Rem=3. D arrived at 10. Queue after: A, B, D, C.
-- t=12: Run A[12–16]. Rem=4. Queue after: B, D, C, A.
-- t=16: Run B[16–20]. Rem=0. B finishes. Queue after: D, C, A.
-- t=20: Run D[20–24]. Rem=5. Queue after: C, A, D.
-- t=24: Run C[24–27]. Rem=0. C finishes. Queue after: A, D.
-- t=27: Run A[27–31]. Rem=0. A finishes. Queue after: D.
-- t=31: Run D[31–35]. Rem=1. Queue after: D.
-- t=35: Run D[35–36]. Rem=0. D finishes.
+### 2.2.4 Round Robin (RR)
 
+> **Schedule the following set of processes according to Round Robin algorithm (Time quantum: 4). Draw Gantt Chart and find average turnaround time and average waiting time. [3 marks] (2082 Bhadra)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| A       | 0                 | 12              |
+| B       | 2                 | 8               |
+| C       | 5                 | 7               |
+| D       | 10                | 9               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 22pt
+ }
+</style>
+
+Ready Queue:
+
+| A   | B   | A   | C   | B   | D   | A   | C   | D   | D   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
+```text
+Gantt Chart: | A  | B  | A  | C  | B  | D  | A  | C  | D  | D  |
+              0    4    8    12   16   20   24   28   31   35   36
 ```
-Gantt Chart: | A | B | C | A | B | D | C | A | D | D |
-              0   4   8  12  16  20  24  27  31  35  36
+
+| Process   | AT  | BT           | CT  | TAT=CT-AT | WT=TAT-BT | RT=StartTime-AT |
+| --------- | --- | ------------ | --- | --------- | --------- | --------------- |
+| A         | 0   | ~~12, 8~~, 4 | 28  | 28        | 16        | 0               |
+| B         | 2   | ~~8~~, 4     | 20  | 18        | 10        | 2               |
+| C         | 5   | ~~7~~, 3     | 31  | 26        | 19        | 7               |
+| D         | 10  | ~~9, 5~~, 1  | 36  | 26        | 17        | 10              |
+| **Total** |     |              |     | **98**    | **62**    |                 |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{98}{4}$
+
+$= 24.5 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{61}{4}$
+
+$= 15.5 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.4 Round Robin (RR)
+
+> **Schedule the following set of processes according to Round Robin algorithm (Time quantum: 2). Draw Gantt Chart and find average turnaround time and average waiting time.**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 5               |
+| P2      | 1                 | 3               |
+| P3      | 2                 | 1               |
+| P4      | 3                 | 2               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 22pt
+ }
+</style>
+
+Ready Queue:
+
+| P1  | P2  | P3  | P1  | P4  | P2  | P1  |
+| --- | --- | --- | --- | --- | --- | --- |
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P1  | P4  | P2  | P1  |
+              0     2     4     5     7     9     10    11
 ```
 
-| Process | AT  | BT  | CT  | TAT | WT  |
-| ------- | --- | --- | --- | --- | --- |
-| A       | 0   | 12  | 31  | 31  | 19  |
-| B       | 2   | 8   | 20  | 18  | 10  |
-| C       | 5   | 7   | 27  | 22  | 15  |
-| D       | 10  | 9   | 36  | 26  | 17  |
+| Process   | AT  | BT          | CT  | TAT=CT-AT | WT=TAT-BT | RT=StartTime-AT |
+| --------- | --- | ----------- | --- | --------- | --------- | --------------- |
+| P1        | 0   | ~~5, 3~~, 1 | 11  | 11        | 6         | 0               |
+| P2        | 1   | ~~3~~, 1    | 10  | 9         | 6         | 1               |
+| P3        | 2   | 1           | 5   | 3         | 2         | 2               |
+| P4        | 3   | 2           | 9   | 6         | 4         | 4               |
+| **Total** |     |             |     | **29**    | **18**    |                 |
 
-Average TAT = (31+18+22+26)/4 = **24.25 ms**. Average WT = (19+10+15+17)/4 = **15.25 ms**.
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{29}{4}$
+
+$= 7.25 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{18}{4}$
+
+$= 4.5 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ### 2.2.5 Highest Response Ratio Next (HRRN)
 
-> **Schedule the following set of processes according to HRRN algorithm. Draw Gantt Chart and find average turnaround time and waiting time. [3 marks] (2082 Bhadra)**
-
-HRRN is a **non-preemptive** scheduling algorithm designed to prevent starvation while maintaining efficiency. It combines waiting time and service time in a priority calculation:
+HRRN is a non-preemptive scheduling algorithm designed to prevent starvation while maintaining efficiency. It combines waiting time and service time in a priority calculation:
 
 **Response Ratio = (Waiting Time + Burst Time) / Burst Time**
 
 The process with the highest response ratio executes next. Short processes naturally have favorable ratios, and long-waiting processes accumulate higher priority over time, guaranteeing no process starves indefinitely. HRRN improves upon SJF by balancing efficiency with fairness.
 
-**Example (2082 Bhadra):** A(AT=0, BT=12), B(AT=2, BT=8), C(AT=5, BT=7), D(AT=10, BT=9).
+---
 
-- t=0: Only A available. Run A[0–12].
-- t=12: B(W=10, RR=(10+8)/8=2.25), C(W=7, RR=(7+7)/7=2.0), D(W=2, RR=(2+9)/9=1.22). Pick B.
-- t=20: C(W=15, RR=(15+7)/7=3.14), D(W=10, RR=(10+9)/9=2.11). Pick C.
-- t=27: Only D remains. Run D[27–36].
+# 2.2 Scheduling Algorithms
 
+### 2.2.5 Highest Response Ratio Next (HRRN)
+
+> **Schedule the following set of processes according to HRRN algorithm. Draw Gantt Chart and find average turnaround time and average waiting time. [3 marks] (2082 Bhadra)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 3               |
+| P2      | 2                 | 6               |
+| P3      | 4                 | 4               |
+| P4      | 6                 | 5               |
+| P5      | 8                 | 2               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step1:  
+At t = 0; only P1 has arrived. It runs to completion (t = 3)
+
+<br>
+
+Step2:  
+At t = 3; only P2 (arrived at t = 2) is in the queue. It runs to completion (t = 9)
+
+```text
+Gantt Chart: | P1  | P2  |
+              0     2     9
 ```
-Gantt Chart: | A            | B        | C       | D         |
-              0              12         20        27          36
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step3:  
+At t = 9; P3, P4 and P5 have arrived. We calculate their Response Ratios:  
+P3: RR = $\frac{WT + BT}{BT}$ = $\frac{(9 - 4) + 4}{4}$ = 2.25 (Winner)
+P4: RR = $\frac{WT + BT}{BT}$ = $\frac{(9 - 6) + 5}{5}$ = 1.6
+P5: RR = $\frac{WT + BT}{BT}$ = $\frac{(9 - 8) + 2}{2}$ = 1.5
+
+<br>
+
+P3 executes until t = 13
+
+```text
+Gantt Chart: | P1  | P2  | P3  |
+              0     3     9     13
 ```
 
-| Process | AT  | BT  | CT  | TAT | WT  |
-| ------- | --- | --- | --- | --- | --- |
-| A       | 0   | 12  | 12  | 12  | 0   |
-| B       | 2   | 8   | 20  | 18  | 10  |
-| C       | 5   | 7   | 27  | 22  | 15  |
-| D       | 10  | 9   | 36  | 26  | 17  |
+---
 
-Average TAT = (12+18+22+26)/4 = **19.5 ms**. Average WT = (0+10+15+17)/4 = **10.5 ms**.
+# 2.2 Scheduling Algorithms
+
+Step4:  
+At t = 13; P4 and P5 are in the queue. Recalculate their Response Ratios:
+P4: RR = $\frac{WT + BT}{BT}$ = $\frac{(13 - 6) + 5}{5}$ = 2.4
+P5: RR = $\frac{WT + BT}{BT}$ = $\frac{(13 - 8) + 2}{2}$ = 3.5 (Winner)
+
+<br>
+
+P5 executes until t = 15
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P5  |
+              0     3     9     13    15
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step5:  
+At t = 15; Only P4 remains. It runs to completion (t = 20)
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P5  | P4  |
+              0     3     9     13    15    20
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 24pt
+ }
+</style>
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P5  | P4  |
+              0     3     9     13    15    20
+```
+
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 3   | 3   | 3         | 0         |
+| P2        | 2   | 6   | 9   | 7         | 1         |
+| P3        | 4   | 4   | 13  | 9         | 5         |
+| P4        | 6   | 5   | 20  | 14        | 9         |
+| P5        | 8   | 2   | 15  | 7         | 5         |
+| **Total** |     |     |     | **40**    | **20**    |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{40}{5}$
+
+$= 8 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{20}{5}$
+
+$= 4 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.5 Highest Response Ratio Next (HRRN)
+
+> **Schedule the following set of processes according to HRRN algorithm. Draw Gantt Chart and find average turnaround time and average waiting time. [3 marks] (2082 Bhadra)**
+
+---
+
+# 2.2 Scheduling Algorithms
+
+| Process | Arrival Time (AT) | Burst Time (BT) |
+| ------- | ----------------- | --------------- |
+| P1      | 0                 | 12              |
+| P2      | 2                 | 8               |
+| P3      | 5                 | 7               |
+| P4      | 10                | 9               |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step1:  
+At t = 0; only P1 has arrived. It runs to completion (t = 12)
+
+<br>
+
+```text
+Gantt Chart: | P1  |
+              0     12
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step2:  
+At t = 12; P2, P3 and P4 have arrived. We calculate their Response Ratios:  
+P2: RR = $\frac{WT + BT}{BT}$ = $\frac{10 + 8}{8}$ = 2.25 (Winner)
+P3: RR = $\frac{WT + BT}{BT}$ = $\frac{7 + 7}{7}$ = 2
+P4: RR = $\frac{WT + BT}{BT}$ = $\frac{2 + 9}{9}$ = 1.22
+
+<br>
+
+P2 executes until t = 20
+
+```text
+Gantt Chart: | P1  | P2  |
+              0     12    20
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step2:  
+At t = 20; P4 and P5 are in the queue. Recalculate their Response Ratios:
+P4: RR = $\frac{WT + BT}{BT}$ = $\frac{15 + 7}{7}$ = 3.14 (Winner)
+P5: RR = $\frac{WT + BT}{BT}$ = $\frac{10 + 9}{9}$ = 2.11
+
+<br>
+
+P3 executes until t = 27
+
+```text
+Gantt Chart: | P1  | P2  | P3  |
+              0     12    20    27
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Step5:  
+At t = 15; Only P4 remains. It runs to completion (t = 36)
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P4  |
+              0     12    20    27    36
+```
+
+---
+
+# 2.2 Scheduling Algorithms
+
+<style scoped>
+ td, th {
+  font-size: 24pt
+ }
+</style>
+
+```text
+Gantt Chart: | P1  | P2  | P3  | P4  |
+              0     12    20    27    36
+```
+
+| Process   | AT  | BT  | CT  | TAT=CT-AT | WT=TAT-BT |
+| --------- | --- | --- | --- | --------- | --------- |
+| P1        | 0   | 12  | 12  | 12        | 0         |
+| P2        | 2   | 8   | 20  | 18        | 10        |
+| P3        | 5   | 7   | 27  | 22        | 15        |
+| P4        | 10  | 9   | 36  | 26        | 17        |
+| **Total** |     |     |     | **78**    | **42**    |
+
+---
+
+# 2.2 Scheduling Algorithms
+
+Average Turnaround Time (ATAT)
+
+$= \frac{\sum TAT}{\text{Number of processes}}$
+
+$= \frac{78}{4}$
+
+$= 19.5 \text{ ms}$
+
+Average Waiting Time (AWT)
+
+$= \frac{\sum WT}{\text{Number of processes}}$
+
+$= \frac{42}{4}$
+
+$= 10.5 \text{ ms}$
+
+---
+
+# 2.2 Scheduling Algorithms
 
 ### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
