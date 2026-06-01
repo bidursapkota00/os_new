@@ -1129,13 +1129,31 @@ $= 10.5 \text{ ms}$
 
 CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2007) until kernel 6.6 (2023), when it was replaced by the EEVDF scheduler. Designed by Ingo Molnár, CFS replaced the earlier O(1) scheduler.
 
-**Core Concept, Virtual Runtime (vruntime):** Instead of using fixed time slices, CFS tracks how much CPU time each process has consumed using a metric called `vruntime`. CFS aims to keep the vruntime of all runnable tasks as close to each other as possible. The process with the **smallest vruntime** (i.e., the one that has received the least CPU time relative to its weight) is always selected next.
+**Core Concept, Virtual Runtime (vruntime):** Instead of using fixed time slices, CFS tracks how much CPU time each process has consumed using a metric called `vruntime`. CFS aims to keep the vruntime of all runnable tasks as close to each other as possible. The process with the smallest vruntime (i.e., the one that has received the least CPU time relative to its weight) is always selected next.
 
-**Red-Black Tree:** CFS stores all runnable tasks in a **red-black tree** (a self-balancing binary search tree), ordered by vruntime. The task with the smallest vruntime is always at the leftmost node. Selecting the next task is O(log N), making CFS highly scalable.
+---
 
-**Weighted Fair Queuing:** CFS respects process priorities through **nice values** (ranging from −20 to +19). High-priority (lower nice value) tasks have their vruntime increase more slowly, allowing them to run longer. Low-priority (higher nice value) tasks have their vruntime increase faster, causing them to be preempted sooner.
+# 2.2 Scheduling Algorithms
+
+### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
+
+**Red-Black Tree:** CFS stores all runnable tasks in a red-black tree (a self-balancing binary search tree), ordered by vruntime. The task with the smallest vruntime is always at the leftmost node. Selecting the next task is O(log N), making CFS highly scalable.
+
+**Weighted Fair Queuing:** CFS respects process priorities through nice values (ranging from −20 to +19). High-priority (lower nice value) tasks have their vruntime increase more slowly, allowing them to run longer. Low-priority (higher nice value) tasks have their vruntime increase faster, causing them to be preempted sooner.
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
 **Operation:** When a task runs, its vruntime increases. Once its vruntime is no longer the smallest, the scheduler preempts it in favor of the new leftmost task. Tasks waking from sleep receive a vruntime close to the current minimum, ensuring they are not penalized for sleeping (sleeper fairness).
+
+---
+
+# 2.2 Scheduling Algorithms
+
+### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
 **Scheduling Goals by System Type:**
 
@@ -1143,29 +1161,56 @@ CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2
 - **Interactive Systems:** Minimize response time, ensure fairness, provide proportionality.
 - **Real-Time Systems:** Meet deadlines, guarantee predictability.
 
-## 2.3 Threads and Thread Scheduling
+---
+
+# 2.3 Threads and Thread Scheduling
 
 ### Threads
 
 > **What are the advantages of multithreading? [2 marks] (Model Question)**
 
-A thread is a **single sequence of execution within a process**. Multiple threads can exist within one process, sharing the same memory space. Each thread has its own **program counter, register set, and stack space**, but threads within a process share the **code section, data section**, and OS resources (open files, signals).
+A thread is a single sequence of execution within a process. Multiple threads can exist within one process, sharing the same memory space. Each thread has its own program counter, register set, and stack space, but threads within a process share the code section, data section, and OS resources (open files, signals).
+
+---
+
+# 2.3 Threads and Thread Scheduling
 
 **Advantages of Multithreading:**
 
 - **Responsiveness:** Blocking one thread does not stop other threads in the process. A user interface thread can remain responsive while a background thread performs computation.
 - **Resource Sharing:** Threads share code and data segments, requiring fewer resources than creating separate processes.
 - **Economy:** Thread creation and switching are faster and cheaper than process creation and switching due to shared memory space.
+
+---
+
+# 2.3 Threads and Thread Scheduling
+
+**Advantages of Multithreading:**
+
 - **Multiprocessor Utilization:** Different threads can execute on different processors simultaneously, achieving true parallelism.
 - **Scalability:** Server applications can handle multiple client requests using separate threads.
 
 **Process vs Thread:** Processes have independent memory spaces and require IPC for communication; threads share memory within a process. Creating a thread requires fewer resources than creating a process. Thread switching is faster than process switching. Both can execute concurrently and create children.
 
+---
+
+# 2.3 Threads and Thread Scheduling
+
 ### Implementation of Threads
 
 **User-Level Threads (ULT):** Thread management occurs entirely within the application using a thread library, without kernel involvement. The OS treats the process as single-threaded. Thread operations execute quickly without system call overhead. However, all threads share a single time quantum, the kernel schedules processes not individual threads (limiting parallelism), and a blocking system call from one thread blocks the entire process. ULTs can run on OSes that do not natively support threading.
 
+---
+
+# 2.3 Threads and Thread Scheduling
+
+### Implementation of Threads
+
 **Kernel-Level Threads (KLT):** The OS kernel directly manages and schedules individual threads. Each thread is visible to the kernel as a separate schedulable entity. Blocking one thread does not prevent other threads from executing. True parallel execution occurs on multiprocessor systems. However, thread creation and management require system calls (slower), and the kernel must maintain data structures for every thread, consuming more memory.
+
+---
+
+# 2.3 Threads and Thread Scheduling
 
 ### Multithreading Models
 
@@ -1173,7 +1218,17 @@ A thread is a **single sequence of execution within a process**. Multiple thread
 
 **One-to-One:** Each user thread maps directly to a separate kernel thread. Provides true parallelism on multiprocessors and independent thread execution. Blocking one thread does not affect others. Thread creation overhead is higher. Examples: Windows, Linux (NPTL).
 
+---
+
+# 2.3 Threads and Thread Scheduling
+
+### Multithreading Models
+
 **Many-to-Many:** Multiple user threads map to multiple kernel threads (equal or smaller number). Applications create as many user threads as needed, and the kernel schedules available kernel threads on processors. Blocking system calls do not necessarily block all threads. Provides flexibility balancing concurrency with resource usage.
+
+---
+
+# 2.3 Threads and Thread Scheduling
 
 ### Thread Scheduling
 
@@ -1181,12 +1236,22 @@ A thread is a **single sequence of execution within a process**. Multiple thread
 
 **Kernel-Level Thread Scheduling:** The OS kernel directly schedules individual threads. Each thread appears as a separate schedulable entity. Standard scheduling algorithms (FCFS, RR, priority) apply to kernel threads. Multiple threads from the same process can run simultaneously on different processors. Context switching requires kernel involvement but provides better multiprocessor parallelism.
 
+---
+
+# 2.3 Threads and Thread Scheduling
+
 ### Multiprocessor Scheduling
 
 **Symmetric Multiprocessing (SMP):** All processors have equal capability and access to system resources. Each processor can execute any process or thread. A global ready queue serves all processors equally.
 
 **Asymmetric Multiprocessing:** One master processor handles all scheduling decisions. Other slave processors only execute assigned tasks. Simpler but the master can become a bottleneck.
 
-**Processor Affinity:** The tendency of threads to execute on the same processor repeatedly. A warm cache on a processor contains data from previous thread execution; migrating a thread invalidates cached data. **Soft affinity** allows migration but prefers the same processor. **Hard affinity** prohibits migration entirely.
+---
 
-**Load Balancing:** Distributes work evenly across all processors. **Push migration** moves processes from overloaded to idle processors proactively. **Pull migration** occurs when an idle processor takes processes from a busy one. Load balancing conflicts with processor affinity, so a balance between distribution and cache performance is necessary.
+# 2.3 Threads and Thread Scheduling
+
+### Multiprocessor Scheduling
+
+**Processor Affinity:** The tendency of threads to execute on the same processor repeatedly. A warm cache on a processor contains data from previous thread execution; migrating a thread invalidates cached data. Soft affinity allows migration but prefers the same processor. Hard affinity prohibits migration entirely.
+
+**Load Balancing:** Distributes work evenly across all processors. Push migration moves processes from overloaded to idle processors proactively. Pull migration occurs when an idle processor takes processes from a busy one. Load balancing conflicts with processor affinity, so a balance between distribution and cache performance is necessary.
