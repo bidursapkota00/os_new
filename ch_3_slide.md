@@ -152,6 +152,10 @@ style: |
   tr {
     background: white !important;
   }
+
+  th img, td img {
+    max-height: 390pt;
+  }
 ---
 
 <!-- _class: title-slide -->
@@ -178,7 +182,7 @@ Concurrency refers to the ability of a system to handle multiple processes at th
 
 # 3.1 Principles of Concurrency, Race Condition, Critical Region
 
-**Execution models:** In a single-processor system, process execution is interleaved (pseudo-parallelism) and true parallelism is not achieved. In multiprocessor systems, processes can execute truly in parallel on different CPUs.
+In a single-processor system, process execution is interleaved (pseudo-parallelism) and true parallelism is not achieved. In multiprocessor systems, processes can execute truly in parallel on different CPUs.
 
 **Problems in concurrent processing:**  
 (1) Sharing of global resources, where uncontrolled access to shared variables leads to inconsistent results.  
@@ -208,6 +212,14 @@ IPC refers to mechanisms that allow processes to exchange data and information. 
 
 # 3.1 Principles of Concurrency, Race Condition, Critical Region
 
+| ![Shared Memory](images/ch_3/shared-memory.png) | ![Message Passing](images/ch_3/message-passing.png) |
+| ----------------------------------------------- | --------------------------------------------------- |
+| Shared Memory                                   | Message Passing                                     |
+
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
 **Buffering:** Messages reside in temporary queues. Zero capacity means the sender must wait for receiver (synchronous/blocking). Bounded capacity means the sender blocks when the queue is full, and the receiver blocks when empty. Unbounded capacity means the sender never blocks (asynchronous/non-blocking).
 
 ---
@@ -226,7 +238,38 @@ A race condition occurs when two or more processes access shared data simultaneo
 
 **Print Spooler Example:** Two shared variables exist: `out` (next file to print) and `in` (next free slot). Process A reads `in` as 7 and stores it locally. Before A can update `in`, a clock interrupt switches to process B, which also reads `in` as 7. B writes its filename into slot 7 and sets `in` to 8. When A resumes, it overwrites slot 7 with its own filename and also sets `in` to 8. The spooler appears consistent, but B's file will never be printed.
 
-**Counter Example:** If `counter = 5` and producer executes `counter++` while consumer concurrently executes `counter--`, the result could be 4, 5, or 6 instead of the correct value 5. This happens because each high-level statement translates to multiple machine instructions (load, modify, store) that can interleave.
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
+![Print Spooler](images/ch_3/print-spooler.png)
+
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
+**Counter Variable of Buffer Size Example:** If `counter = 5` and producer executes `counter++` while consumer concurrently executes `counter--`, the result could be 4, 5, or 6 instead of the correct value 5. This happens because each high-level statement translates to multiple machine instructions (load, modify, store) that can interleave.
+
+```text
+"counter++" implementation:"       "counter--" implementation:
+
+register₁ = counter                register₂ = counter
+register₁ = register₁ + 1          register₂ = register₂ - 1
+counter = register₁                counter = register₂
+```
+
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
+| Time | Process  | Action  | Instruction               | Local State       |
+| ---- | -------- | ------- | ------------------------- | ----------------- |
+| T₀   | producer | execute | register₁ = counter       | { register₁ = 5 } |
+| T₁   | producer | execute | register₁ = register₁ + 1 | { register₁ = 6 } |
+| T₂   | consumer | execute | register₂ = counter       | { register₂ = 5 } |
+| T₃   | consumer | execute | register₂ = register₂ - 1 | { register₂ = 4 } |
+| T₄   | producer | execute | counter = register₁       | { counter = 6 }   |
+| T₅   | consumer | execute | counter = register₂       | { counter = 4 }   |
 
 ---
 
@@ -252,7 +295,32 @@ A critical region is a section of code where shared resources (common variables,
 
 <br>
 
-**Structure of a process using critical sections:** Entry section (request permission) → Critical section (access shared resource) → Exit section (release) → Remainder section (other code).
+**Structure of a process using critical sections:**  
+Entry section (request permission)  
+Critical section (access shared resource)  
+Exit section (release)  
+Remainder section (other code)
+
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
+**Structure of a process using critical sections:**
+
+```c
+do {
+    entry section
+        critical section
+    exit section
+        remainder section
+} while(true)
+```
+
+---
+
+# 3.1 Principles of Concurrency, Race Condition, Critical Region
+
+![Mutual exclusion using critical regions](images/ch_3/exclusion-in-critical.png)
 
 ---
 
@@ -270,7 +338,69 @@ A critical region is a section of code where shared resources (common variables,
 
 **Lock Variables:** A shared variable (initially 0) is checked before entering the critical region. If 0, the process sets it to 1 and enters; if 1, it waits. This has the same flaw as the spooler problem. Two processes can read the lock as 0 before either sets it to 1, both entering their critical regions simultaneously.
 
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+```c
+do {
+    while(lock == 1); // do nothing
+    lock = 1; // enter critical section
+
+    // critical section
+
+    lock = 0; // exit critical section
+
+    // remainder section
+
+} while(true);
+```
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
 **Strict Alternation:** A `turn` variable tracks whose turn it is. Process 0 enters when `turn == 0`, process 1 enters when `turn == 1`. Each process sets `turn` to the other upon exit. This works but violates the progress requirement. If one process is much slower or in its non-critical region, it blocks the other process.
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+```c
+// process 0
+do {
+    // non critical section
+
+    while(turn != 0); // do nothing
+
+    // critical section
+
+    turn = 1; // exit critical section
+
+    // remainder non critical section
+
+} while(true);
+```
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+```c
+// process 1
+do {
+    // non critical section
+
+    while(turn != 1); // do nothing
+
+    // critical section
+
+    turn = 0; // exit critical section
+
+    // remainder non critical section
+
+} while(true);
+```
 
 ---
 
@@ -288,7 +418,78 @@ When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving
 
 # 3.2 Mutual Exclusion, Semaphores, and Mutex
 
+```c
+do {
+    flag[i] = true;
+    turn = j;
+    while(flag [j] && turn == j);
+
+    // critical section
+
+    flag[i] = false;
+
+    // remainder section
+
+} while(true);
+```
+
+Structure of Pi
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+```c
+do {
+    flag[j] = true;
+    turn = i;
+    while(flag [i] && turn == i);
+
+    critical section
+
+    flag[j] = false;
+
+    remainder section
+
+} while(true);
+```
+
+Structure of Pj
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
 **Test and Set Lock (TSL), Hardware-Based:** Uses a special atomic hardware instruction `TestAndSet()` that reads a lock variable and sets it to 1 in a single indivisible operation. A process calls `TestAndSet(&lock)`. If the old value was 0, the process enters the critical region; if 1, it loops (busy waits). Because the instruction is atomic, no interleaving can occur between the read and the set.
+
+```c
+boolean TestAndSet (boolean *target) {
+    boolean rv = *target;
+    *target = true;
+    return rv;
+}
+```
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+```c
+do {
+    while(TestAndSet(&lock)) ; // "Spin"
+
+    // critical section
+
+    lock = false; // Release lock
+
+    // remainder section
+
+} while(true);
+```
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
 
 **Busy Waiting (Spin-Locking):** All the above solutions involve busy waiting, where a process continuously tests a condition in a loop, wasting CPU time. Alternatively, a process can block itself and go to a waiting queue until it is woken up.
 
@@ -298,10 +499,10 @@ When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving
 
 ### Semaphores
 
-A semaphore is a variable used to solve the critical section problem and achieve process synchronization. It can only be accessed using two **atomic** operations:
+A semaphore is a variable used to solve the critical section problem and achieve process synchronization. It can only be accessed using two atomic operations:
 
-- **wait(S)** (also called P or down): If `S > 0`, decrement `S` by 1 and proceed. If `S == 0`, the process waits (blocks) until `S` becomes greater than 0.
-- **signal(S)** (also called V or up): Increment `S` by 1. If any processes are waiting, one is woken up.
+- **wait(S)** (also called P(to wait) or down): If `S > 0`, decrement `S` by 1 and proceed. If `S == 0`, the process waits (blocks) until `S` becomes greater than 0. wait operation is called when a process wants access to a resource.
+- **signal(S)** (also called V(to increment) or up): Increment `S` by 1. If any processes are waiting, one is woken up. signal operation is called when a process is done using a resource.
 
 ---
 
@@ -312,6 +513,23 @@ A semaphore is a variable used to solve the critical section problem and achieve
 **Binary Semaphore (Mutex):** Takes values 0 or 1 only. Used for mutual exclusion. Initialize to 1. When process P1 enters its critical section, it calls `wait(s)` and `s` becomes 0. If P2 tries to enter, it calls `wait(s)` and blocks since `s == 0`. When P1 exits and calls `signal(s)`, `s` becomes 1, unblocking P2.
 
 **Counting Semaphore:** Takes any non-negative integer value. Used to control access to resources with multiple instances. The initial value represents the number of available resources.
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+### Semaphore Operations
+
+```c
+void P() {
+    while (S <= 0) ;
+    S--;
+}
+
+void V() {
+    S++;
+}
+```
 
 ---
 
@@ -348,9 +566,24 @@ A monitor is a high-level synchronization construct that provides mutual exclusi
 
 ### Monitors
 
-When a process signals another inside a monitor, there are two approaches:  
-(1) **Signal and Wait (Hoare):** the signaler blocks immediately and the awakened process takes over;  
-(2) **Signal and Continue (Mesa):** the signaler continues running and the awakened process competes for the monitor lock later (requires re-checking the condition in a `while` loop).
+```c
+// Syntax of a Monitor
+monitor monitor_name
+{
+    // shared variable declarations
+    procedure P1(...) { ... }
+    procedure P2(...) { ... }
+    ...
+    procedure Pn(...) { ... }
+    initialization code(...) { ... }
+}
+```
+
+---
+
+# 3.3 Message Passing and Monitors
+
+![Monitor](images/ch_3/monitor.png)
 
 ---
 
