@@ -25,7 +25,7 @@ style: |
     background-color: rgb(25, 107, 36);
     color: white;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 35pt;
+    font-size: 30pt;
     margin: 0;
     padding: 8pt;
     text-align: center;
@@ -262,9 +262,19 @@ A critical region is a section of code where shared resources (common variables,
 
 **Disabling Interrupts:** On a single processor, a process disables interrupts upon entering its critical region and re-enables them before leaving. With interrupts disabled, no clock interrupt occurs and the CPU cannot switch to another process. However, a buggy process could disable interrupts and never re-enable them, crashing the system. On multiprocessor systems, disabling interrupts on one CPU does not affect others, and they can still access shared memory.
 
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+### Approaches to Mutual Exclusion
+
 **Lock Variables:** A shared variable (initially 0) is checked before entering the critical region. If 0, the process sets it to 1 and enters; if 1, it waits. This has the same flaw as the spooler problem. Two processes can read the lock as 0 before either sets it to 1, both entering their critical regions simultaneously.
 
 **Strict Alternation:** A `turn` variable tracks whose turn it is. Process 0 enters when `turn == 0`, process 1 enters when `turn == 1`. Each process sets `turn` to the other upon exit. This works but violates the progress requirement. If one process is much slower or in its non-critical region, it blocks the other process.
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
 
 **Peterson's Solution:**
 
@@ -274,9 +284,17 @@ A classic software-based solution for two processes that satisfies mutual exclus
 
 When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving priority to the other process). It then waits while `flag[j] == true && turn == j`. This ensures that if both processes try to enter simultaneously, only one succeeds, which is the one whose turn it is. When a process exits, it sets `flag[i] = false`.
 
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
 **Test and Set Lock (TSL), Hardware-Based:** Uses a special atomic hardware instruction `TestAndSet()` that reads a lock variable and sets it to 1 in a single indivisible operation. A process calls `TestAndSet(&lock)`. If the old value was 0, the process enters the critical region; if 1, it loops (busy waits). Because the instruction is atomic, no interleaving can occur between the read and the set.
 
 **Busy Waiting (Spin-Locking):** All the above solutions involve busy waiting, where a process continuously tests a condition in a loop, wasting CPU time. Alternatively, a process can block itself and go to a waiting queue until it is woken up.
+
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
 
 ### Semaphores
 
@@ -285,42 +303,82 @@ A semaphore is a variable used to solve the critical section problem and achieve
 - **wait(S)** (also called P or down): If `S > 0`, decrement `S` by 1 and proceed. If `S == 0`, the process waits (blocks) until `S` becomes greater than 0.
 - **signal(S)** (also called V or up): Increment `S` by 1. If any processes are waiting, one is woken up.
 
+---
+
+# 3.2 Mutual Exclusion, Semaphores, and Mutex
+
+### Semaphores
+
 **Binary Semaphore (Mutex):** Takes values 0 or 1 only. Used for mutual exclusion. Initialize to 1. When process P1 enters its critical section, it calls `wait(s)` and `s` becomes 0. If P2 tries to enter, it calls `wait(s)` and blocks since `s == 0`. When P1 exits and calls `signal(s)`, `s` becomes 1, unblocking P2.
 
 **Counting Semaphore:** Takes any non-negative integer value. Used to control access to resources with multiple instances. The initial value represents the number of available resources.
 
-## 3.3 Message Passing and Monitors
+---
+
+# 3.3 Message Passing and Monitors
 
 ### Message Passing
 
 (Covered under IPC in Section 3.1.) Message passing allows processes to communicate without shared memory. Two primitives are used: `send(destination, message)` and `receive(sender, message)`. The OS manages message transmission. Communication links can be direct (naming the process) or indirect (using mailboxes/ports). Message passing is also a solution for race conditions because no shared memory is involved, so no conflict arises.
 
+---
+
+# 3.3 Message Passing and Monitors
+
 ### Monitors
 
 A monitor is a high-level synchronization construct that provides mutual exclusion automatically. It encapsulates shared data, the procedures that operate on that data, and synchronization code into a single module.
 
-**Rules:** A procedure defined within a monitor can access only variables declared locally within the monitor and its formal parameters. Local variables of a monitor can be accessed only by its local procedures. The monitor construct ensures that **only one process at a time can be active within the monitor**. If another process calls a monitor procedure while one is already active, it blocks and waits in an entry queue.
+**Rules:** A procedure defined within a monitor can access only variables declared locally within the monitor and its formal parameters. Local variables of a monitor can be accessed only by its local procedures. The monitor construct ensures that only one process at a time can be active within the monitor. If another process calls a monitor procedure while one is already active, it blocks and waits in an entry queue.
+
+---
+
+# 3.3 Message Passing and Monitors
+
+### Monitors
 
 **Condition Variables:** Declared as `condition x, y;`. They support two operations:
 
 - **x.wait():** The calling process is suspended and placed in a waiting queue for condition `x`. The monitor lock is released, allowing another process to enter.
 - **x.signal():** Resumes exactly one suspended process waiting on condition `x`. If no process is waiting, the signal has no effect (no history is kept).
 
-**Signaling Disciplines:** When a process signals another inside a monitor, there are two approaches: (1) **Signal and Wait (Hoare):** the signaler blocks immediately and the awakened process takes over; (2) **Signal and Continue (Mesa):** the signaler continues running and the awakened process competes for the monitor lock later (requires re-checking the condition in a `while` loop).
+---
 
-## 3.4 Classical Problems of Synchronization
+# 3.3 Message Passing and Monitors
+
+### Monitors
+
+When a process signals another inside a monitor, there are two approaches:  
+(1) **Signal and Wait (Hoare):** the signaler blocks immediately and the awakened process takes over;  
+(2) **Signal and Continue (Mesa):** the signaler continues running and the awakened process competes for the monitor lock later (requires re-checking the condition in a `while` loop).
+
+---
+
+# 3.4 Classical Problems of Synchronization
 
 ### Producer-Consumer Problem (Bounded Buffer)
 
 > **Explain how the producer-consumer problem can be solved using semaphore with its respective pseudo-code implementations. [5 marks] (2082 Bhadra)**
 
-A buffer of `n` slots exists. The **Producer** inserts data into empty slots. The **Consumer** removes data from filled slots. Constraints: the producer must not insert when the buffer is full, the consumer must not remove when the buffer is empty, and they must not access the buffer simultaneously.
+A buffer of `n` slots exists. The Producer inserts data into empty slots. The Consumer removes data from filled slots. Constraints: the producer must not insert when the buffer is full, the consumer must not remove when the buffer is empty, and they must not access the buffer simultaneously.
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Producer-Consumer Problem (Bounded Buffer)
 
 **Solution using three semaphores:**
 
-- `mutex`: binary semaphore initialized to **1** (mutual exclusion for buffer access).
-- `empty`: counting semaphore initialized to **n** (tracks empty slots).
-- `full`: counting semaphore initialized to **0** (tracks filled slots).
+- `mutex`: binary semaphore initialized to 1 (mutual exclusion for buffer access).
+- `empty`: counting semaphore initialized to n (tracks empty slots).
+- `full`: counting semaphore initialized to 0 (tracks filled slots).
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Producer-Consumer Problem (Bounded Buffer)
 
 ```
 Producer:                          Consumer:
@@ -334,19 +392,41 @@ while (true) {                     while (true) {
 }                                  }
 ```
 
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Producer-Consumer Problem (Bounded Buffer)
+
 The producer waits if no empty slots (`wait(empty)`), acquires the lock (`wait(mutex)`), inserts the item, releases the lock (`signal(mutex)`), and signals that a full slot is available (`signal(full)`). The consumer does the symmetric operation.
+
+---
+
+# 3.4 Classical Problems of Synchronization
 
 ### Readers-Writers Problem
 
 > **Explain solution of Reader-Writer problem using semaphore with its respective pseudo-code implementations. [5 marks] (Model Question)**
 
-A database is shared among concurrent processes. **Readers** only read data, and multiple readers can read simultaneously without adverse effects. **Writers** update data, and a writer must have exclusive access (no other reader or writer may access the database simultaneously).
+A database is shared among concurrent processes. Readers only read data, and multiple readers can read simultaneously without adverse effects. Writers update data, and a writer must have exclusive access (no other reader or writer may access the database simultaneously).
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Readers-Writers Problem
 
 **Solution using two semaphores and an integer variable:**
 
 - `mutex`: semaphore initialized to **1** (protects `readcount`).
 - `wrt`: semaphore initialized to **1** (provides exclusive access for writers, shared between readers and writers).
 - `readcount`: integer initialized to **0** (tracks current number of readers).
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Readers-Writers Problem
 
 ```
 Writer:                            Reader:
@@ -365,7 +445,17 @@ while (true) {                     while (true) {
                                    }
 ```
 
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Readers-Writers Problem
+
 The first reader to arrive locks out writers by calling `wait(wrt)`. Subsequent readers increment `readcount` without blocking on `wrt`. The last reader to leave (when `readcount` becomes 0) calls `signal(wrt)`, allowing writers to proceed. Writers call `wait(wrt)` for exclusive access.
+
+---
+
+# 3.4 Classical Problems of Synchronization
 
 ### Dining Philosophers Problem
 
@@ -375,7 +465,19 @@ Five philosophers sit around a table, each alternating between thinking and eati
 
 **Semaphore-Based Solution:** Each fork is represented by a semaphore initialized to 1. A philosopher calls `wait(fork[i])` and `wait(fork[(i+1)%5])` to pick up forks, and `signal()` on both to put them down.
 
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Dining Philosophers Problem
+
 **Deadlock condition:** If all five philosophers become hungry simultaneously and each grabs their right fork first, all fork semaphores become 0. When each philosopher then tries to grab the left fork, all are delayed forever in a circular wait (deadlock).
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Dining Philosophers Problem
 
 **Remedies to avoid deadlock:**
 
@@ -383,9 +485,17 @@ Five philosophers sit around a table, each alternating between thinking and eati
 - Allow a philosopher to pick up forks only if both are available (pick up in a critical section).
 - Use an asymmetric solution: odd philosophers pick up left fork first, even philosophers pick up right fork first.
 
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Dining Philosophers Problem
+
 **Monitor-Based Solution (Deadlock-Free):** Three states are defined: `thinking`, `hungry`, `eating`. A philosopher can set `state[i] = eating` only if neither neighbor is eating. A condition variable `self[i]` allows philosopher `i` to delay when hungry but unable to obtain both forks.
 
-## 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Deadlock
 
