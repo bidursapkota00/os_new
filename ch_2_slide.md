@@ -1127,7 +1127,7 @@ $= 10.5 \text{ ms}$
 
 ### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
-CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2007) until kernel 6.6 (2023), when it was replaced by the EEVDF scheduler. Designed by Ingo Molnár, CFS replaced the earlier O(1) scheduler.
+CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2007) until kernel 6.6 (2023), when it was replaced by the EEVDF scheduler. Designed by Ingo Molnár, CFS replaced the earlier Linux O(1) scheduler(one querue per priority level).
 
 **Core Concept, Virtual Runtime (vruntime):** Instead of using fixed time slices, CFS tracks how much CPU time each process has consumed using a metric called `vruntime`. CFS aims to keep the vruntime of all runnable tasks as close to each other as possible. The process with the smallest vruntime (i.e., the one that has received the least CPU time relative to its weight) is always selected next.
 
@@ -1148,18 +1148,6 @@ CFS was the default process scheduler in the Linux kernel from version 2.6.23 (2
 ### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
 
 **Operation:** When a task runs, its vruntime increases. Once its vruntime is no longer the smallest, the scheduler preempts it in favor of the new leftmost task. Tasks waking from sleep receive a vruntime close to the current minimum, ensuring they are not penalized for sleeping (sleeper fairness).
-
----
-
-# 2.2 Scheduling Algorithms
-
-### 2.2.6 Completely Fair Scheduler (CFS), Used in Linux
-
-**Scheduling Goals by System Type:**
-
-- **Batch Systems:** Maximize throughput, minimize turnaround time, keep CPU busy.
-- **Interactive Systems:** Minimize response time, ensure fairness, provide proportionality.
-- **Real-Time Systems:** Meet deadlines, guarantee predictability.
 
 ---
 
@@ -1224,7 +1212,27 @@ A thread is a single sequence of execution within a process. Multiple threads ca
 
 ### Multithreading Models
 
+| ![Many to One](images/ch_3/many-to-one.png) | ![One to One](images/ch_3/one-to-one.png) |
+| ------------------------------------------- | ----------------------------------------- |
+| Many to One                                 | One to One                                |
+
+---
+
+# 2.3 Threads and Thread Scheduling
+
+### Multithreading Models
+
 **Many-to-Many:** Multiple user threads map to multiple kernel threads (equal or smaller number). Applications create as many user threads as needed, and the kernel schedules available kernel threads on processors. Blocking system calls do not necessarily block all threads. Provides flexibility balancing concurrency with resource usage.
+
+---
+
+# 2.3 Threads and Thread Scheduling
+
+### Multithreading Models
+
+![Many to Many](images/ch_3/many-to-many.png)
+
+Fig: Many to Many Model
 
 ---
 
