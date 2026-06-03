@@ -1212,7 +1212,7 @@ A thread is a single sequence of execution within a process. Multiple threads ca
 
 ### Multithreading Models
 
-| ![Many to One](images/ch_3/many-to-one.png) | ![One to One](images/ch_3/one-to-one.png) |
+| ![Many to One](images/ch_2/many-to-one.png) | ![One to One](images/ch_2/one-to-one.png) |
 | ------------------------------------------- | ----------------------------------------- |
 | Many to One                                 | One to One                                |
 
@@ -1230,7 +1230,7 @@ A thread is a single sequence of execution within a process. Multiple threads ca
 
 ### Multithreading Models
 
-![Many to Many](images/ch_3/many-to-many.png)
+![Many to Many](images/ch_2/many-to-many.png)
 
 Fig: Many to Many Model
 

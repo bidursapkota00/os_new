@@ -611,18 +611,46 @@ A buffer of `n` slots exists. The Producer inserts data into empty slots. The Co
 
 # 3.4 Classical Problems of Synchronization
 
-### Producer-Consumer Problem (Bounded Buffer)
+```c
+// Producer
+do {
+    // 1. Wait until there is at least one empty slot
+    wait(empty);
 
+    // 2. Lock the buffer (Mutual Exclusion)
+    wait(mutex);
+
+    /* Critical Section: Add data to the buffer */
+
+    // 3. Unlock the buffer
+    signal(mutex);
+
+    // 4. Increment the count of full slots
+    signal(full);
+} while(true);
 ```
-Producer:                          Consumer:
-while (true) {                     while (true) {
-    produce_item();                    wait(full);
-    wait(empty);                       wait(mutex);
-    wait(mutex);                       remove_item();
-    insert_item();                     signal(mutex);
-    signal(mutex);                     signal(empty);
-    signal(full);                      consume_item();
-}                                  }
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+```c
+// Consumer
+do {
+    // 1. Wait until there is at least one full slot
+    wait(full);
+
+    // 2. Lock the buffer (Mutual Exclusion)
+    wait(mutex);
+
+    /* Critical Section: Remove data from the buffer */
+
+    // 3. Unlock the buffer
+    signal(mutex);
+
+    // 4. Increment the count of empty slots
+    signal(empty);
+} while(true);
 ```
 
 ---
