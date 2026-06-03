@@ -422,7 +422,7 @@ When process `i` wants to enter, it sets `flag[i] = true` and `turn = j` (giving
 do {
     flag[i] = true;
     turn = j;
-    while(flag [j] && turn == j);
+    while(flag[j] && turn == j);
 
     // critical section
 
@@ -443,13 +443,13 @@ Structure of Pi
 do {
     flag[j] = true;
     turn = i;
-    while(flag [i] && turn == i);
+    while(flag[i] && turn == i);
 
-    critical section
+    // critical section
 
     flag[j] = false;
 
-    remainder section
+    // remainder section
 
 } while(true);
 ```
@@ -463,8 +463,8 @@ Structure of Pj
 **Test and Set Lock (TSL), Hardware-Based:** Uses a special atomic hardware instruction `TestAndSet()` that reads a lock variable and sets it to 1 in a single indivisible operation. A process calls `TestAndSet(&lock)`. If the old value was 0, the process enters the critical region; if 1, it loops (busy waits). Because the instruction is atomic, no interleaving can occur between the read and the set.
 
 ```c
-boolean TestAndSet (boolean *target) {
-    boolean rv = *target;
+bool TestAndSet (bool *target) {
+    bool rv = *target;
     *target = true;
     return rv;
 }
@@ -476,7 +476,7 @@ boolean TestAndSet (boolean *target) {
 
 ```c
 do {
-    while(TestAndSet(&lock)) ; // "Spin"
+    while(TestAndSet(&lock)); // "Spin"
 
     // critical section
 
@@ -522,7 +522,7 @@ A semaphore is a variable used to solve the critical section problem and achieve
 
 ```c
 void P() {
-    while (S <= 0) ;
+    while(S <= 0);
     S--;
 }
 
