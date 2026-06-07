@@ -689,21 +689,44 @@ A database is shared among concurrent processes. Readers only read data, and mul
 
 ### Readers-Writers Problem
 
+```c
+// Writer
+do {
+    // writer requests for critical section
+    wait(wrt);
+
+    /* performs the write */
+
+    // leaves the critical section
+    signal(wrt);
+} while(true);
 ```
-Writer:                            Reader:
-while (true) {                     while (true) {
-    wait(wrt);                         wait(mutex);
-    write_database();                  readcount++;
-    signal(wrt);                       if (readcount == 1)
-}                                          wait(wrt);
-                                       signal(mutex);
-                                       read_database();
-                                       wait(mutex);
-                                       readcount--;
-                                       if (readcount == 0)
-                                           signal(wrt);
-                                       signal(mutex);
-                                   }
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+```c
+// Reader
+do {
+    wait(mutex);
+    readcnt++;   // The number of readers has now increased by 1
+
+    if(readcnt == 1)
+        wait(wrt);   // ensures no writer can enter if there is even one reader
+    signal(mutex);   // other readers can enter while this current reader is
+                     // inside the critical section
+
+    /* current reader performs reading here */
+
+    wait(mutex);
+    readcnt--;   // a reader wants to leave
+
+    if (readcnt == 0)   // no reader is left in the critical section
+        signal(wrt);   // writers can enter
+
+    signal(mutex);   // reader leaves
+} while(true);
 ```
 
 ---
@@ -732,6 +755,40 @@ Five philosophers sit around a table, each alternating between thinking and eati
 
 ### Dining Philosophers Problem
 
+![Dining Philosophers Problem](images/ch_3/dining-philisophers.png)
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+```c
+// The structure of philosopher i
+
+do {
+
+    wait(chopstick[i]);
+
+    wait(chopstick[(i + 1) % 5]);
+
+    ...
+
+    // eat
+
+    signal(chopstick[i]);
+
+    signal(chopstick[(i + 1) % 5]);
+
+    // think
+
+} while(true);
+```
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+### Dining Philosophers Problem
+
 **Deadlock condition:** If all five philosophers become hungry simultaneously and each grabs their right fork first, all fork semaphores become 0. When each philosopher then tries to grab the left fork, all are delayed forever in a circular wait (deadlock).
 
 ---
@@ -753,6 +810,58 @@ Five philosophers sit around a table, each alternating between thinking and eati
 ### Dining Philosophers Problem
 
 **Monitor-Based Solution (Deadlock-Free):** Three states are defined: `thinking`, `hungry`, `eating`. A philosopher can set `state[i] = eating` only if neither neighbor is eating. A condition variable `self[i]` allows philosopher `i` to delay when hungry but unable to obtain both forks.
+
+---
+
+# 3.4 Classical Problems of Synchronization
+
+<style scoped>
+  section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: start;
+  }
+  section h1 {
+        grid-column: 1 / 3;
+
+  }
+</style>
+
+```c
+monitor dp {
+    enum { THINKING, HUNGRY, EATING } state[5];
+    condition self[5];
+
+    void pickup(int i) {
+        state[i] = HUNGRY;
+        test(i);
+        if (state[i] != EATING)
+            self[i].wait();
+    }
+
+    void putdown(int i) {
+        state[i] = THINKING;
+        test((i + 4) % 5);
+        test((i + 1) % 5);
+    }
+```
+
+```c
+    void test(int i) {
+        if ((state[(i + 4) % 5] != EATING) &&
+            (state[i] == HUNGRY) &&
+            (state[(i + 1) % 5] != EATING)) {
+            state[i] = EATING;
+            self[i].signal();
+        }
+    }
+
+    initialization_code() {
+        for (int i = 0; i < 5; i++)
+            state[i] = THINKING;
+    }
+}
+```
 
 ---
 
