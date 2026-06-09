@@ -871,6 +871,12 @@ monitor dp {
 
 A deadlock is a situation where a set of processes is permanently blocked because each process is holding a resource and waiting for a resource held by another process in the set. It represents a circular wait condition where no process can proceed.
 
+![Deadlock](images/ch_3/deadlock.png)
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Starvation vs Deadlock:** Starvation occurs when a process waits indefinitely because other processes are continuously given preference. The process could potentially run, but the scheduler never selects it. A starved process might eventually proceed (e.g., through aging), while a deadlocked process will never proceed without external intervention.
 
 ---
@@ -965,48 +971,136 @@ Named after a banker who allocates capital ensuring all customers can complete t
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
-**Safety Algorithm:**
-
-1. Let `Work = Available` and `Finish[i] = false` for all processes.
-2. Find a process Pᵢ such that `Finish[i] == false` and `Need[i] ≤ Work`.
-3. If found: `Work = Work + Allocation[i]`, set `Finish[i] = true`, go to step 2.
-4. If all `Finish[i] == true`, the system is in a safe state.
+Consider a system with 3 concurrent processes (P0, P1, P2) and 3 resources (R0, R1, R2). The number of resources of each resource type in the system are 5, 5, 5 respectively. Allocation table and Current Need table are given below:
+Is the system safe? If so, show the safe execution of process.
 
 ---
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
-**Resource-Request Algorithm (when process Pᵢ requests resources):**
+<style scoped>
+  * {
+    font-size: 23pt;
+    font-weight: normal;
+  }
+</style>
 
-1. If `Request[i] > Need[i]`, raise an error (exceeded maximum claim).
-2. If `Request[i] > Available`, Pᵢ must wait.
-3. Otherwise, tentatively allocate: `Available -= Request[i]`, `Allocation[i] += Request[i]`, `Need[i] -= Request[i]`.
-4. Run the safety algorithm. If safe, grant the request permanently. If unsafe, roll back and make Pᵢ wait.
+|     | R0  | R1  | R2  |
+| --- | --- | --- | --- |
+| P0  | 1   | 2   | 1   |
+| P1  | 2   | 0   | 1   |
+| P2  | 2   | 2   | 1   |
+
+Allocation Table
+
+<br>
+
+|     | R0  | R1  | R2  |
+| --- | --- | --- | --- |
+| P0  | 1   | 0   | 3   |
+| P1  | 0   | 1   | 2   |
+| P2  | 1   | 2   | 0   |
+
+Current Need
 
 ---
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
-**Example (2082 Bhadra):** 5 processes (P₀–P₄), 4 resource types with total instances (6, 4, 4, 2).
+![Bankers Numerical Solution 1](images/ch_3/bankers-1.png)
 
-| Process | Allocation (R₀ R₁ R₂ R₃) | Max (R₀ R₁ R₂ R₃) | Need (R₀ R₁ R₂ R₃) |
-| ------- | ------------------------ | ----------------- | ------------------ |
-| P₀      | 2 0 1 1                  | 3 2 1 1           | 1 2 0 0            |
-| P₁      | 1 1 0 0                  | 1 2 0 2           | 0 1 0 2            |
-| P₂      | 1 1 0 0                  | 1 1 2 0           | 0 0 2 0            |
-| P₃      | 1 0 1 0                  | 3 2 1 0           | 2 2 0 0            |
-| P₄      | 0 1 0 1                  | 2 1 0 1           | 2 0 0 0            |
+---
 
-Total Allocated = (5, 3, 2, 2). Available = (6, 4, 4, 2) − (5, 3, 2, 2) = **(1, 1, 2, 0)**.
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
-- P₂: Need(0,0,2,0) ≤ Available(1,1,2,0) ✓ → Work = (1,1,2,0) + (1,1,0,0) = (2,2,2,0)
-- P₀: Need(1,2,0,0) ≤ (2,2,2,0) ✓ → Work = (2,2,2,0) + (2,0,1,1) = (4,2,3,1)
-- P₁: Need(0,1,0,2) ≤ (4,2,3,1)? R₃: 2 > 1 ✗. Skip.
-- P₃: Need(2,2,0,0) ≤ (4,2,3,1) ✓ → Work = (4,2,3,1) + (1,0,1,0) = (5,2,4,1)
-- P₄: Need(2,0,0,0) ≤ (5,2,4,1) ✓ → Work = (5,2,4,1) + (0,1,0,1) = (5,3,4,2)
-- P₁: Need(0,1,0,2) ≤ (5,3,4,2) ✓ → Work = (5,3,4,2) + (1,1,0,0) = (6,4,4,2)
+<style scoped>
+  th, td {
+    font-size: 21pt;
+    font-weight: normal;
+  }
+</style>
 
-Safe sequence: **⟨P₂, P₀, P₃, P₄, P₁⟩**. The system is in a safe state.
+Consider a system with 5 concurrent processes (P0, P1, P2, P3, P4) and 4 resources (R0, R1, R2, R3). The number of resources of each resource type in the system are 6, 4, 4, 2 respectively. Allocation table and maximum claim table are given below:
+Is the system safe? If so, show the safe execution of process.
+
+|     | R0  | R1  | R2  | R3  |
+| --- | --- | --- | --- | --- |
+| P0  | 2   | 0   | 1   | 1   |
+| P1  | 1   | 1   | 0   | 0   |
+| P2  | 1   | 1   | 0   | 0   |
+| P3  | 1   | 0   | 1   | 0   |
+| P4  | 0   | 1   | 0   | 1   |
+
+Allocation Table
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+<style scoped>
+  th, td {
+    font-size: 23pt;
+    font-weight: normal;
+  }
+</style>
+
+|     | R0  | R1  | R2  | R3  |
+| --- | --- | --- | --- | --- |
+| P0  | 3   | 2   | 1   | 1   |
+| P1  | 1   | 2   | 0   | 2   |
+| P2  | 1   | 1   | 2   | 0   |
+| P3  | 3   | 2   | 1   | 0   |
+| P4  | 2   | 1   | 0   | 1   |
+
+Maximum Claim
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+![Bankers Numerical Solution 2](images/ch_3/bankers-2.png)
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+Consider a system with 3 concurrent processes (P0, P1, P2) and 3 resources (R0, R1, R2). The number of resources of each resource type in the system are 5, 5, 5 respectively. Allocation table and Current Need table are given below:
+Is the system safe? If so, show the safe execution of process.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+<style scoped>
+  * {
+    font-size: 23pt;
+    font-weight: normal;
+  }
+</style>
+
+|     | R0  | R1  | R2  |
+| --- | --- | --- | --- |
+| P0  | 1   | 2   | 2   |
+| P1  | 2   | 0   | 1   |
+| P2  | 2   | 2   | 1   |
+
+Allocation Table
+
+<br>
+
+|     | R0  | R1  | R2  |
+| --- | --- | --- | --- |
+| P0  | 1   | 0   | 2   |
+| P1  | 0   | 1   | 2   |
+| P2  | 1   | 2   | 0   |
+
+Current Need
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+![Bankers Numerical Solution 3](images/ch_3/bankers-3.png)
 
 ---
 
