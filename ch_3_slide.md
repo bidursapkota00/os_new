@@ -873,7 +873,15 @@ A deadlock is a situation where a set of processes is permanently blocked becaus
 
 **Starvation vs Deadlock:** Starvation occurs when a process waits indefinitely because other processes are continuously given preference. The process could potentially run, but the scheduler never selects it. A starved process might eventually proceed (e.g., through aging), while a deadlocked process will never proceed without external intervention.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Livelock:** Processes are not blocked but still cannot make progress. They continuously change state in response to each other, consuming CPU but performing useless work. Example: two processes repeatedly acquire and release their first resource, each backing off "politely" when they find the other's resource is unavailable. Solution: introduce randomness in retry timing or set maximum retry attempts.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Four Necessary Conditions for Deadlock
 
@@ -881,8 +889,17 @@ All four must hold simultaneously for deadlock to occur:
 
 - **Mutual Exclusion:** At least one resource is held in a non-sharable mode. Only one process can use it at a time; others must wait.
 - **Hold and Wait:** A process holds at least one resource while waiting to acquire additional resources held by other processes. It does not release currently held resources while waiting.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 - **No Preemption:** Resources cannot be forcibly taken away. A resource is released only voluntarily by the process holding it, after completing its task.
 - **Circular Wait:** A set of processes {P₀, P₁, ..., Pₙ} exists such that P₀ waits for a resource held by P₁, P₁ waits for P₂, ..., Pₙ waits for P₀.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Deadlock Prevention
 
@@ -890,21 +907,41 @@ Deadlock prevention ensures that at least one of the four necessary conditions c
 
 **1. Preventing Mutual Exclusion:** For sharable resources (e.g., read-only files), mutual exclusion is not required. However, for inherently non-sharable resources (e.g., printers), mutual exclusion cannot be denied. Spooling can convert some non-sharable resources into sharable ones. In general, this approach is not practical for most resources.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **2. Preventing Hold and Wait:** Require a process to request all resources at once before execution begins, or allow a process to request new resources only after releasing all currently held ones. This prevents a process from holding resources while waiting, but leads to low resource utilization and possible starvation.
 
 **3. Preventing No Preemption:** If a process holding resources requests another that cannot be immediately allocated, all its currently held resources are preempted (released). The process must re-acquire all resources when they become available. This is applicable only to resources whose state can be easily saved and restored (e.g., CPU registers, memory), not to resources like printers.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **4. Preventing Circular Wait:** Assign each resource type a unique integer number. A process can request resources only in increasing order of the assigned numbers. This imposes a total ordering that prevents circular wait.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Deadlock Ignorance (Ostrich Algorithm)
 
 The ostrich algorithm handles deadlocks by simply ignoring them, pretending they do not occur. This approach is used by most general-purpose operating systems (Windows, Linux, macOS) because deadlocks are rare in practice, and the overhead of continuous prevention/detection outweighs the cost of occasional manual intervention (killing a frozen process or rebooting). This is not suitable for safety-critical systems (flight control, medical devices) where continuous reliable operation is essential.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 ### Deadlock Avoidance
 
 Deadlock avoidance requires additional information about future resource requests. The system dynamically examines the resource-allocation state before granting each request to ensure the system never enters an unsafe state. Unlike prevention, avoidance does not restrict how requests are made.
 
-**Safe State:** A state is safe if there exists a **safe sequence**, which is an ordering ⟨P₁, P₂, ..., Pₙ⟩ of all processes such that for each Pᵢ, the resources it still needs can be satisfied by currently available resources plus resources held by all Pⱼ where j < i. If no such sequence exists, the state is **unsafe**. An unsafe state is not necessarily a deadlock, but it means the system cannot guarantee deadlock avoidance.
+**Safe State:** A state is safe if there exists a safe sequence, which is an ordering ⟨P₁, P₂, ..., Pₙ⟩ of all processes such that for each Pᵢ, the resources it still needs can be satisfied by currently available resources plus resources held by all Pⱼ where j < i. If no such sequence exists, the state is unsafe. An unsafe state is not necessarily a deadlock, but it means the system cannot guarantee deadlock avoidance.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 **Banker's Algorithm:**
 
@@ -913,12 +950,20 @@ Deadlock avoidance requires additional information about future resource request
 
 Named after a banker who allocates capital ensuring all customers can complete their transactions. Designed for systems with multiple instances of each resource type.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Data structures** (n = number of processes, m = number of resource types):
 
 - **Available[m]:** Number of available instances of each resource type.
 - **Max[n][m]:** Maximum demand of each process.
 - **Allocation[n][m]:** Resources currently allocated to each process.
 - **Need[n][m]:** Remaining resource need. `Need[i][j] = Max[i][j] − Allocation[i][j]`.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 **Safety Algorithm:**
 
@@ -927,12 +972,20 @@ Named after a banker who allocates capital ensuring all customers can complete t
 3. If found: `Work = Work + Allocation[i]`, set `Finish[i] = true`, go to step 2.
 4. If all `Finish[i] == true`, the system is in a safe state.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Resource-Request Algorithm (when process Pᵢ requests resources):**
 
 1. If `Request[i] > Need[i]`, raise an error (exceeded maximum claim).
 2. If `Request[i] > Available`, Pᵢ must wait.
 3. Otherwise, tentatively allocate: `Available -= Request[i]`, `Allocation[i] += Request[i]`, `Need[i] -= Request[i]`.
 4. Run the safety algorithm. If safe, grant the request permanently. If unsafe, roll back and make Pᵢ wait.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 **Example (2082 Bhadra):** 5 processes (P₀–P₄), 4 resource types with total instances (6, 4, 4, 2).
 
@@ -955,19 +1008,34 @@ Total Allocated = (5, 3, 2, 2). Available = (6, 4, 4, 2) − (5, 3, 2, 2) = **(1
 
 Safe sequence: **⟨P₂, P₀, P₃, P₄, P₁⟩**. The system is in a safe state.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 ### Deadlock Detection
 
 When neither prevention nor avoidance is used, the system must detect deadlocks after they occur.
 
 **Resource Allocation Graph (RAG):** A directed graph where process nodes (circles) and resource nodes (rectangles with dots for instances) are connected by request edges (Pᵢ → Rⱼ, process requests resource) and assignment edges (Rⱼ → Pᵢ, resource allocated to process).
 
-- If the graph contains **no cycle** → no deadlock.
-- If each resource type has **exactly one instance** → a cycle is a necessary and sufficient condition for deadlock.
-- If resources have **multiple instances** → a cycle is necessary but not sufficient; a more sophisticated algorithm is needed.
+- If the graph contains no cycle → no deadlock.
+- If each resource type has exactly one instance → a cycle is a necessary and sufficient condition for deadlock.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+- If resources have multiple instances → a cycle is necessary but not sufficient; a more sophisticated algorithm is needed.
+
+<br>
 
 **Wait-For Graph:** A simplified version of the RAG for single-instance resources. Remove all resource nodes and create a direct edge from Pᵢ to Pⱼ if Pᵢ is waiting for a resource held by Pⱼ. A cycle in the wait-for graph indicates deadlock. Cycle detection using DFS runs in O(n²).
 
 **When to invoke detection:** When a request cannot be granted immediately, at regular time intervals, or when CPU utilization drops below a threshold.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Recovery from Deadlock
 
@@ -978,15 +1046,29 @@ Once detected, the system must break the circular wait.
 - **Abort all deadlocked processes:** This is simple but drastic; all computation is lost.
 - **Abort one process at a time:** Terminate processes one by one until the deadlock cycle is broken. Higher overhead since detection must re-run after each termination.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Criteria for selecting a victim:** lowest priority, shortest computation time so far, most additional time needed, fewest resources used (or most resources held to free up more), batch processes over interactive ones.
 
 **Resource Preemption:** Take resources from some processes and give them to others. The preempted process must be rolled back, either through total rollback (restart from the beginning) or partial rollback (to a state before it acquired the preempted resource). The same process may repeatedly be chosen as a victim, causing starvation. Including a cost factor (number of rollbacks) can prevent this.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 **Checkpoint and Rollback:** A process periodically saves its state (memory contents, register values, resource allocation). If rollback is needed, the process is restored to a previous checkpoint instead of restarting entirely. More frequent checkpoints mean less work lost but higher overhead.
+
+<br>
 
 ### Integrated Deadlock Strategy
 
 No single approach is optimal for all resources. An integrated strategy partitions resources into classes and applies the most appropriate method to each: prevention for some, avoidance for others, detection and recovery where needed.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Two-Phase Locking
 
@@ -995,7 +1077,15 @@ Two-phase locking (2PL) is a concurrency control protocol primarily used in data
 - **Growing Phase:** A transaction may acquire locks but may not release any. The number of locks only increases.
 - **Shrinking Phase:** A transaction may release locks but may not acquire new ones. The number of locks only decreases.
 
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
 2PL does not prevent deadlock. Because transactions accumulate locks during the growing phase, circular wait can easily arise. Prevention strategies include: always locking resources in a fixed order, acquiring all locks atomically at the start, or using timeouts with rollback and restart.
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Communication Deadlock
 
