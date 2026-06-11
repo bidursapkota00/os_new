@@ -1112,20 +1112,37 @@ When neither prevention nor avoidance is used, the system must detect deadlocks 
 
 **Resource Allocation Graph (RAG):** A directed graph where process nodes (circles) and resource nodes (rectangles with dots for instances) are connected by request edges (Pᵢ → Rⱼ, process requests resource) and assignment edges (Rⱼ → Pᵢ, resource allocated to process).
 
-- If the graph contains no cycle → no deadlock.
-- If each resource type has exactly one instance → a cycle is a necessary and sufficient condition for deadlock.
+- If the graph contains no cycle, there is no deadlock.
+- If each resource type has exactly one instance, a cycle is both a necessary and sufficient condition for deadlock.
 
 ---
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
-- If resources have multiple instances → a cycle is necessary but not sufficient; a more sophisticated algorithm is needed.
+| ![Resource Allocation Graph 1](images/ch_3/rag1.png) | ![Resource Allocation Graph 2](images/ch_3/rag2.png) |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+- If resource types have multiple instances, a cycle is a necessary condition for deadlock but not a sufficient condition; a more sophisticated deadlock detection algorithm is required.
 
 <br>
 
-**Wait-For Graph:** A simplified version of the RAG for single-instance resources. Remove all resource nodes and create a direct edge from Pᵢ to Pⱼ if Pᵢ is waiting for a resource held by Pⱼ. A cycle in the wait-for graph indicates deadlock. Cycle detection using DFS runs in O(n²).
+**Wait-For Graph:** A simplified version of the RAG for single-instance resources. Remove all resource nodes and create a direct edge from Pᵢ to Pⱼ if Pᵢ is waiting for a resource held by Pⱼ. A cycle in the wait-for graph indicates deadlock.
 
-**When to invoke detection:** When a request cannot be granted immediately, at regular time intervals, or when CPU utilization drops below a threshold.
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+![Wait For Graph](images/ch_3/wait-for-graph.png)
+
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+Deadlock detection can be invoked whenever a resource request cannot be granted immediately, at regular intervals, or when CPU utilization falls below a specified threshold.
 
 ---
 
@@ -1135,26 +1152,36 @@ When neither prevention nor avoidance is used, the system must detect deadlocks 
 
 Once detected, the system must break the circular wait.
 
-**Process Termination:**
+**A. Process Termination:**
 
-- **Abort all deadlocked processes:** This is simple but drastic; all computation is lost.
-- **Abort one process at a time:** Terminate processes one by one until the deadlock cycle is broken. Higher overhead since detection must re-run after each termination.
+1. **Abort all deadlocked processes:** This is simple but drastic; all computation is lost.
+2. **Abort one process at a time:** Terminate processes one by one until the deadlock cycle is broken. Higher overhead since detection must re-run after each termination.
 
 ---
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
+
+### Recovery from Deadlock
+
+**A. Process Termination:**
 
 **Criteria for selecting a victim:** lowest priority, shortest computation time so far, most additional time needed, fewest resources used (or most resources held to free up more), batch processes over interactive ones.
 
-**Resource Preemption:** Take resources from some processes and give them to others. The preempted process must be rolled back, either through total rollback (restart from the beginning) or partial rollback (to a state before it acquired the preempted resource). The same process may repeatedly be chosen as a victim, causing starvation. Including a cost factor (number of rollbacks) can prevent this.
+**B. Resource Preemption:** Take resources from some processes and give them to others. The preempted process must be rolled back, either through total rollback (restart from the beginning) or partial rollback (to a state before it acquired the preempted resource). The same process may repeatedly be chosen as a victim, causing starvation. Including a cost factor (number of rollbacks) can prevent this.
 
 ---
 
 # 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
+### Recovery from Deadlock
+
+**B. Resource Preemption:**
+
 **Checkpoint and Rollback:** A process periodically saves its state (memory contents, register values, resource allocation). If rollback is needed, the process is restored to a previous checkpoint instead of restarting entirely. More frequent checkpoints mean less work lost but higher overhead.
 
-<br>
+---
+
+# 3.5 Deadlock: Prevention, Ignorance, Avoidance, Detection and Recovery
 
 ### Integrated Deadlock Strategy
 
