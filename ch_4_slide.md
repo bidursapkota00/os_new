@@ -183,9 +183,11 @@ I/O devices allow communication between the computer and the outside world. The 
 
 # 4.1.1 I/O Hardware
 
+An I/O port is a set of registers that the CPU can read from or write to. Each port has a unique address. Each device controller has one or more I/O ports.
+
 **I/O Port Addressing:**
 
-- **Separate I/O Space:** I/O ports have a separate address space from memory. Special I/O instructions (IN/OUT) are used to access ports. The x86 architecture supports this.
+- **Separate I/O Space:** I/O ports have a separate address space from memory. Special I/O instructions (IN/OUT) are used to access ports. The x86 architecture supports this. It requires special hardware signals to distinguish I/O from memory access.
 - **Memory-Mapped I/O:** I/O ports are mapped into the regular memory address space. No special instructions are needed because regular load/store instructions work. Simpler programming (C can access ports directly), but memory addresses are consumed by I/O mapping.
 
 ---
@@ -243,7 +245,13 @@ I/O software is organized in four layers from bottom to top:
 
 **3. Device-Independent I/O Software:** Provides functions common to all devices, such as uniform interface for drivers, buffering, error reporting, allocating/releasing dedicated devices, and providing a device-independent block size.
 
-**4. User-Level I/O Software:** Runs in user space. Includes library routines (C library functions like `printf`, `scanf`, `fread`, `fwrite` built on top of system calls) and user-level processes like spooling daemons.
+**4. User-Level I/O Software:** Runs in user space. Includes library routines (C library functions like `printf`, `scanf`, `fread`, `fwrite` built on top of system calls). They provide formatting, parsing, user level buffering, and other conveniences.
+
+---
+
+# 4.1.2 I/O Software Layer
+
+![alt text](images/ch_4/io-software-layers.png)
 
 ---
 
@@ -252,6 +260,18 @@ I/O software is organized in four layers from bottom to top:
 **Magnetic Disk (HDD):** The traditional secondary storage device. Non-volatile, large capacity, lowest cost per GB. Consists of circular platters coated with magnetic material, mounted on a spindle rotating at 5400–15000 RPM. Each surface has a read/write head mounted on an actuator arm; all heads move together.
 
 **Tracks, Cylinders, Sectors:** Data is recorded on concentric circles called tracks. The set of all tracks at the same radial position on all surfaces is a cylinder. Each track is divided into fixed-size sectors (512 bytes or 4096 bytes), which is the smallest readable/writable unit. Outer tracks can hold more sectors (zone bit recording). Each sector has a preamble (cylinder/head/sector numbers), data field, and ECC (Error Correcting Code) field.
+
+---
+
+# 4.1.3 Disk Technologies: Magnetic Disk
+
+![alt text](images/ch_4/magnetic-disk.png)
+
+---
+
+# 4.1.3 Disk Technologies: Magnetic Disk
+
+![alt text](images/ch_4/platter.png)
 
 ---
 
@@ -269,11 +289,9 @@ Seek time (moving heads to desired track) dominates and is typically 3–15 ms. 
 
 **Disk Formatting:**
 
-Low-level (physical) formatting creates tracks and sectors, and this is done at the factory.
+Low-level (physical) formatting creates tracks and sectors, and this is done at the factory. It creates tracks and sectors on each disk surface. It writes the preamble, data area, and ECC for each sector.
 
-Partitioning divides the disk into logical units (MBR or GPT).
-
-High-level (logical) formatting creates file system structures (boot block, superblock, free space structures, root directory).
+High-level (logical) formatting creates file system structures (boot block, superblock, free space structures, root directory. Partitioning divides the disk into logical units (MBR or GPT).
 
 ---
 
