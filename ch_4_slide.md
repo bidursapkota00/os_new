@@ -289,15 +289,29 @@ Seek time (moving heads to desired track) dominates and is typically 3–15 ms. 
 
 **Disk Formatting:**
 
-Low-level (physical) formatting creates tracks and sectors, and this is done at the factory. It creates tracks and sectors on each disk surface. It writes the preamble, data area, and ECC for each sector.
+Low-level (physical) formatting creates tracks and sectors, and this is done at the factory. It creates tracks and sectors on each disk surface. It writes the preamble, data area, and ECC for each sector. Interleaving places logical sectors with gaps between them so the controller has enough time to process one sector before the next required sector passes under the read/write head.
+
+<br>
 
 High-level (logical) formatting creates file system structures (boot block, superblock, free space structures, root directory. Partitioning divides the disk into logical units (MBR or GPT).
+
+---
+
+# 4.1.3 Disk Technologies: Magnetic Disk
+
+**Disk Formatting:**
+
+![Interleaving](images/ch_4/interleaving.png)
 
 ---
 
 # 4.1.3 Disk Technologies: SSD, NVMe Storage
 
 **Solid State Drive (SSD, SATA):** Uses flash memory instead of spinning platters. It has no moving parts, making it faster, more durable, lower power, and silent. SATA interface limits speed to ~550 MB/s. Moderate cost per GB. Good for general-purpose use and upgrading older systems.
+
+---
+
+# 4.1.3 Disk Technologies: SSD, NVMe Storage
 
 **NVMe SSD:** Uses flash memory connected directly via the PCIe bus, bypassing the SATA bottleneck. Speeds of 3,500–14,000+ MB/s with very low latency (<0.05 ms). Highest cost per GB but prices are falling. Ideal for OS boot drives, gaming, and high-performance workloads.
 
