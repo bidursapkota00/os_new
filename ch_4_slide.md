@@ -305,26 +305,222 @@ High-level (logical) formatting creates file system structures (boot block, supe
 
 ---
 
-# 4.1.3 Disk Technologies: SSD, NVMe Storage
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
 
-**Solid State Drive (SSD, SATA):** Uses flash memory instead of spinning platters. It has no moving parts, making it faster, more durable, lower power, and silent. SATA interface limits speed to ~550 MB/s. Moderate cost per GB. Good for general-purpose use and upgrading older systems.
+Disk arm scheduling determines the order in which disk requests are serviced.
+The goal is to minimize total seek time and improve disk throughput.
+
+<br>
+
+**First-Come, First-Served (FCFS):**
+FCFS serves requests in the order they arrive.
+
+**Shortest Seek Time First (SSTF)**
+SSTF selects the request closest to the current head position.
+
+**SCAN (Elevator Algorithm)**
+SCAN moves the disk arm in one direction, servicing requests along the way. When the arm reaches the end of the disk, it reverses direction.
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**C-SCAN (Circular SCAN)**
+The arm moves in one direction, servicing requests.
+When it reaches the end of the disk, it immediately returns to the beginning.
+
+**LOOK**
+LOOK is a variant of SCAN. Instead of going to the end of the disk, it goes only as far as the last request.
+
+**C-LOOK**
+C-LOOK is a variant of C-SCAN. Instead of going to the end of the disk, it goes only as far as the last request then it returns to the beginning.
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**First-Come, First-Serve (FCFS)**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using FCFS scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![First Come First Serve](images/ch_4/fcfs.png)
+
+Total Distance travelled = 45+85+146+85+108+110+59+2 = 640 cylinders
+Average distance travelled = 640/8 = 80 cylinders
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**Shortest Seek Time First (SSTF)**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using SSTF scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![Shortest Seek Time First](images/ch_4/sstf.png)
+
+Total Distance travelled = 236 cylinders
+Average distance travelled = 29.5 cylinders
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**SCAN (Elevator Algorithm)**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using SCAN scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![Scan (Elevator Algorithm)](images/ch_4/scan.png)
+
+Total Distance travelled = 208 cylinders
+Average distance travelled = 26 cylinders
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**C-SCAN (Circular SCAN)**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using C-SCAN scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![Circular Scan (C-SCAN)](images/ch_4/cscan.png)
+
+Total Distance travelled = 382 cylinders
+Average distance travelled = 47.75 cylinders
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**LOOK Algorithm**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using LOOK scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![LOOK Algorithm](images/ch_4/look.png)
+
+Total Distance travelled = 194 cylinders
+Average distance travelled = 24.25 cylinders
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+**C-LOOK Algorithm**
+Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The drive is currently serving a request at cylinder 53. The queue of the pending requests is 98, 183, 37, 122, 14, 124, 65, 67. Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests if the controller is using C-LOOK scheduling algorithm??
+
+<br>
+
+Queue: 98, 183, 37, 122, 14, 124, 65, 67
+Head Pos: 53
+
+---
+
+# 4.1.3 Disk Technologies: Disk Arm Scheduling
+
+![Circular LOOK (C-LOOK)](images/ch_4/clook.png)
+
+Total Distance travelled = 352 cylinders
+Average distance travelled = 44 cylinders
 
 ---
 
 # 4.1.3 Disk Technologies: SSD, NVMe Storage
+
+**Solid State Drive (SSD, SATA):** Uses flash memory instead of spinning platters. It has no moving parts, making it faster, more durable, lower power, and silent. SATA interface limits speed to ~550 MB/s. Moderate cost per GB. Good for general-purpose use and upgrading older systems.
 
 **NVMe SSD:** Uses flash memory connected directly via the PCIe bus, bypassing the SATA bottleneck. Speeds of 3,500–14,000+ MB/s with very low latency (<0.05 ms). Highest cost per GB but prices are falling. Ideal for OS boot drives, gaming, and high-performance workloads.
 
 ---
 
+# 4.1.3 Disk Technologies: SSD Working Principle
+
+**NAND Flash Memory:** SSDs store data using NAND flash memory chips. The basic storage element is a floating-gate transistor. Each transistor traps electrons on a floating gate (an insulated conductor between the control gate and the channel). When electrons are trapped on the floating gate, the transistor's threshold voltage changes. By measuring whether the transistor conducts at a given voltage, the controller determines the stored value. Programming (writing) injects electrons onto the floating gate using high voltage (Fowler-Nordheim tunneling). Erasing removes electrons by applying a reverse high voltage. No mechanical movement is involved in any operation.
+
+---
+
+# 4.1.3 Disk Technologies: SSD Working Principle
+
+**Cell Types:** SLC (Single-Level Cell) stores 1 bit per cell (two voltage states). MLC (Multi-Level Cell) stores 2 bits (four states). TLC (Triple-Level Cell) stores 3 bits (eight states). QLC (Quad-Level Cell) stores 4 bits (sixteen states). More bits per cell increases capacity but reduces speed, endurance, and reliability.
+
+**Pages and Blocks:** Flash memory is organized into pages (typically 4–16 KB), which is the smallest unit that can be read or written. Pages are grouped into blocks (typically 256–512 pages, i.e., 1–4 MB per block). The smallest unit that can be erased is a block. This asymmetry (write a page, erase a block) is a fundamental constraint of flash memory.
+
+---
+
+# 4.1.3 Disk Technologies: SSD Working Principle
+
+**Erase-Before-Write:** Flash cells cannot be overwritten directly. To modify data, the SSD must erase the entire block first, then write the new data. To avoid erasing an entire block for a small update, the SSD writes modified data to a new, clean page and marks the old page as invalid (stale). This is called out-of-place writing.
+
+**Garbage Collection:** Over time, blocks accumulate stale pages. The SSD's controller runs a background garbage collection process that copies valid pages from partially-stale blocks to a clean block, then erases the old block to make it available for new writes.
+
+---
+
+# 4.1.3 Disk Technologies: SSD Working Principle
+
+**Wear Leveling:** Each flash cell can only endure a limited number of program/erase (P/E) cycles (SLC: ~100,000; TLC: ~1,000–3,000). Without management, frequently written blocks would wear out quickly. The SSD controller uses wear leveling to distribute writes evenly across all blocks, extending the drive's lifespan.
+
+**TRIM Command:** When the OS deletes a file, the SSD does not automatically know which pages are now invalid. The TRIM command tells the SSD which pages are no longer in use, enabling efficient garbage collection.
+
+---
+
+# 4.1.3 Disk Technologies: SSD Working Principle
+
+**Flash Translation Layer (FTL):** The FTL is firmware inside the SSD controller that maps logical block addresses (LBAs used by the OS) to physical flash pages. It manages out-of-place writes, garbage collection, wear leveling, and bad block management. It makes the SSD appear as a simple block device to the OS despite the complexity of flash operations.
+
+**SSD Access Time:** Since there is no seek time or rotational latency (no moving parts), access time is determined almost entirely by electronic signal propagation and controller processing. Typical read latency for SATA SSDs is 0.1–0.2 ms compared to 5–15 ms for HDDs.
+
+---
+
+# 4.1.3 Disk Technologies: SSD, NVMe Storage
+
+---
+
 # 4.1.3 Disk Technologies: Magnetic Disk, SSD, NVMe Storage
 
-| Feature     | HDD              | SATA SSD     | NVMe SSD           |
-| ----------- | ---------------- | ------------ | ------------------ |
-| Technology  | Spinning platter | Flash (SATA) | Flash (PCIe)       |
-| Max Speed   | ~160 MB/s        | ~550 MB/s    | 3,500–14,000+ MB/s |
-| Latency     | 5–15 ms          | 0.1–0.2 ms   | <0.05 ms           |
-| Cost per GB | Lowest           | Moderate     | Highest            |
+| HDD                             | SATA SSD                                   | NVMe SSD                                |
+| ------------------------------- | ------------------------------------------ | --------------------------------------- |
+| Uses spinning magnetic platters | Uses NAND flash memory over SATA interface | Uses NAND flash memory over PCIe bus    |
+| Maximum speed is ~160 MB/s      | Maximum speed is ~550 MB/s                 | Speed ranges from 3,500 to 14,000+ MB/s |
+| Latency is 5–15 ms              | Latency is 0.1–0.2 ms                      | Latency is less than 0.05 ms            |
+| Lowest cost per GB              | Moderate cost per GB                       | Highest cost per GB                     |
 
 ---
 
