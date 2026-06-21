@@ -204,13 +204,13 @@ The primary goals are: making I/O devices easy to use (hiding hardware complexit
 
 **Uniform Naming:** In UNIX, devices are named as files in `/dev` (e.g., `/dev/sda1`). Applications access devices using the same naming scheme as ordinary files. Windows uses drive letters (C:, D:) and device names (COM1).
 
-**Error Handling:** Errors should be handled as close to hardware as possible. The controller retries first, then the driver, then higher layers. Many errors are transient and resolved by retrying. Permanent errors must be reported upward.
-
-**Synchronous vs Asynchronous I/O:** In synchronous (blocking) I/O, the program waits until the operation completes. This is simple but sequential. In asynchronous (non-blocking) I/O, the program continues while I/O proceeds and is notified on completion. This allows overlapping computation and I/O but is more complex.
+**Error Handling:** Errors should be handled as close to the hardware as possible. The controller typically retries operations first, followed by the device driver and higher layers if needed. Errors may be programming errors (invalid commands), transient errors (e.g., checksum errors from dust or vibration, often fixed by retrying), permanent errors (damaged blocks), seek errors, head crashes, or controller failures. Techniques such as ECC (Error-Correcting Codes), bad-sector remapping (sector sparing), and file system redundancy/journaling help detect, correct, and recover from errors.
 
 ---
 
 # 4.1.1 Principles of I/O Software
+
+**Synchronous vs Asynchronous I/O:** In synchronous (blocking) I/O, the program waits until the operation completes. This is simple but sequential. In asynchronous (non-blocking) I/O, the program continues while I/O proceeds and is notified on completion. This allows overlapping computation and I/O but is more complex.
 
 **Buffering:** Temporary storage areas handle speed differences between devices and processes, and differences in data transfer sizes (a process may want 1 byte but the device transfers 512 bytes).
 
@@ -251,7 +251,7 @@ I/O software is organized in four layers from bottom to top:
 
 # 4.1.2 I/O Software Layer
 
-![alt text](images/ch_4/io-software-layers.png)
+![I/O Software Layers](images/ch_4/io-software-layers.png)
 
 ---
 
@@ -265,13 +265,13 @@ I/O software is organized in four layers from bottom to top:
 
 # 4.1.3 Disk Technologies: Magnetic Disk
 
-![alt text](images/ch_4/magnetic-disk.png)
+![Magnetic Disk](images/ch_4/magnetic-disk.png)
 
 ---
 
 # 4.1.3 Disk Technologies: Magnetic Disk
 
-![alt text](images/ch_4/platter.png)
+![Magnetic Disk Platters](images/ch_4/platter.png)
 
 ---
 
@@ -290,6 +290,8 @@ Seek time (moving heads to desired track) dominates and is typically 3–15 ms. 
 **Disk Formatting:**
 
 Low-level (physical) formatting creates tracks and sectors, and this is done at the factory. It creates tracks and sectors on each disk surface. It writes the preamble, data area, and ECC for each sector. Interleaving places logical sectors with gaps between them so the controller has enough time to process one sector before the next required sector passes under the read/write head.
+
+![Sector](images/ch_4/sector.png)
 
 <br>
 
@@ -465,9 +467,11 @@ Average distance travelled = 44 cylinders
 
 # 4.1.3 Disk Technologies: SSD, NVMe Storage
 
-**Solid State Drive (SSD, SATA):** Uses flash memory instead of spinning platters. It has no moving parts, making it faster, more durable, lower power, and silent. SATA interface limits speed to ~550 MB/s. Moderate cost per GB. Good for general-purpose use and upgrading older systems.
+**Solid State Drive (SSD, SATA):** Uses flash memory instead of spinning platters. It has no moving parts, making it faster, more durable, lower power, and silent. SATA (Serial Advanced Technology Attachment) interface limits speed to ~550 MB/s. Moderate cost per GB. Good for general-purpose use and upgrading older systems.
 
 **NVMe SSD:** Uses flash memory connected directly via the PCIe bus, bypassing the SATA bottleneck. Speeds of 3,500–14,000+ MB/s with very low latency (<0.05 ms). Highest cost per GB but prices are falling. Ideal for OS boot drives, gaming, and high-performance workloads.
+
+Non-Volatile Memory Express (NVMe): NVMe is a communication protocol for SSDs that connects directly to the CPU via the PCIe (Peripheral Component Interconnect Express) bus, bypassing the slower SATA interface.
 
 ---
 
@@ -479,37 +483,25 @@ Average distance travelled = 44 cylinders
 
 # 4.1.3 Disk Technologies: SSD Working Principle
 
+<style scoped>
+  p {
+    font-size: 26pt;
+  }
+</style>
+
 **Cell Types:** SLC (Single-Level Cell) stores 1 bit per cell (two voltage states). MLC (Multi-Level Cell) stores 2 bits (four states). TLC (Triple-Level Cell) stores 3 bits (eight states). QLC (Quad-Level Cell) stores 4 bits (sixteen states). More bits per cell increases capacity but reduces speed, endurance, and reliability.
 
 **Pages and Blocks:** Flash memory is organized into pages (typically 4–16 KB), which is the smallest unit that can be read or written. Pages are grouped into blocks (typically 256–512 pages, i.e., 1–4 MB per block). The smallest unit that can be erased is a block. This asymmetry (write a page, erase a block) is a fundamental constraint of flash memory.
 
+**Erase-Before-Write:** Flash cells cannot be overwritten directly. To modify data, the SSD must erase the entire block first, then write the new data. To avoid erasing an entire block for a small update, the SSD writes modified data to a new, clean page and marks the old page as invalid (stale). This is called out-of-place writing.
+
 ---
 
 # 4.1.3 Disk Technologies: SSD Working Principle
-
-**Erase-Before-Write:** Flash cells cannot be overwritten directly. To modify data, the SSD must erase the entire block first, then write the new data. To avoid erasing an entire block for a small update, the SSD writes modified data to a new, clean page and marks the old page as invalid (stale). This is called out-of-place writing.
 
 **Garbage Collection:** Over time, blocks accumulate stale pages. The SSD's controller runs a background garbage collection process that copies valid pages from partially-stale blocks to a clean block, then erases the old block to make it available for new writes.
 
----
-
-# 4.1.3 Disk Technologies: SSD Working Principle
-
-**Wear Leveling:** Each flash cell can only endure a limited number of program/erase (P/E) cycles (SLC: ~100,000; TLC: ~1,000–3,000). Without management, frequently written blocks would wear out quickly. The SSD controller uses wear leveling to distribute writes evenly across all blocks, extending the drive's lifespan.
-
-**TRIM Command:** When the OS deletes a file, the SSD does not automatically know which pages are now invalid. The TRIM command tells the SSD which pages are no longer in use, enabling efficient garbage collection.
-
----
-
-# 4.1.3 Disk Technologies: SSD Working Principle
-
 **Flash Translation Layer (FTL):** The FTL is firmware inside the SSD controller that maps logical block addresses (LBAs used by the OS) to physical flash pages. It manages out-of-place writes, garbage collection, wear leveling, and bad block management. It makes the SSD appear as a simple block device to the OS despite the complexity of flash operations.
-
-**SSD Access Time:** Since there is no seek time or rotational latency (no moving parts), access time is determined almost entirely by electronic signal propagation and controller processing. Typical read latency for SATA SSDs is 0.1–0.2 ms compared to 5–15 ms for HDDs.
-
----
-
-# 4.1.3 Disk Technologies: SSD, NVMe Storage
 
 ---
 
@@ -558,38 +550,100 @@ RAID (Redundant Array of Independent Disks) uses multiple disks together to prov
 
 ---
 
-# 4.1 I/O Management
-
-### 4.1.5 Concept of Stable Storage, Cost Per Bit Comparison
+# 4.1.5 Concept of Stable Storage, Cost Per Bit Comparison
 
 > **Explain how Write Ahead Logging (WAL) helps to achieve the concept of stable storage. [2 marks] (2082 Bhadra)**
 > **Explain any two approaches that helps to achieve the concept of stable storage. [4 marks] (Model Question)**
 
 **Stable Storage:** An idealized disk that always works correctly. Once data is committed, it survives crashes. A write either completes fully or has no effect, and partial writes never leave data inconsistent. Stable storage must survive CPU crashes, power failures, and some disk failures. It provides the foundation for crash recovery in transaction processing and databases.
 
-**Approach 1, Redundant Disk Writes:** Implemented using two or more identical copies of each block on separate disks. **Stable write** writes to the first disk, verifies by reading back, retries on failure, then repeats for the second disk. Only after both disks confirm is the write complete. **Stable read** reads from the first disk; if it fails, reads from the second. **Crash recovery** reads each block from both disks and compares. If one copy is bad, it is replaced with the good copy.
+---
 
-**Approach 2, Write-Ahead Logging (WAL):** Before any change is applied to the actual data, a log record describing the change is first written to stable storage. The log is append-only and sequential, making it fast to write. If the system crashes, the log is used for recovery: the **redo phase** replays committed transactions that may not have been fully flushed to data files, and the **undo phase** reverses changes from uncommitted transactions. WAL ensures atomicity and durability. No committed data is lost, and no partial writes corrupt data.
+# 4.1.5 Concept of Stable Storage
 
-**Cost Per Bit Comparison:**
+**Approach 1, Redundant Disk Writes:** Implemented using two or more identical copies of each block on separate disks. Stable write writes to the first disk, verifies by reading back, retries on failure, then repeats for the second disk. Only after both disks confirm is the write complete. Stable read reads from the first disk; if it fails, reads from the second. Crash recovery reads each block from both disks and compares. If one copy is bad, it is replaced with the good copy.
+
+---
+
+# 4.1.5 Concept of Stable Storage
+
+**Approach 2, Write-Ahead Logging (WAL):** Before any change is applied to the actual data, a log record describing the change is first written to stable storage. The log is append-only and sequential, making it fast to write. If the system crashes, the log is used for recovery: the redo phase replays committed transactions that may not have been fully flushed to data files, and the undo phase reverses changes from uncommitted transactions. WAL ensures atomicity and durability. No committed data is lost, and no partial writes corrupt data.
+
+---
+
+# Cost Per Bit Comparison
 
 > **A NVMe SSD with capacity of 2 TB costs NPR. 15,000 and A SATA SSD with capacity of 1 TB costs NPR. 5,500. Calculate the cost of storing a 160 MB file on each device. Which is cost efficient and by how much? [4 marks] (2082 Bhadra)**
 
-NVMe: Cost/MB = 15,000 / (2 × 1024 × 1024) MB = 15,000 / 2,097,152 ≈ NPR 0.00715/MB. Cost for 160 MB = 0.00715 × 160 ≈ **NPR 1.144**.
+**For NVMe SSD:**
 
-SATA SSD: Cost/MB = 5,500 / (1 × 1024 × 1024) MB = 5,500 / 1,048,576 ≈ NPR 0.005245/MB. Cost for 160 MB = 0.005245 × 160 ≈ **NPR 0.839**.
+Cost/MB = 15,000 / (2 × 1024 × 1024)
+= 15,000 / 2,097,152 ≈ NPR 0.00715/MB.
+
+<br>
+
+Cost for 160 MB = 0.00715 × 160 ≈ NPR 1.144.
+
+---
+
+# Cost Per Bit Comparison
+
+**For SATA SSD:**
+
+Cost/MB = 5,500 / (1 × 1024 × 1024)
+= 5,500 / 1,048,576 ≈ NPR 0.005245/MB.
+
+Cost for 160 MB = 0.005245 × 160 ≈ NPR 0.839.
+
+<br>
+
+Percentage cheaper = $\frac{\text{Cost of NVMe} - \text{Cost of SATA}}{\text{Cost of NVMe}} \times 100$
+
+<br>
+
+Percentage cheaper = $\frac{1.144 - 0.839}{1.144} \times 100 \approx 26.66\%$
+
+<br>
 
 SATA SSD is more cost efficient by approximately NPR 0.305 per 160 MB file (about 26.7% cheaper).
 
+---
+
+# Cost Per Bit Comparison
+
 > **An HDD with 512 GB and an SSD with 256 GB cost NPR. 3,500 and NPR 5,600 respectively. Calculate the cost of storing a 300 MB file on each disk. Which is cost efficient? [3 marks] (Model Question)**
 
-HDD: Cost/MB = 3,500 / (512 × 1024) = 3,500 / 524,288 ≈ NPR 0.006676/MB. Cost for 300 MB = 0.006676 × 300 ≈ **NPR 2.003**.
+**For HDD:**
 
-SSD: Cost/MB = 5,600 / (256 × 1024) = 5,600 / 262,144 ≈ NPR 0.02136/MB. Cost for 300 MB = 0.02136 × 300 ≈ **NPR 6.409**.
+Cost/MB = 3,500 / (512 × 1024)
+= 3,500 / 524,288 ≈ NPR 0.006676/MB.
 
-HDD is more cost efficient. Storing 300 MB costs approximately NPR 4.41 less than on the SSD.
+<br>
 
-**Disk Error Handling:** Errors can be programming errors (invalid commands), transient checksum errors (dust or vibration, resolved by retrying), permanent checksum errors (physically damaged block), seek errors (arm cannot reach track), head crashes (head touches surface), or controller errors. Bad sectors are detected and remapped to spare sectors (sector sparing). ECC is used for error detection and correction. File systems use redundancy and journaling to protect metadata.
+Cost for 300 MB = 0.006676 × 300 ≈ NPR 2.003.
+
+---
+
+# Cost Per Bit Comparison
+
+**For SSD:**
+
+Cost/MB = 5,600 / (256 × 1024)
+= 5,600 / 262,144 ≈ NPR 0.02136/MB.
+
+Cost for 300 MB = 0.02136 × 300 ≈ NPR 6.409.
+
+<br>
+
+Percentage cheaper = $\frac{\text{Cost of HDD} - \text{Cost of SSD}}{\text{Cost of HDD}} \times 100$
+
+<br>
+
+Percentage cheaper = $\frac{6.409 - 2.003}{6.409} \times 100 \approx 68.75\%$
+
+<br>
+
+HDD is more cost efficient. Storing 300 MB costs approximately NPR 4.41 or 68.75% less than on the SSD.
 
 ## 4.2 Memory Management
 
