@@ -765,9 +765,9 @@ fi
 
 ---
 
-# Practical 4: Programs Using I/O System Calls of UNIX
+# Practical 3: Programs Using System Calls of UNIX
 
-Unlike C library functions (`fopen`, `fgets`, `fprintf`), UNIX I/O system calls (`open`, `read`, `write`, `close`, `lseek`) interact directly with the kernel. They use integer **file descriptors** instead of `FILE*` pointers.
+Unlike C library functions (`fopen`, `fgets`, `fprintf`), UNIX I/O system calls (`open`, `read`, `write`, `close`, `lseek`) interact directly with the kernel. They use integer file descriptors instead of `FILE*` pointers.
 
 | System Call                 | Purpose                        | Header       |
 | --------------------------- | ------------------------------ | ------------ |
