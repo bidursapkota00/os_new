@@ -645,7 +645,9 @@ Percentage cheaper = $\frac{6.409 - 2.003}{6.409} \times 100 \approx 68.75\%$
 
 HDD is more cost efficient. Storing 300 MB costs approximately NPR 4.41 or 68.75% less than on the SSD.
 
-## 4.2 Memory Management
+---
+
+# 4.2 Memory Management
 
 ### 4.2.1 Memory Address, Swapping and Managing Free Memory Space
 
@@ -653,26 +655,94 @@ HDD is more cost efficient. Storing 300 MB costs approximately NPR 4.41 or 68.75
 
 **Memory Manager:** The OS component responsible for tracking which parts of memory are in use and which are free, allocating memory to processes, deallocating it when done, managing swapping between main memory and disk, and providing protection and sharing.
 
-**Memory Address Types:**
+---
 
-- **Physical Address:** The actual real address in physical memory hardware.
-- **Virtual (Logical) Address:** An address relative to the start of a process's address space.
-- **Memory Management Unit (MMU):** A hardware device that maps virtual addresses to physical addresses at runtime. It sits between the CPU and memory bus and uses page tables for translation.
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
 
-**Address Binding:** Mapping addresses from one space to another. Can occur at three stages: **Compile time** (addresses fixed at compilation, and the program must be recompiled if location changes), **Load time** (compiler generates relocatable code, and the OS decides starting position at load; the process does not move after loading), **Execution time** (the process can move during execution and requires hardware support via MMU for runtime translation).
+Memory address is a number that identifies a location in memory.
+
+### Memory Address Types:
+
+1. **Physical Address:** The actual real address in physical memory hardware.
+2. **Virtual (Logical) Address:** An address relative to the start of a process's address space.
+3. **Memory Management Unit (MMU):** A hardware device that maps virtual addresses to physical addresses at runtime. It sits between the CPU and memory bus and uses page tables for translation.
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+**Address Binding:** Mapping addresses from one space to another. Can occur at three stages: Compile time (addresses fixed at compilation, and the program must be recompiled if location changes), Load time (compiler generates relocatable code, and the OS decides starting position at load; the process does not move after loading), Execution time (the process can move during execution and requires hardware support via MMU for runtime translation).
 
 **Base and Limit Registers:** Ensure each process has a separate, protected memory space. The base register holds the smallest legal physical address; the limit register specifies the range size. Any access outside this range traps to the OS.
 
-**Swapping:** Moving a process out to disk to release its memory. When active again, the OS reloads it. With static relocation, the process must return to the same position. With dynamic relocation, the OS can place it in a new position and update the base/limit registers. Idle processes are stored on disk and do not consume memory.
+---
 
-**Managing Free Memory:**
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+![Base and Limit Registers](images/ch_4/base-limit.png)
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+### Swapping
+
+Moving a process out to disk to release its memory. When active again, the OS reloads it. With static relocation, the process must return to the same position. With dynamic relocation, the OS can place it in a new position and update the base/limit registers. Idle processes are stored on disk and do not consume memory.
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+### Managing Free Memory
 
 - **Bitmaps:** Memory is divided into allocation units. Each unit has a corresponding bit (0 = free, 1 = occupied). Simple but searching for contiguous free space can be slow.
 - **Linked Lists:** A linked list of allocated and free memory segments. Each entry specifies hole (H) or process (P), starting address, length, and a pointer to the next entry. Sorted by address. When a process terminates, adjacent holes are coalesced into a larger hole.
 
-**Multiprogramming with Fixed Partitions:** Memory is divided into several fixed-size partitions. Each holds one process. The number of partitions limits the degree of multiprogramming. Equal-size partitions are simple but wasteful; unequal-size partitions assign processes to the smallest adequate partition. Suffers from **internal fragmentation**, which is wasted space within a partition when the process is smaller than the partition.
+---
 
-**Multiprogramming with Variable Partitions (Dynamic Partitioning):** A process is allocated exactly the memory it needs with no fixed divisions. Eliminates internal fragmentation. However, over time, loading and unloading creates scattered free holes, causing **external fragmentation**, where enough total free memory exists but it is not contiguous.
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+![Managing Free Memory](images/ch_4/free-mem.png)
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+**Uniprogramming** refers to having single processes in memory at once. Main memory is divided into two parts: one for the operating system and one for the currently executing program.
+
+**Multiprogramming** refers to having multiple processes in memory at once. The user portion of memory must be further divided to accommodate multiple processes.
+
+**Resident monitor** is the earliest form of operating system which occupies a fixed portion of memory, usually at the lowest memory addresses throughout the operation of the computer, protected by fence register.
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+**Multiprogramming with Fixed Partitions:** Memory is divided into several fixed-size partitions. Each holds one process. The number of partitions limits the degree of multiprogramming. Equal-size partitions are simple but wasteful; unequal-size partitions assign processes to the smallest adequate partition. Suffers from internal fragmentation, which is wasted space within a partition when the process is smaller than the partition.
+
+**Multiprogramming with Variable Partitions (Dynamic Partitioning):** A process is allocated exactly the memory it needs with no fixed divisions. Eliminates internal fragmentation. However, over time, loading and unloading creates scattered free holes, causing external fragmentation, where enough total free memory exists but it is not contiguous.
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+![Fixed and Dynamic Partitioning](images/ch_4/mem-partitioning.png)
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+![Memory Allocation Techniques](images/ch_4/mem-alloc.png)
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+![Dynamic Partitioning Example](images/ch_4/dynamic-partitioning.png)
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
 
 **Memory Allocation Policies:**
 
@@ -681,9 +751,57 @@ HDD is more cost efficient. Storing 300 MB costs approximately NPR 4.41 or 68.75
 - **Best-Fit:** Allocates the smallest hole that fits. Better utilization but slower (must search entire list).
 - **Worst-Fit:** Allocates the largest hole, leaving the largest leftover. Sometimes better utilization but generally poor.
 
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+Given the memory partitions of 100K, 500K, 200K, 300K and 600K (in order), how would each of the First-fit, Best-fit, and Worst-fit algorithms place processes of 212K, 417K, 112K, and 426K (in order)?
+Which algorithm makes the most efficient use of memory?
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+| Process Size | First-Fit                 | Best-Fit | Worst-Fit                 |
+| ------------ | ------------------------- | -------- | ------------------------- |
+| 212K         | 500K                      | 300K     | 600K                      |
+| 417K         | 600K                      | 500K     | 500K                      |
+| 112K         | 288K (Leftover from 500K) | 200K     | 388K (Leftover from 600K) |
+| 426K         | Wait                      | 600K     | Wait                      |
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+Consider swapping system where memory consists of following hole size in memory order: 10K, 4K, 20K, 18K, 7K, 9K, 12K, and 15K. Which hole is taken for successive segment request of: 12K, 10K, 9K for First Fit, Best Fit, Worst Fit?
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+| Process Size | First-Fit | Best-Fit | Worst-Fit |
+| ------------ | --------- | -------- | --------- |
+| 12K          | 20K       | 12K      | 20K       |
+| 10K          | 10K       | 10K      | 18K       |
+| 9K           | 18K       | 9K       | 15K       |
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
 **Coalescing and Compaction:** Coalescing merges adjacent holes into a single larger hole when a process terminates. Compaction combines all holes into one by moving all processes together. This eliminates external fragmentation but requires significant CPU time, and the system must stop during compaction.
 
-### 4.2.2 Virtual Memory Management, Paging, Segmentation
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
+| ![Coalescing](images/ch_4/coalescing.png) | ![Compaction](images/ch_4/compaction.png) |
+| ----------------------------------------- | ----------------------------------------- |
+| Coalescing                                | Compaction                                |
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
 
 **Virtual Memory:** A technique that allows programs larger than physical memory to execute. It creates an illusion of a very large memory. Only the required portions of a process are loaded into main memory at any time. The logical address space can be much larger than the physical address space.
 
