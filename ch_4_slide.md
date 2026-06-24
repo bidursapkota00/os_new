@@ -805,13 +805,25 @@ Consider swapping system where memory consists of following hole size in memory 
 
 **Virtual Memory:** A technique that allows programs larger than physical memory to execute. It creates an illusion of a very large memory. Only the required portions of a process are loaded into main memory at any time. The logical address space can be much larger than the physical address space.
 
-**Benefits:** Programs can be larger than physical memory. More programs can run simultaneously. Programmers are freed from memory size constraints. Memory can be shared between processes efficiently.
+**Benefits:**
+Programs can be larger than physical memory.
+More programs can run simultaneously.
+Programmers are freed from memory size constraints.
+Memory can be shared between processes efficiently.
 
-**Paging:** A non-contiguous memory allocation technique that solves external fragmentation. The process's logical memory is divided into fixed-size blocks called **pages**. Physical memory is divided into blocks of the same size called **frames** (frame size = page size). Common page sizes range from 512 bytes to several megabytes. Pages need not be allocated contiguously in physical memory.
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+**Paging:** A non-contiguous memory allocation technique that solves external fragmentation. The process's logical memory is divided into fixed-size blocks called pages. Physical memory is divided into blocks of the same size called frames (frame size = page size). Common page sizes range from 512 bytes to several megabytes. Pages need not be allocated contiguously in physical memory.
 
 **Page Table:** A per-process data structure that maps each virtual page number to a physical frame number. Stored in main memory. A page table base register (PTBR) points to the current process's page table. The MMU uses the page table to translate virtual addresses.
 
-**Address Translation in Paging:** A virtual address is split into a **page number** (used to index the page table) and a **page offset** (position within the page). The page table gives the frame number. Physical address = frame number concatenated with the offset.
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+**Address Translation in Paging:** A virtual address is split into a page number (used to index the page table) and a page offset (position within the page). The page table gives the frame number. Physical address = frame number concatenated with the offset.
 
 - Page number bits = log₂(number of pages)
 - Offset bits = log₂(page size)
@@ -819,7 +831,72 @@ Consider swapping system where memory consists of following hole size in memory 
 - Frame number bits = log₂(number of frames)
 - Total physical address bits = frame number bits + offset bits
 
-**Example:** 8 pages of 1024 words, 32 frames. Logical address = log₂(8) + log₂(1024) = 3 + 10 = **13 bits**. Physical address = log₂(32) + log₂(1024) = 5 + 10 = **15 bits**.
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+<style scoped>
+ th {
+  font-weight: normal;
+  text-align: left;
+  vertical-align: top;
+ }
+ img {
+  height: 300pt;
+ }
+</style>
+
+Let, Process size = 4 Byte. Page size = 2 Byte. Main memory size = 16 Byte.
+
+| Always: Frame size = Page size = 2 Byte<br>So, Number of pages =<br>Process size / Page size = 4 / 2 = 2.<br>So, Number of frames =<br>Main memory size / Frame size = 16 / 2 = 8. | ![Paging](images/ch_4/paging-1.png) |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+
+Number inside table are byte numbers
+Number outside table are page/frame numbers
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+![Paging](images/ch_4/paging-2.png)
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+Consider logical address spaces of eight pages of 1024 words, each mapped onto a physical memory of 32 frames then,
+a) How many bits are in logical address and physical address?
+b) How paging will be done?
+
+<br>
+
+a)
+Logical address bits = Page number bits + Offset bits
+Logical address bits = log₂(8) + log₂(1024) = 3 + 10 = 13 bits.
+
+<br>
+
+Physical address bits = Frame number bits + Offset bits
+Physical address bits = log₂(32) + log₂(1024) = 5 + 10 = 15 bits.
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+Consider logical address spaces of eight pages of 1024 words, each mapped onto a physical memory of 32 frames then,
+a) How many bits are in logical address and physical address?
+b) How paging will be done?
+
+<br>
+
+b)
+
+The page table maps the 3-bit page number to a 5-bit frame number.
+The frame number is concatenated with the 10-bit offset to form the 15-bit physical address.
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
 
 **Physical Address Calculation:** Given logical address 18325, page size 8192 bytes: Page number = ⌊18325 / 8192⌋ = 2, Offset = 18325 mod 8192 = 1941. If page 2 maps to frame 11: Physical address = (11 × 8192) + 1941 = **92053**.
 
