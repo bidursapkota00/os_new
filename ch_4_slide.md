@@ -635,7 +635,7 @@ Cost for 300 MB = 0.02136 × 300 ≈ NPR 6.409.
 
 <br>
 
-Percentage cheaper = $\frac{\text{Cost of HDD} - \text{Cost of SSD}}{\text{Cost of HDD}} \times 100$
+Percentage cheaper = $\frac{\text{Cost of SSD} - \text{Cost of HDD}}{\text{Cost of SSD}} \times 100$
 
 <br>
 
