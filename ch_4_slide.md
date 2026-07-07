@@ -826,7 +826,7 @@ Memory can be shared between processes efficiently.
 **Address Translation in Paging:** A virtual address is split into a page number (used to index the page table) and a page offset (position within the page). The page table gives the frame number. Physical address = frame number concatenated with the offset.
 
 - Page number bits = log₂(number of pages)
-- Offset bits = log₂(page size)
+- Offset bits = log₂(number of words per page (Page size))
 - Total logical address bits = page number bits + offset bits
 - Frame number bits = log₂(number of frames)
 - Total physical address bits = frame number bits + offset bits
@@ -898,59 +898,216 @@ The frame number is concatenated with the 10-bit offset to form the 15-bit physi
 
 # 4.2.2 Virtual Memory Management, Paging, Segmentation
 
-**Physical Address Calculation:** Given logical address 18325, page size 8192 bytes: Page number = ⌊18325 / 8192⌋ = 2, Offset = 18325 mod 8192 = 1941. If page 2 maps to frame 11: Physical address = (11 × 8192) + 1941 = **92053**.
+<style scoped>
+  th, td, p {
+    font-weight: normal;
+    font-size: 24pt;
+  }
+</style>
+
+Consider a paged memory system with eight pages of 8KB page size each and 16 page frames in memory. Using the given page table, compute the physical address for the logical address 18325.
+
+| 7   | 10  |
+| --- | --- |
+| 6   | 4   |
+| 5   | 0   |
+| 4   | 7   |
+| 3   | 13  |
+| 2   | 11  |
+| 1   | 14  |
+| 0   | 5   |
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+Given, Number of Pages = 8
+**Page Number bits** = log₂(8) = 3 bits [for 8 pages]
+
+<br>
+
+Each page size = 8KB = 8192 Bytes
+Assume 1 word = 1 Byte
+**Offset bits** = log₂(8 x 1024) = 13 bits
+
+<br>
+
+Total words = 8 x 8192 = 65536 words
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+Given logical address = 18325
+Page number = 18325 ÷ 8192 = ⌊2.237⌋ = 2
+Page Offset:
+= 18325 % 8192
+= 18325 − (2 × 8192)
+= 18325 − 16384
+= 1941
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+From Page Table:
+Page 2 maps to Frame 11
+
+<br>
+
+Physical Address = (Frame number × Page/Frame size) + Offset
+= (11 x 8192) + 1941
+= 92053
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
 
 **Page Fault:** Occurs when a program references a page not currently in memory. The MMU detects the unmapped page and traps to the OS. The OS loads the required page from disk into an available frame, updates the page table, and restarts the faulting instruction.
 
 **Translation Lookaside Buffer (TLB):** A small hardware cache inside the MMU that stores recently used page table entries. When a virtual address is presented, the TLB is checked first. A TLB hit provides the frame number directly without accessing the page table in memory, significantly speeding up address translation. TLB misses fall back to the normal page table lookup.
 
-**Advantages of Paging:** Eliminates external fragmentation. Any free frame can be used. Supports virtual memory. Simplifies swapping. **Disadvantages:** Internal fragmentation in the last page. Page tables can be very large. Translation overhead on every memory access.
+---
 
-**Segmentation:** A program is divided into multiple segments based on logical divisions such as code, data, and stack. Each segment has a segment number and a variable length. Segments can grow or shrink independently. A logical address consists of a segment number and an offset. The OS maintains a **segment table** for each process, where each entry provides the base address and length (limit) of the segment. The segment number indexes the table; the offset is checked against the limit for protection, then added to the base to get the physical address. Different segments can have different protection levels (code = execute-only, data = read-write). Suffers from external fragmentation since segments are variable-sized.
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
 
-**Paged Segmentation:** Combines both approaches. A program is divided into segments, and each segment is further divided into fixed-size pages. The OS maintains a segment table where each entry points to a page table for that segment. Address translation: segment number → segment table → page table → frame number + offset → physical address. Supports logical organization (segments) with efficient memory utilization (paging), but requires multiple table lookups and more overhead.
+**Advantages of Paging:**
+Eliminates external fragmentation.
+Any free frame can be used.
+Supports virtual memory.
+Simplifies swapping.
 
-### 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU), Page Fault and Hit Ratio
+**Disadvantages:**
+Internal fragmentation in the last page.
+Page tables can be very large.
+Translation overhead on every memory access.
 
-> **Consider the following page-reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1. Assuming 3 frames, how many page faults would occur for FIFO, Optimal, LRU. [5 marks] (2082 Bhadra)**
-> **Given references: 1, 2, 3, 2, 1, 5, 2, 1, 6, 2, 5, 6, 3, 1, 3, 6, 1, 2, 4, 3. With 4 frames, find page faults for LRU, FIFO, Optimal. [5 marks] (Model Question)**
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+**Segmentation:** A program is divided into multiple segments based on logical divisions such as code, data, and stack. Each segment has a segment number and a variable length. Segments can grow or shrink independently. A logical address consists of a segment number and an offset. The OS maintains a segment table for each process, where each entry provides the base address and length (limit) of the segment. The segment number indexes the table; the offset is checked against the limit for protection, then added to the base to get the physical address. Different segments can have different protection levels (code = execute-only, data = read-write). Suffers from external fragmentation since segments are variable-sized.
+
+---
+
+# 4.2.2 Virtual Memory Management, Paging, Segmentation
+
+**Paged Segmentation:** Combines both approaches. A program is divided into segments, and each segment is further divided into fixed-size pages. The OS maintains a segment table where each entry points to a page table for that segment. Address translation: the segment number is used to look up the segment table, which points to the page table, which gives the frame number combined with the offset to form the physical address. Supports logical organization (segments) with efficient memory utilization (paging), but requires multiple table lookups and more overhead.
 
 **Demand Paging:** Pages are loaded only when referenced (lazy loading). Less memory per process, more processes in memory, faster startup. However, page faults cause delay due to disk I/O.
 
-**Page Fault:** Occurs when a referenced page is not in memory. **Page Hit:** The referenced page is found in memory. **Fault ratio** = page faults / total references. **Hit ratio** = page hits / total references.
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**Page Fault:** Occurs when a referenced page is not in memory.
+**Page Hit:** The referenced page is found in memory.
+**Fault ratio** = page faults / total references.
+**Hit ratio** = page hits / total references.
 
 When a page fault occurs and all frames are full, the OS must choose a page to evict. The choice significantly affects performance.
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
 
 **A. Optimal Page Replacement:** Replaces the page that will not be used for the longest time in the future. Produces the minimum number of page faults. Impossible to implement in practice (future references are unknown). Used as a benchmark to evaluate other algorithms.
 
 **B. FIFO (First-In First-Out):** Replaces the page that has been in memory the longest. The OS maintains a queue where the oldest page (head) is evicted and the new page is added to the tail. Simple to implement, but the oldest page may still be heavily used. Suffers from **Belady's Anomaly**, where in some cases, increasing the number of frames can increase page faults.
 
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
 **C. LRU (Least Recently Used):** Replaces the page that has not been used for the longest time. Uses past behavior to predict future behavior, since recently used pages are likely to be needed again. A good approximation of the optimal algorithm. Does not suffer from Belady's anomaly.
 
 **D. LFU (Least Frequently Used):** Replaces the page with the smallest reference count. A counter is maintained for each page, incremented on each reference. The idea is that actively used pages have high counts.
 
-**Worked Example (2082 Bhadra):** Reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1. Frames = 3.
+---
 
-**FIFO:**
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
 
-| Ref | 7   | 0   | 1   | 2   | 0   | 3   | 0   | 4   | 2   | 3   | 0   | 3   | 2   | 1   | 2   | 0   | 1   | 7   | 0   | 1   |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| F1  | 7   | 7   | 7   | 2   | 2   | 2   | 4   | 4   | 4   | 0   | 0   | 0   | 7   | 7   | 7   |     |     |     |     |     |
-| F2  |     | 0   | 0   | 0   | 3   | 3   | 3   | 2   | 2   | 2   | 1   | 1   | 1   | 0   | 0   |     |     |     |     |     |
-| F3  |     |     | 1   | 1   | 1   | 0   | 0   | 0   | 3   | 3   | 3   | 2   | 2   | 2   | 1   |     |     |     |     |     |
-| PF? | F   | F   | F   | F   | H   | F   | F   | F   | F   | F   | F   | H   | F   | F   | F   | F   | H   | F   | F   | H   |
+Page frame size is 3 and the reference string is
+7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 1, 2, 0
 
-**FIFO page faults = 15.**
+---
 
-**Optimal:** At each fault, evict the page not needed for the longest future time.
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
 
-**Optimal page faults = 9.**
+**Optimal**
 
-**LRU:** At each fault, evict the page not used for the longest past time.
+| Ref    | 7     | 0     | 1     | 2     | 0        | 3     | 0        | 4     | 2        | 3        | 0     | 3        | 1     | 2        | 0        |
+| ------ | ----- | ----- | ----- | ----- | -------- | ----- | -------- | ----- | -------- | -------- | ----- | -------- | ----- | -------- | -------- |
+| F1     | **7** | 7     | 7     | **2** | 2        | 2     | 2        | 2     | <u>2</u> | 2        | 2     | 2        | 2     | <u>2</u> | 2        |
+| F2     | -     | **0** | 0     | 0     | <u>0</u> | 0     | <u>0</u> | **4** | 4        | 4        | **0** | 0        | 0     | 0        | <u>0</u> |
+| F3     | -     | -     | **1** | 1     | 1        | **3** | 3        | 3     | 3        | <u>3</u> | 3     | <u>3</u> | **1** | 1        | 1        |
+| Result | F     | F     | F     | F     | H        | F     | H        | F     | H        | H        | F     | H        | F     | H        | H        |
 
-**LRU page faults = 12.**
+No. of Hit: 7
+Page Fault: 8
+Hit Rate: 46.67 %
 
-### 4.2.4 Allocation of Frames
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**FIFO**
+
+| Ref    | 7     | 0     | 1     | 2     | 0        | 3     | 0     | 4     | 2     | 3     | 0     | 3        | 1     | 2     | 0        |
+| ------ | ----- | ----- | ----- | ----- | -------- | ----- | ----- | ----- | ----- | ----- | ----- | -------- | ----- | ----- | -------- |
+| F1     | **7** | 7     | 7     | **2** | 2        | 2     | 2     | **4** | 4     | 4     | **0** | 0        | 0     | 0     | <u>0</u> |
+| F2     | -     | **0** | 0     | 0     | <u>0</u> | **3** | 3     | 3     | **2** | 2     | 2     | 2        | **1** | 1     | 1        |
+| F3     | -     | -     | **1** | 1     | 1        | 1     | **0** | 0     | 0     | **3** | 3     | <u>3</u> | 3     | **2** | 2        |
+| Result | F     | F     | F     | F     | H        | F     | F     | F     | F     | F     | F     | H        | F     | F     | H        |
+
+No. of Hit: 3
+Page Fault: 12
+Hit Rate: 20 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**LRU**
+
+| Ref    | 7     | 0     | 1     | 2     | 0        | 3     | 0        | 4     | 2     | 3     | 0     | 3        | 1     | 2     | 0     |
+| ------ | ----- | ----- | ----- | ----- | -------- | ----- | -------- | ----- | ----- | ----- | ----- | -------- | ----- | ----- | ----- |
+| F1     | **7** | 7     | 7     | **2** | 2        | 2     | 2        | **4** | 4     | 4     | **0** | 0        | 0     | **2** | 2     |
+| F2     | -     | **0** | 0     | 0     | <u>0</u> | 0     | <u>0</u> | 0     | 0     | **3** | 3     | <u>3</u> | 3     | 3     | **0** |
+| F3     | -     | -     | **1** | 1     | 1        | **3** | 3        | 3     | **2** | 2     | 2     | 2        | **1** | 1     | 1     |
+| Result | F     | F     | F     | F     | H        | F     | H        | F     | F     | F     | F     | H        | F     | F     | F     |
+
+No. of Hit: 3
+Page Fault: 12
+Hit Rate: 20 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**LFU**
+
+| Ref    | 7     | 0     | 1     | 2     | 0        | 3     | 0        | 4     | 2     | 3     | 0        | 3        | 1     | 2     | 0        |
+| ------ | ----- | ----- | ----- | ----- | -------- | ----- | -------- | ----- | ----- | ----- | -------- | -------- | ----- | ----- | -------- |
+| F1     | **7** | 7     | 7     | **2** | 2        | 2     | 2        | **4** | 4     | **3** | 3        | <u>3</u> | 3     | 3     | 3        |
+| F2     | -     | **0** | 0     | 0     | <u>0</u> | 0     | <u>0</u> | 0     | 0     | 0     | <u>0</u> | 0        | 0     | 0     | <u>0</u> |
+| F3     | -     | -     | **1** | 1     | 1        | **3** | 3        | 3     | **2** | 2     | 2        | 2        | **1** | **2** | 2        |
+| Result | F     | F     | F     | F     | H        | F     | H        | F     | F     | F     | H        | H        | F     | F     | H        |
+
+No. of Hit: 5
+Page Fault: 10
+Hit Rate: 33.33 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+> **Consider the following page-reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1. Assuming 3 frames, how many page faults would occur for FIFO, Optimal, LRU. [5 marks] (2082 Bhadra)**
+> **Given references: 1, 2, 3, 2, 1, 5, 2, 1, 6, 2, 5, 6, 3, 1, 3, 6, 1, 2, 4, 3. With 4 frames, find page faults for LRU, FIFO, Optimal. [5 marks] (Model Question)**
+
+---
+
+# 4.2.4 Allocation of Frames
 
 Frame allocation determines how many frames each process receives. Each process needs a minimum number of frames determined by the instruction set architecture (if an instruction can reference multiple memory locations, all those pages must be in memory). The maximum is the total available physical memory.
 
@@ -960,14 +1117,27 @@ Frame allocation determines how many frames each process receives. Each process 
 
 **Priority Allocation:** Higher-priority processes receive more frames. Lower-priority processes may lose frames to higher-priority ones.
 
-### 4.2.5 Thrashing
+---
+
+# 4.2.5 Thrashing
 
 > **Write a short note on Thrashing. [3 marks] (2082 Bhadra)**
 
-Thrashing occurs when a process spends more time paging (swapping pages in and out of memory) than executing useful work. The process is constantly generating page faults, and the system's CPU utilization drops dramatically. Thrashing happens when the total memory demand of all active processes exceeds available physical memory. Each process has fewer frames than its working set requires, so loading one page evicts another that will be needed soon.
+Thrashing occurs when a process spends more time swapping pages in and out of memory than executing useful work. The process is constantly generating page faults, and the system's CPU utilization drops dramatically. Thrashing happens when the total memory demand of all active processes exceeds available physical memory. Each process has fewer frames than its working set requires, so loading one page evicts another that will be needed soon.
 
-**Causes:** Too many processes in memory (high degree of multiprogramming), insufficient frames allocated per process, poor page replacement decisions.
+---
+
+# 4.2.5 Thrashing
+
+**Causes:**
+Too many processes in memory (high degree of multiprogramming)
+Insufficient frames allocated per process
+Poor page replacement decisions
 
 **Working Set Model (Prevention):** Proposed by Peter Denning. A process's working set is the collection of pages it has actively referenced within a recent time window (Δ). The OS monitors working set sizes. A process should only execute if its entire working set fits in memory. If the sum of all working sets exceeds available memory, the OS suspends one or more processes to free frames for the remaining ones.
+
+---
+
+# 4.2.5 Thrashing
 
 **Page Fault Frequency (PFF):** The OS monitors each process's page fault rate. If the rate exceeds an upper threshold, the process needs more frames, so additional frames are allocated. If the rate falls below a lower threshold, the process has excess frames, so some are reclaimed. This keeps page fault frequency within an acceptable range.
