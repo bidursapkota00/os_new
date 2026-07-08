@@ -1102,6 +1102,81 @@ Hit Rate: 33.33 %
 
 # 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
 
+Page frame size is 3 and the reference string is
+1, 3, 0, 3, 5, 6, 3
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**Optimal**
+
+| Ref    | 1     | 3     | 0     | 3        | 5     | 6     | 3        |
+| ------ | ----- | ----- | ----- | -------- | ----- | ----- | -------- |
+| F1     | **1** | 1     | 1     | 1        | **5** | 5     | 5        |
+| F2     | -     | **3** | 3     | <u>3</u> | 3     | 3     | <u>3</u> |
+| F3     | -     | -     | **0** | 0        | 0     | **6** | 6        |
+| Result | F     | F     | F     | H        | F     | F     | H        |
+
+No. of Hit: 2
+Page Fault: 5
+Hit Rate: 28.57 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**FIFO**
+
+| Ref    | 1     | 3     | 0     | 3        | 5     | 6     | 3     |
+| ------ | ----- | ----- | ----- | -------- | ----- | ----- | ----- |
+| F1     | **1** | 1     | 1     | 1        | **5** | 5     | 5     |
+| F2     | -     | **3** | 3     | <u>3</u> | 3     | **6** | 6     |
+| F3     | -     | -     | **0** | 0        | 0     | 0     | **3** |
+| Result | F     | F     | F     | H        | F     | F     | F     |
+
+No. of Hit: 1
+Page Fault: 6
+Hit Rate: 14.29 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**LRU**
+
+| Ref    | 1     | 3     | 0     | 3        | 5     | 6     | 3        |
+| ------ | ----- | ----- | ----- | -------- | ----- | ----- | -------- |
+| F1     | **1** | 1     | 1     | 1        | **5** | 5     | 5        |
+| F2     | -     | **3** | 3     | <u>3</u> | 3     | 3     | <u>3</u> |
+| F3     | -     | -     | **0** | 0        | 0     | **6** | 6        |
+| Result | F     | F     | F     | H        | F     | F     | H        |
+
+No. of Hit: 2
+Page Fault: 5
+Hit Rate: 28.57 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
+**LFU**
+
+| Ref    | 1     | 3     | 0     | 3        | 5     | 6     | 3        |
+| ------ | ----- | ----- | ----- | -------- | ----- | ----- | -------- |
+| F1     | **1** | 1     | 1     | 1        | **5** | 5     | 5        |
+| F2     | -     | **3** | 3     | <u>3</u> | 3     | 3     | <u>3</u> |
+| F3     | -     | -     | **0** | 0        | 0     | **6** | 6        |
+| Result | F     | F     | F     | H        | F     | F     | H        |
+
+No. of Hit: 2
+Page Fault: 5
+Hit Rate: 28.57 %
+
+---
+
+# 4.2.3 Page Replacement Algorithms (FIFO, LRU, LFU)
+
 > **Consider the following page-reference string: 7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1. Assuming 3 frames, how many page faults would occur for FIFO, Optimal, LRU. [5 marks] (2082 Bhadra)**
 > **Given references: 1, 2, 3, 2, 1, 5, 2, 1, 6, 2, 5, 6, 3, 1, 3, 6, 1, 2, 4, 3. With 4 frames, find page faults for LRU, FIFO, Optimal. [5 marks] (Model Question)**
 
