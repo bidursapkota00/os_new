@@ -169,7 +169,7 @@ By Bidur Sapkota
 
 # 5.1 File Concepts
 
-A file is a named collection of related information recorded on secondary storage. It is the smallest allotment of logical secondary storage — data cannot be written to secondary storage unless it is within a file. The OS abstracts from the physical properties of storage devices to define a logical storage unit called a file. From the user's perspective, a file contains either a program or data.
+A file is a named collection of related information recorded on secondary storage. It is the smallest allotment of logical secondary storage. Data cannot be written to secondary storage unless it is within a file. The OS abstracts from the physical properties of storage devices to define a logical storage unit called a file. From the user's perspective, a file contains either a program or data.
 
 ---
 
@@ -177,7 +177,7 @@ A file is a named collection of related information recorded on secondary storag
 
 ### File Naming
 
-When a process creates a file, it gives the file a name. The file continues to exist after the process terminates and can be accessed by other processes using its name. Many file systems support names as long as 255 characters. UNIX differentiates between uppercase and lowercase letters in file names, whereas MS-DOS does not. Many operating systems support file names with two parts separated by a period — the part following the period is called the file extension (e.g., `.txt`, `.c`, `.exe`, `.html`, `.mp3`, `.pdf`), which usually indicates the type or contents of the file.
+When a process creates a file, it gives the file a name. The file continues to exist after the process terminates and can be accessed by other processes using its name. Many file systems support names as long as 255 characters. UNIX differentiates between uppercase and lowercase letters in file names, whereas MS-DOS does not. Many operating systems support file names with two parts separated by a period. The part following the period is called the file extension (e.g., `.txt`, `.c`, `.exe`, `.html`, `.mp3`, `.pdf`), which usually indicates the type or contents of the file.
 
 ---
 
@@ -187,7 +187,7 @@ When a process creates a file, it gives the file a name. The file continues to e
 
 Files can be structured in several ways:
 
-**Byte Sequence:** The file is an unstructured sequence of bytes. The OS does not know or care what is in the file — any meaning must be imposed by user-level programs. This provides maximum flexibility. Both UNIX and Windows use this approach.
+**Byte Sequence:** The file is an unstructured sequence of bytes. The OS does not know or care what is in the file. Any meaning must be imposed by user-level programs. This provides maximum flexibility. Both UNIX and Windows use this approach.
 
 **Record Sequence:** The file is a sequence of fixed-length records, each with some internal structure. The read operation returns one record at a time, and write overwrites or appends one record at a time.
 
@@ -235,7 +235,7 @@ Files can be structured in several ways:
 
 ### File Access Methods
 
-**Indexed Sequential Access:** Built on top of direct access. An index containing pointers to various blocks is constructed (like an index in a book). To find an entry, the system first searches the index, then uses the pointer to access the file directly. For large files, a multi-level index (primary index → secondary index → data) may be used. Provides both sequential and random access capabilities.
+**Indexed Sequential Access:** Built on top of direct access. An index containing pointers to various blocks is constructed (like an index in a book). To find an entry, the system first searches the index, then uses the pointer to access the file directly. For large files, a multi-level index may be used, such as a primary index pointing to a secondary index, which then points to the data. This provides both sequential and random access capabilities.
 
 ---
 
@@ -260,7 +260,7 @@ File attributes (also called metadata) are extra information associated with eac
 ### File Attributes
 
 - **Protection:** Access control information regarding who can read, write, and execute.
-- **Time and Date:** Timestamps for creation, last modification, and last access — useful for security and usage monitoring.
+- **Time and Date:** Timestamps for creation, last modification, and last access are kept, as they are useful for security and usage monitoring.
 - **Owner:** The user who created and owns the file.
 - **Flags:** Special attributes like hidden, system, archive, and read-only.
 
@@ -307,7 +307,7 @@ A directory is a node in the file system that contains entries for files and sub
 
 ### Single-Level Directory
 
-The simplest form — one directory containing all the files (root directory). Advantage: simplicity — files can be located quickly. Disadvantage: naming conflicts when many users or many files exist, and no support for grouping related files. Common on early personal computers and simple embedded devices.
+The simplest form is a single directory containing all the files, known as the root directory. Its advantage is simplicity, which means files can be located quickly. The disadvantage is that naming conflicts occur when many users or many files exist, and there is no support for grouping related files. This structure is common on early personal computers and simple embedded devices.
 
 ---
 
@@ -325,7 +325,7 @@ Each user gets a private directory. A root directory contains entries pointing t
 
 ### Hierarchical Directory (Directory Tree)
 
-Users can create an arbitrary number of subdirectories to any depth. This is now almost universally used — UNIX, Linux, Windows, and macOS all support hierarchical directories. Files with logical relationships can be grouped together.
+Users can create an arbitrary number of subdirectories to any depth. This structure is now almost universally used. For example, UNIX, Linux, Windows, and macOS all support hierarchical directories. Files with logical relationships can be grouped together.
 
 ---
 
@@ -347,7 +347,7 @@ Users can create an arbitrary number of subdirectories to any depth. This is now
 
 When the file system is a directory tree, file names are specified using path names.
 
-**Absolute Path Name:** Begins at the root of the file system. In UNIX/Linux, the root is `/` and components are separated by `/` <br> (e.g., `/home/john/documents/report.txt`). In Windows, the root is a drive letter like `C:\` and components are separated by `\` <br> (e.g., `C:\Users\John\Documents\report.txt`). Works regardless of the current working directory.
+**Absolute Path Name:** Begins at the root of the file system. In UNIX/Linux, the root is `/` and components are separated by `/` (e.g., `/home/john/documents/report.txt`). In Windows, the root is a drive letter like `C:\` and components are separated by `\` <br> (e.g., `C:\Users\John\Documents\report.txt`). Works regardless of the current working directory.
 
 ---
 
@@ -403,12 +403,12 @@ File systems are stored on disks. Most disks can be divided into one or more par
 
 ### Block Size
 
-The block is the fundamental unit of disk space allocation (also called allocation unit or cluster). Typically a power of 2 — commonly 4 KB (default for both ext4 and NTFS).
+The block is the fundamental unit of disk space allocation (also called an allocation unit or cluster). It is typically a power of 2, and is commonly 4 KB, which is the default for both ext4 and NTFS.
 
 **Space Utilization vs. Performance Trade-off:**
 
-- **Large blocks** → waste space due to internal fragmentation (unused space in the last block). A 1-byte file in a 4 KB block wastes 4095 bytes.
-- **Small blocks** → files span many blocks, requiring more disk I/O operations and seeks, reducing performance.
+- **Large blocks:** Using large blocks wastes space due to internal fragmentation (unused space in the last block). A 1-byte file in a 4 KB block wastes 4095 bytes.
+- **Small blocks:** Using small blocks causes files to span many blocks, requiring more disk I/O operations and seeks, which reduces performance.
 
 ---
 
@@ -418,7 +418,7 @@ The block is the fundamental unit of disk space allocation (also called allocati
 
 **Space Utilization vs. Performance Trade-off:**
 
-- **Large blocks** → fewer I/O operations, higher effective data rate, better performance.
+- **Large blocks:** Large blocks require fewer I/O operations, which results in a higher effective data rate and better performance.
 
 ---
 
@@ -446,10 +446,10 @@ An inode contains: file type, permissions (rwx for owner/group/others), number o
 
 Pointer structure (with 4 KB blocks and 4-byte pointers, each indirect block holds 1024 pointers):
 
-- 12 direct pointers → files up to 48 KB
-- 1 single indirect block → additional 4 MB
-- 1 double indirect block → additional 4 GB
-- 1 triple indirect block → additional 4 TB
+- 12 direct pointers can address files up to 48 KB.
+- 1 single indirect block can address an additional 4 MB.
+- 1 double indirect block can address an additional 4 GB.
+- 1 triple indirect block can address an additional 4 TB.
 
 ---
 
@@ -468,7 +468,7 @@ Pointer structure (with 4 KB blocks and 4-byte pointers, each indirect block hol
 **A. Contiguous Allocation:**
 Each file is stored as a contiguous run of disk blocks. Only two numbers need to be stored: the disk address of the first block and the number of blocks.
 
-- **Advantages:** Simple to implement. Excellent read performance — the entire file can be read in a single operation with only one seek.
+- **Advantages:** It is simple to implement and provides excellent read performance. The entire file can be read in a single operation with only one seek.
 
 ---
 
@@ -478,7 +478,7 @@ Each file is stored as a contiguous run of disk blocks. Only two numbers need to
 
 **A. Contiguous Allocation:**
 
-- **Disadvantages:** External fragmentation — as files are deleted, gaps form that may be too small for new files, wasting space even though total free space may be sufficient. Compaction can fix this but is extremely time-consuming. File size must be known at creation time; if too little space is allocated, the file cannot grow; if too much, space is wasted.
+- **Disadvantages:** It suffers from external fragmentation. As files are deleted, gaps form that may be too small for new files, wasting space even though total free space may be sufficient. Compaction can fix this but is extremely time-consuming. File size must be known at creation time; if too little space is allocated, the file cannot grow; if too much, space is wasted.
 - **Use case:** CD-ROMs/DVDs (written once, read-only) and real-time systems where file sizes are known in advance.
 
 ---
@@ -500,7 +500,7 @@ Each file is stored as a contiguous run of disk blocks. Only two numbers need to
 **B. Linked List Allocation:**
 Each file is a linked list of disk blocks. The first word of each block is a pointer to the next block; the rest is for data. The directory entry stores only the first block's address.
 
-- **Advantages:** No external fragmentation — any free block can be used. Files can grow easily.
+- **Advantages:** There is no external fragmentation, as any free block can be used. Files can grow easily.
 
 ---
 
@@ -510,7 +510,7 @@ Each file is a linked list of disk blocks. The first word of each block is a poi
 
 **B. Linked List Allocation:**
 
-- **Disadvantages:** Random access is extremely slow (must follow the chain from the beginning to reach block n). The pointer in each block reduces usable data space (no longer a power of two). Vulnerable to disk errors — if one pointer is corrupted, the rest of the file is lost.
+- **Disadvantages:** Random access is extremely slow, as it must follow the chain from the beginning to reach block n. The pointer in each block reduces usable data space, meaning it is no longer a power of two. It is vulnerable to disk errors. If one pointer is corrupted, the rest of the file is lost.
 
 ---
 
@@ -582,7 +582,7 @@ A directory maps file names to storage information. Two approaches: storing file
 
 File system performance is crucial for overall system responsiveness since disk I/O is often the bottleneck. Key techniques to improve performance:
 
-**Caching (Buffer Cache):** The OS maintains a buffer cache in main memory to store frequently accessed disk blocks. When a process requests data, the OS checks the cache first — a cache hit avoids a slow disk I/O operation. Cache replacement algorithms like LRU and LFU determine which blocks to evict. Write-back (delayed write) allows writes to happen in cache first, with disk writes happening later (typically every 5–30 seconds), aggregating and optimizing multiple write requests.
+**Caching (Buffer Cache):** The OS maintains a buffer cache in main memory to store frequently accessed disk blocks. When a process requests data, the OS checks the cache first. A cache hit avoids a slow disk I/O operation. Cache replacement algorithms like LRU and LFU determine which blocks to evict. Write-back (delayed write) allows writes to happen in cache first, with disk writes happening later (typically every 5–30 seconds), aggregating and optimizing multiple write requests.
 
 ---
 
@@ -604,7 +604,7 @@ File system performance is crucial for overall system responsiveness since disk 
 
 # 5.5 Example File Systems
 
-**FAT32 (File Allocation Table 32):** A legacy file system designed for compatibility. Uses a file allocation table (linked-list-style allocation) to track block order. Extremely high cross-platform compatibility — readable by almost every OS (Windows, macOS, Linux, game consoles, cameras). Limitations: no journaling (prone to corruption), no file-level security/permissions, strict 4 GB maximum file size, and 2 TB maximum volume size. Suitable for removable media (USB drives, memory cards) but not for modern system drives.
+**FAT32 (File Allocation Table 32):** This is a legacy file system designed for compatibility. It uses a file allocation table with linked-list-style allocation to track block order. It offers extremely high cross-platform compatibility, as it is readable by almost every OS including Windows, macOS, Linux, game consoles, and cameras. Its limitations include no journaling, which makes it prone to corruption, no file-level security or permissions, a strict 4 GB maximum file size, and a 2 TB maximum volume size. It is suitable for removable media like USB drives and memory cards, but not for modern system drives.
 
 ---
 
@@ -616,7 +616,7 @@ File system performance is crucial for overall system responsiveness since disk 
 
 # 5.5 Example File Systems
 
-**EXT4 (Fourth Extended File System):** The standard, high-performance file system for Linux distributions. Inode-based file structure — directories map file names to inode numbers. Supports files up to 16 TB and volumes up to 1 EB. Features journaling for data integrity, extents (contiguous block ranges for reducing fragmentation), delayed allocation, and backward compatibility with ext2/ext3. Default block size is 4 KB. Designed for efficient random and sequential access. Limited native compatibility with Windows and macOS.
+**EXT4 (Fourth Extended File System):** This is the standard, high-performance file system for Linux distributions. It uses an inode-based file structure where directories map file names to inode numbers. It supports files up to 16 TB and volumes up to 1 EB. It features journaling for data integrity, extents for contiguous block ranges to reduce fragmentation, delayed allocation, and backward compatibility with ext2 and ext3. The default block size is 4 KB. It is designed for efficient random and sequential access. It has limited native compatibility with Windows and macOS.
 
 ---
 
