@@ -779,7 +779,7 @@ Unlike C library functions (`fopen`, `fgets`, `fprintf`), UNIX I/O system calls 
 
 **Standard file descriptors:** 0 = stdin, 1 = stdout, 2 = stderr.
 
-## 4.1 Write and Read a File Using System Calls
+## 3.1 Write and Read a File Using System Calls
 
 ### Code: `io_basic.c`
 
@@ -835,7 +835,7 @@ Hello from UNIX system calls!
 
 **lseek whence:** `SEEK_SET` (from start), `SEEK_CUR` (from current), `SEEK_END` (from end).
 
-## 4.4 Create a Child Process Using `fork()`
+## 3.2 Create a Child Process Using `fork()`
 
 ### Code: `forkdemo.c`
 
@@ -875,49 +875,56 @@ Parent: PID = 12345, Child PID = 12346
 
 ---
 
-# Practical 5: Scheduling Algorithms and Producer-Consumer Problem
+# Practical 4: Scheduling Algorithms and Producer-Consumer Problem
 
-## 5.1 FCFS (First Come First Serve) Scheduling
+## 4.1 FCFS (First Come First Serve) Scheduling
 
 ### Code: `fcfs.c`
 
 ```c
-#include <stdio.h>
+#include<stdio.h>
 
 int main() {
-    int n, i;
-    printf("Enter number of processes: ");
+    int n;
+    printf("Enter number of process: ");
     scanf("%d", &n);
 
-    int bt[n], wt[n], tat[n], at[n];
-    for (i = 0; i < n; i++) {
-        printf("P%d - Arrival Time & Burst Time: ", i + 1);
+    int at[n], bt[n], ct[n], tat[n], wt[n], d[n];
+    for(int i=0; i<n; i++) {
+        printf("\nFor P%d: Enter at and bt: ", i+1);
         scanf("%d %d", &at[i], &bt[i]);
+        d[i] = 0; ct[i]=0; tat[i]=0; wt[i]=0;
     }
 
-    /* Sort by arrival time (simple selection sort) */
-    for (i = 0; i < n - 1; i++)
-        for (int j = i + 1; j < n; j++)
-            if (at[j] < at[i]) {
-                int t;
-                t = at[i]; at[i] = at[j]; at[j] = t;
-                t = bt[i]; bt[i] = bt[j]; bt[j] = t;
+    int t=0, stat=0, swt=0, c=0;
+    while(c<n) {
+        int min_at=9999, idx=-1;
+        for(int i=0; i<n; i++) {
+            if(!d[i] && at[i]<min_at && at[i]<=t) {
+                min_at=at[i];
+                idx=i;
             }
-
-    int ct = 0;  /* current time */
-    float total_wt = 0, total_tat = 0;
-
-    printf("\nProcess\tAT\tBT\tWT\tTAT\n");
-    for (i = 0; i < n; i++) {
-        if (ct < at[i]) ct = at[i];  /* CPU idle */
-        wt[i] = ct - at[i];
-        tat[i] = wt[i] + bt[i];
-        ct += bt[i];
-        total_wt += wt[i];
-        total_tat += tat[i];
-        printf("P%d\t%d\t%d\t%d\t%d\n", i + 1, at[i], bt[i], wt[i], tat[i]);
+        }
+        if(idx==-1) {t++; continue;}
+        ct[idx]=t+bt[idx];
+        tat[idx]=ct[idx]-at[idx];
+        wt[idx]=tat[idx]-bt[idx];
+        swt += wt[idx];
+        stat += tat[idx];
+        d[idx] = 1;
+        c++;
+        t = ct[idx];
     }
-    printf("Avg WT = %.2f, Avg TAT = %.2f\n", total_wt / n, total_tat / n);
+
+    printf("\n\nProcess\tat\tbt\tct\ttat\twt");
+    for(int i=0; i<n; i++) {
+        printf("\nP%d\t%d\t%d\t%d\t%d\t%d", i+1, at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+    printf("\nTotal\t\t\t\t%d\t%d\n", stat, swt);
+
+    printf("\n\natat = %.2f", (float)stat/n);
+    printf("\nawt = %.2f\n", (float)swt/n);
+
     return 0;
 }
 ```
@@ -927,59 +934,77 @@ int main() {
 ```bash
 $ gcc -o fcfs fcfs.c
 $ ./fcfs
-Enter number of processes: 3
-P1 - Arrival Time & Burst Time: 0 5
-P2 - Arrival Time & Burst Time: 1 3
-P3 - Arrival Time & Burst Time: 2 8
+Enter number of process: 4
 
-Process	AT	BT	WT	TAT
-P1	0	5	0	5
-P2	1	3	4	7
-P3	2	8	6	14
-Avg WT = 3.33, Avg TAT = 8.67
+For P1: Enter at and bt: 0 10
+
+For P2: Enter at and bt: 1 6
+
+For P3: Enter at and bt: 3 2
+
+For P4: Enter at and bt: 5 4
+
+
+Process at      bt      ct      tat     wt
+P1      0       10      10      10      0
+P2      1       6       16      15      9
+P3      3       2       18      15      13
+P4      5       4       22      17      13
+Total                           57      35
+
+
+atat = 14.25
+awt = 8.75
 ```
 
-## 5.2 SJF (Shortest Job First), Non-Preemptive
+## 4.2 SJF (Shortest Job First), Non-Preemptive
 
 ### Code: `sjf.c`
 
 ```c
-#include <stdio.h>
+#include<stdio.h>
 
 int main() {
-    int n, i;
-    printf("Enter number of processes: ");
+    int n;
+    printf("Enter number of process: ");
     scanf("%d", &n);
 
-    int bt[n], at[n], wt[n], tat[n], done[n], order[n];
-    for (i = 0; i < n; i++) {
-        printf("P%d - Arrival Time & Burst Time: ", i + 1);
+    int at[n], bt[n], ct[n], tat[n], wt[n], d[n];
+    for(int i=0; i<n; i++) {
+        printf("\nFor P%d: Enter at and bt: ", i+1);
         scanf("%d %d", &at[i], &bt[i]);
-        done[i] = 0;
+        d[i] = 0; ct[i]=0; tat[i]=0; wt[i]=0;
     }
 
-    int ct = 0, completed = 0;
-    float total_wt = 0, total_tat = 0;
-
-    printf("\nProcess\tAT\tBT\tWT\tTAT\n");
-    while (completed < n) {
-        int min_bt = 99999, idx = -1;
-        for (i = 0; i < n; i++)
-            if (!done[i] && at[i] <= ct && bt[i] < min_bt) {
-                min_bt = bt[i]; idx = i;
+    int t=0, stat=0, swt=0, c=0;
+    while(c<n) {
+        int min_bt=9999, idx=-1;
+        for(int i=0; i<n; i++) {
+            if(!d[i] && bt[i]<min_bt && at[i]<=t) {
+                min_bt=bt[i];
+                idx=i;
             }
-        if (idx == -1) { ct++; continue; }
-
-        wt[idx] = ct - at[idx];
-        tat[idx] = wt[idx] + bt[idx];
-        ct += bt[idx];
-        done[idx] = 1;
-        completed++;
-        total_wt += wt[idx];
-        total_tat += tat[idx];
-        printf("P%d\t%d\t%d\t%d\t%d\n", idx + 1, at[idx], bt[idx], wt[idx], tat[idx]);
+        }
+        if(idx==-1) {t++; continue;}
+        ct[idx]=t+bt[idx];
+        tat[idx]=ct[idx]-at[idx];
+        wt[idx]=tat[idx]-bt[idx];
+        swt += wt[idx];
+        stat += tat[idx];
+        d[idx] = 1;
+        c++;
+        t = ct[idx];
     }
-    printf("Avg WT = %.2f, Avg TAT = %.2f\n", total_wt / n, total_tat / n);
+
+    printf("\n\nProcess\tat\tbt\tct\ttat\twt");
+    for(int i=0; i<n; i++) {
+        printf("\nP%d\t%d\t%d\t%d\t%d\t%d", i+1, at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+    printf("\nTotal\t\t\t\t%d\t%d\n", stat, swt);
+
+    printf("\n\natat = %.2f", (float)stat/n);
+    printf("\nawt = %.2f\n", (float)swt/n);
+
     return 0;
 }
 ```
@@ -989,67 +1014,111 @@ int main() {
 ```bash
 $ gcc -o sjf sjf.c
 $ ./sjf
-Enter number of processes: 3
-P1 - Arrival Time & Burst Time: 0 5
-P2 - Arrival Time & Burst Time: 1 3
-P3 - Arrival Time & Burst Time: 2 8
+Enter number of process: 4
 
-Process	AT	BT	WT	TAT
-P1	0	5	0	5
-P2	1	3	4	7
-P3	2	8	6	14
-Avg WT = 3.33, Avg TAT = 8.67
+For P1: Enter at and bt: 0 7
+
+For P2: Enter at and bt: 2 4
+
+For P3: Enter at and bt: 4 1
+
+For P4: Enter at and bt: 5 4
+
+
+Process at      bt      ct      tat     wt
+P1      0       7       7       7       0
+P2      2       4       12      10      6
+P3      4       1       8       4       3
+P4      5       4       16      11      7
+Total                           32      16
+
+
+atat = 8.00
+awt = 4.00
 ```
 
-## 5.3 Round Robin Scheduling
+## 4.3 Round Robin Scheduling
 
 ### Code: `rr.c`
 
 ```c
-#include <stdio.h>
+#include<stdio.h>
 
 int main() {
-    int n, quantum, i;
-    printf("Enter number of processes: ");
+    int n, q;
+    printf("Enter number of process: ");
     scanf("%d", &n);
+    printf("\nEnter quantum: ");
+    scanf("%d", &q);
 
-    int bt[n], at[n], rem[n], wt[n], tat[n];
-    for (i = 0; i < n; i++) {
-        printf("P%d - Arrival Time & Burst Time: ", i + 1);
+    int at[n], bt[n], ct[n], tat[n], wt[n], rem[n], visited[n], pid[n];
+    for(int i=0; i<n; i++) {
+        printf("\nFor P%d: Enter at and bt: ", i+1);
         scanf("%d %d", &at[i], &bt[i]);
-        rem[i] = bt[i];
+        rem[i] = bt[i]; pid[i]=i+1;
+        ct[i]=0; tat[i]=0; wt[i]=0; visited[i]=0;
     }
-    printf("Enter time quantum: ");
-    scanf("%d", &quantum);
 
-    int ct = 0, completed = 0;
-    while (completed < n) {
-        int found = 0;
-        for (i = 0; i < n; i++) {
-            if (rem[i] > 0 && at[i] <= ct) {
-                found = 1;
-                if (rem[i] > quantum) {
-                    ct += quantum;
-                    rem[i] -= quantum;
-                } else {
-                    ct += rem[i];
-                    rem[i] = 0;
-                    tat[i] = ct - at[i];
-                    wt[i] = tat[i] - bt[i];
-                    completed++;
-                }
+    for(int i=0; i<n-1; i++) {
+        for(int j=i+1; j<n; j++) {
+            if(at[i] > at[j]) {
+                int temp;
+                temp = at[i]; at[i] = at[j]; at[j] = temp;
+                temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;
+                temp = rem[i]; rem[i] = rem[j]; rem[j] = temp;
+                temp = pid[i]; pid[i] = pid[j]; pid[j] = temp;
             }
         }
-        if (!found) ct++;
     }
 
-    float total_wt = 0, total_tat = 0;
-    printf("\nProcess\tAT\tBT\tWT\tTAT\n");
-    for (i = 0; i < n; i++) {
-        total_wt += wt[i]; total_tat += tat[i];
-        printf("P%d\t%d\t%d\t%d\t%d\n", i + 1, at[i], bt[i], wt[i], tat[i]);
+    int queue[100];
+    int front=0, rear=0;
+
+    int t=0, stat=0, swt=0, c=0;
+    while(c<n) {
+        for(int i=0; i<n; i++) {
+            if(at[i]<=t && !visited[i]) {
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+
+        if(front == rear) {t++; continue;}
+
+        int p = queue[front++];
+        if(rem[p]>q) {
+            rem[p]-=q;
+            t+=q;
+        } else {
+            ct[p]=t+rem[p];
+            rem[p] = 0;
+            tat[p]=ct[p]-at[p];
+            wt[p]=tat[p]-bt[p];
+            swt += wt[p];
+            stat += tat[p];
+            c++;
+            t = ct[p];
+        }
+
+        for(int i=0; i<n; i++) {
+            if(at[i]<=t && !visited[i]) {
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+
+        if(rem[p] > 0) queue[rear++] = p;
     }
-    printf("Avg WT = %.2f, Avg TAT = %.2f\n", total_wt / n, total_tat / n);
+
+    printf("\n\nProcess\tat\tbt\tct\ttat\twt");
+    for(int i=0; i<n; i++) {
+        printf("\nP%d\t%d\t%d\t%d\t%d\t%d", pid[i], at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+    printf("\nTotal\t\t\t\t%d\t%d\n", stat, swt);
+
+    printf("\n\natat = %.2f", (float)stat/n);
+    printf("\nawt = %.2f\n", (float)swt/n);
+
     return 0;
 }
 ```
@@ -1059,17 +1128,29 @@ int main() {
 ```bash
 $ gcc -o rr rr.c
 $ ./rr
-Enter number of processes: 3
-P1 - Arrival Time & Burst Time: 0 5
-P2 - Arrival Time & Burst Time: 1 3
-P3 - Arrival Time & Burst Time: 2 8
-Enter time quantum: 4
+Enter number of process: 4
 
-Process	AT	BT	WT	TAT
-P1	0	5	7	12
-P2	1	3	6	9
-P3	2	8	6	14
-Avg WT = 6.33, Avg TAT = 11.67
+Enter quantum: 2
+
+For P1: Enter at and bt: 0 5
+
+For P2: Enter at and bt: 1 3
+
+For P3: Enter at and bt: 2 1
+
+For P4: Enter at and bt: 3 2
+
+
+Process at      bt      ct      tat     wt
+P1      0       5       11      11      6
+P2      1       3       10      9       6
+P3      2       1       5       3       2
+P4      3       2       9       6       4
+Total                           29      18
+
+
+atat = 7.25
+awt = 4.50
 ```
 
 ## 5.4 Producer-Consumer Problem Using Semaphores
