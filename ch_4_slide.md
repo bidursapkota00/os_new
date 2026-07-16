@@ -726,6 +726,15 @@ Moving a process out to disk to release its memory. When active again, the OS re
 
 # 4.2.1 Memory Address, Swapping and Managing Free Memory Space
 
+**Internal Fragmentation:** It is the wasted space within a fixed-size partition when a process is smaller than the allocated partition size. This memory is internal to a partition and cannot be used by other processes.
+
+**External Fragmentation:** It occurs when there is enough total free memory to satisfy a memory request, but the available spaces are not contiguous, meaning the memory is fragmented into small holes scattered throughout the physical memory.
+
+
+---
+
+# 4.2.1 Memory Address, Swapping and Managing Free Memory Space
+
 ![Fixed and Dynamic Partitioning](images/ch_4/mem-partitioning.png)
 
 ---
