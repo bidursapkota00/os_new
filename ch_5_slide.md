@@ -390,12 +390,38 @@ When the file system is a directory tree, file names are specified using path na
 
 ---
 
+# 5.2 Directory Structures: Paths and Hierarchies
+
+### Implementing Directories
+
+A directory maps file names to storage information. Two approaches: storing file attributes and disk addresses directly in fixed-size directory entries, or storing only file names with inode numbers that reference separate attribute structures. Variable-length file names are handled by allocating a fixed maximum space per name, using variable-size entries with length headers, or storing names in a separate heap. Directories are searched using linear scans for small directories, or hash tables/B-trees for large directories.
+
+---
+
 # 5.3 File System Implementation
 
 > **Describe different file allocation methods. [3 marks] (2082 Bhadra)**
 > **Explain the advantages and disadvantages of a contiguous file allocation scheme? [3 marks] (Model Question)**
 
 File systems are stored on disks. Most disks can be divided into one or more partitions, each with an independent file system. Sector 0 of the disk is the MBR (Master Boot Record), used to boot the computer. The MBR's end contains the partition table with starting/ending addresses of each partition, one marked as active. Each partition starts with a boot block. The super block contains file system metadata (type, block size, etc.). The free space management block tracks available space using bitmaps or linked lists.
+
+---
+
+# 5.3 File System Implementation
+
+![Magnetic Disk](images/ch_4/magnetic-disk.png)
+
+---
+
+# 5.3 File System Implementation
+
+![Magnetic Disk Platters](images/ch_4/platter.png)
+
+---
+
+# 5.3 File System Implementation
+
+![MBR](images/ch_1/mbr.png)
 
 ---
 
@@ -408,7 +434,8 @@ The block is the fundamental unit of disk space allocation (also called an alloc
 **Space Utilization vs. Performance Trade-off:**
 
 - **Large blocks:** Using large blocks wastes space due to internal fragmentation (unused space in the last block). A 1-byte file in a 4 KB block wastes 4095 bytes.
-- **Small blocks:** Using small blocks causes files to span many blocks, requiring more disk I/O operations and seeks, which reduces performance.
+
+Large blocks require fewer I/O operations, which results in a higher effective data rate and better performance.
 
 ---
 
@@ -418,46 +445,13 @@ The block is the fundamental unit of disk space allocation (also called an alloc
 
 **Space Utilization vs. Performance Trade-off:**
 
-- **Large blocks:** Large blocks require fewer I/O operations, which results in a higher effective data rate and better performance.
+- **Small blocks:** Using small blocks causes files to span many blocks, requiring more disk I/O operations and seeks, which reduces performance.
 
 ---
 
 # 5.3 File System Implementation
 
 ![Block Size vs Performance](images/ch_5/block_size_vs_performance.png)
-
----
-
-# 5.3 File System Implementation
-
-### Inodes (Index Nodes)
-
-An inode is a data structure associated with each file that lists the file's attributes and disk addresses of the file's blocks. Used by UNIX/Linux.
-
-<br>
-
-An inode contains: file type, permissions (rwx for owner/group/others), number of links, user ID, group ID, file size, timestamps (last access, last modification, last inode change), direct pointers to data blocks (typically 10–15), a single indirect pointer, a double indirect pointer, and a triple indirect pointer.
-
----
-
-# 5.3 File System Implementation
-
-### Inodes (Index Nodes)
-
-Pointer structure (with 4 KB blocks and 4-byte pointers, each indirect block holds 1024 pointers):
-
-- 12 direct pointers can address files up to 48 KB.
-- 1 single indirect block can address an additional 4 MB.
-- 1 double indirect block can address an additional 4 GB.
-- 1 triple indirect block can address an additional 4 TB.
-
----
-
-# 5.3 File System Implementation
-
-### Inodes (Index Nodes)
-
-**Advantages:** Very efficient for small files (block addresses stored directly in inode, no extra disk accesses). Good support for both sequential and random access (any block located with at most 3 disk accesses). Unlike FAT, the inode needs to be in memory only when the file is open.
 
 ---
 
@@ -547,7 +541,34 @@ The pointer from each disk block is stored in a File Allocation Table (FAT) in m
 ### Allocation Methods
 
 **D. Inode-based Allocation:**
-Each file has an inode containing attributes and block pointers (direct, single/double/triple indirect). Described in detail above.
+Each file has an inode containing attributes and block pointers.
+
+<br>
+
+An inode is a data structure associated with each file that lists the file's attributes and disk addresses of the file's blocks. Used by UNIX/Linux.
+
+An inode contains: file type, permissions (rwx for owner/group/others), number of links, user ID, group ID, file size, timestamps (last access, last modification, last inode change), direct pointers to data blocks (typically 10–15), a single indirect pointer, a double indirect pointer, and a triple indirect pointer.
+
+---
+
+# 5.3 File System Implementation
+
+### Inodes (Index Nodes)
+
+Pointer structure (with 4 KB blocks and 4-byte pointers, each indirect block holds 1024 pointers):
+
+- 12 direct pointers can address files up to 48 KB.
+- 1 single indirect block can address an additional 4 MB.
+- 1 double indirect block can address an additional 4 GB.
+- 1 triple indirect block can address an additional 4 TB.
+
+---
+
+# 5.3 File System Implementation
+
+### Inodes (Index Nodes)
+
+**Advantages:** Very efficient for small files (block addresses stored directly in inode, no extra disk accesses). Good support for both sequential and random access (any block located with at most 3 disk accesses). Unlike FAT, the inode needs to be in memory only when the file is open.
 
 ---
 
@@ -556,14 +577,6 @@ Each file has an inode containing attributes and block pointers (direct, single/
 **D. Inode-based Allocation:**
 
 ![Inode based Allocation](images/ch_5/inode_based_allocation.png)
-
----
-
-# 5.3 File System Implementation
-
-### Implementing Directories
-
-A directory maps file names to storage information. Two approaches: storing file attributes and disk addresses directly in fixed-size directory entries, or storing only file names with inode numbers that reference separate attribute structures. Variable-length file names are handled by allocating a fixed maximum space per name, using variable-size entries with length headers, or storing names in a separate heap. Directories are searched using linear scans for small directories, or hash tables/B-trees for large directories.
 
 ---
 
