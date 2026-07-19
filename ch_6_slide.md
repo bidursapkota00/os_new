@@ -204,17 +204,29 @@ Plaintext is the original readable message before encryption. Ciphertext is the 
 
 # Symmetric Encryption (Secret Key Cryptography)
 
-Uses a single shared key for both encryption and decryption. It is fast and efficient, making it ideal for bulk data encryption (e.g., full-disk encryption, file storage). The primary challenge is securely distributing the shared key between parties. If the key is compromised, all encrypted data becomes vulnerable. Example: AES (Advanced Encryption Standard) used in Wi-Fi security (WPA2).
+Symmetric encryption uses a single shared key for both encryption and decryption. It is fast and efficient, making it ideal for bulk data encryption (e.g., full-disk encryption, file storage). The primary challenge is securely distributing the shared key between parties. If the key is compromised, all encrypted data becomes vulnerable. An example of this is the Advanced Encryption Standard (AES) used in Wi-Fi security (WPA2).
 
-Sender encrypts plaintext using a secret key → Ciphertext is transmitted → Receiver decrypts ciphertext using the same secret key → Original plaintext is recovered.
+The sender encrypts the plaintext using a secret key, the ciphertext is transmitted, the receiver decrypts the ciphertext using the same secret key, and the original plaintext is recovered.
+
+---
+
+# Symmetric Encryption (Secret Key Cryptography)
+
+![Symmetric Key Cryptography](images/ch_6/symmetric-key-cryptography.png)
 
 ---
 
 # Asymmetric Encryption (Public Key Cryptography)
 
-Uses two mathematically related keys: a public key (shared with everyone, used to encrypt data) and a private key (kept secret, used to decrypt data). It is more secure than symmetric encryption because the private key never needs to be shared, but it is slower. It solves the key distribution problem inherent in symmetric encryption. Example: RSA encryption used in secure email communication (PGP), end-to-end encryption in messaging apps like WhatsApp.
+Asymmetric encryption uses two mathematically related keys: a public key (shared with everyone, used to encrypt data) and a private key (kept secret, used to decrypt data). It is more secure than symmetric encryption because the private key never needs to be shared, but it is slower. It solves the key distribution problem inherent in symmetric encryption. An example is RSA encryption used in secure email communication (PGP) and end-to-end encryption in messaging apps like WhatsApp.
 
-Sender encrypts plaintext using the receiver's public key → Ciphertext is transmitted → Receiver decrypts ciphertext using their private key → Original plaintext is recovered. Only the holder of the corresponding private key can decrypt data encrypted with the public key.
+The sender encrypts the plaintext using the receiver's public key, the ciphertext is transmitted, the receiver decrypts the ciphertext using their private key, and the original plaintext is recovered. Only the holder of the corresponding private key can decrypt data encrypted with the public key.
+
+---
+
+# Asymmetric Encryption (Public Key Cryptography)
+
+![Assymetric Key Cryptography](images/ch_6/assymetric-key-cryptographt.png)
 
 ---
 
@@ -237,6 +249,12 @@ A digital signature is an electronic equivalent of a handwritten signature that 
 **Verification Process:** The recipient uses the sender's public key to decrypt the signature, retrieving the original hash. The recipient also computes the hash of the received message independently. If the two hashes match, the message is authentic and untampered. If they do not match, the message has been altered or did not come from the claimed sender.
 
 **Example:** Verifying the authenticity of software downloads (e.g., Windows updates, Linux package managers use GPG signatures).
+
+---
+
+# Digital Signature
+
+![Digital Signature](images/ch_6/digital-signature.png)
 
 ---
 
@@ -268,8 +286,8 @@ Active attacks involve modification of the data stream or creation of a false st
 
 ### B. Active Attacks
 
-1. **Masquerade Attack:** One entity pretends to be a different entity to gain unauthorized access. An attacker may use stolen usernames and passwords, forged credentials, or compromised authentication tokens. Solution: Multi-Factor Authentication (MFA).
-2. **Replay Attack:** Involves capturing data transmissions and retransmitting them later to produce unauthorized effects. Example: Capturing an encrypted authentication message and replaying it to gain access without knowing the password. Solution: One-Time Passwords (OTP).
+1. **Masquerade Attack:** One entity pretends to be a different entity to gain unauthorized access. An attacker may use stolen usernames and passwords, forged credentials, or compromised authentication tokens. A solution to this is Multi-Factor Authentication (MFA).
+2. **Replay Attack:** This attack involves capturing data transmissions and retransmitting them later to produce unauthorized effects. An example is capturing an encrypted authentication message and replaying it to gain access without knowing the password. A solution to this is using One-Time Passwords (OTP).
 
 ---
 
@@ -277,8 +295,8 @@ Active attacks involve modification of the data stream or creation of a false st
 
 ### B. Active Attacks
 
-3. **Modification of Messages:** Involves capturing messages, altering their content, and transmitting the modified messages. Examples: Changing the amount in a financial transaction, altering the destination address of a message. Solution: Digital Signatures.
-4. **Denial of Service (DoS) Attack:** Aims to make a system or network resource unavailable to intended users by overwhelming systems with traffic, exploiting vulnerabilities to crash systems, or consuming resources to prevent legitimate access.
+3. **Modification of Messages:** This involves capturing messages, altering their content, and transmitting the modified messages. Examples include changing the amount in a financial transaction or altering the destination address of a message. A solution to this is using Digital Signatures.
+4. **Denial of Service (DoS) Attack:** This attack aims to make a system or network resource unavailable to intended users by overwhelming systems with traffic, exploiting vulnerabilities to crash systems, or consuming resources to prevent legitimate access.
 
 ---
 
@@ -286,16 +304,16 @@ Active attacks involve modification of the data stream or creation of a false st
 
 Malware (malicious software) is any software intentionally designed to cause damage to computers, servers, or networks.
 
-1. **Virus:** Attaches to files and spreads when the file is executed. Requires user action to propagate. Example: "ILOVEYOU" virus spread via email attachments.
-2. **Worm:** Self-replicating malware that spreads through networks without user intervention. Example: "WannaCry" ransomware spread through the internet exploiting a Windows vulnerability.
-3. **Trojan Horse:** Disguised as a useful program but carries malicious functions such as creating backdoors or stealing data. Example: A fake antivirus software stealing user data.
+1. **Virus:** A virus attaches to files and spreads when the file is executed. It requires user action to propagate. An example is the "ILOVEYOU" virus that spread via email attachments.
+2. **Worm:** A worm is a self-replicating malware that spreads through networks without user intervention. An example is the "WannaCry" ransomware that spread through the internet by exploiting a Windows vulnerability.
+3. **Trojan Horse:** This malware is disguised as a useful program but carries malicious functions such as creating backdoors or stealing data. An example is a fake antivirus software stealing user data.
 
 ---
 
 # Malware
 
-4. **Spyware:** Secretly collects user data such as keystrokes and browsing history. Example: Keyloggers capturing login credentials.
-5. **Ransomware:** Encrypts user files and demands ransom to decrypt them. Example: "CryptoLocker" demanded Bitcoin payments for decryption keys.
+4. **Spyware:** Spyware secretly collects user data such as keystrokes and browsing history. An example includes keyloggers capturing login credentials.
+5. **Ransomware:** Ransomware encrypts user files and demands a ransom to decrypt them. An example is "CryptoLocker," which demanded Bitcoin payments for decryption keys.
 
 ---
 
@@ -303,9 +321,9 @@ Malware (malicious software) is any software intentionally designed to cause dam
 
 Authentication is the process of verifying the identity of a user, process, or device attempting to access a system. Authentication factors include:
 
-1. **Something you know** — Password, PIN, security questions.
-2. **Something you have** — Smartphone, security token, smart card.
-3. **Something you are** — Biometrics (fingerprint, retina scan, facial recognition).
+1. **Something you know:** This includes passwords, PINs, and security questions.
+2. **Something you have:** This includes smartphones, security tokens, and smart cards.
+3. **Something you are:** This involves biometrics such as fingerprints, retina scans, and facial recognition.
 
 ---
 
@@ -359,14 +377,14 @@ Sandboxing is a security mechanism that isolates running programs in a restricte
 
 A firewall is a network security device or software that filters and controls traffic between networks based on predefined security rules.
 
-1. **Packet Filtering Firewall:** Inspects individual data packets based on rules (IP address, port number, protocol). It operates at the network layer. Example: A router blocking access to certain websites.
-2. **Proxy Firewall:** Acts as an intermediary between internal and external networks, hiding internal network details. It inspects traffic at the application layer. Example: Corporate networks using a proxy to filter internet access.
+1. **Packet Filtering Firewall:** This firewall inspects individual data packets based on rules such as IP address, port number, or protocol. It operates at the network layer. An example is a router blocking access to certain websites.
+2. **Proxy Firewall:** This acts as an intermediary between internal and external networks, hiding internal network details. It inspects traffic at the application layer. An example is corporate networks using a proxy to filter internet access.
 
 ---
 
 # Firewall
 
-3. **Stateful Inspection Firewall:** Tracks active connections and allows only trusted packets that are part of an established session. It reduces rule-checking overhead for ongoing connections and blocks unauthorized access, TCP SYN floods, and other connection-based attacks.
+3. **Stateful Inspection Firewall:** This firewall tracks active connections and allows only trusted packets that are part of an established session. It reduces rule-checking overhead for ongoing connections and blocks unauthorized access, TCP SYN floods, and other connection-based attacks.
 
 ---
 
@@ -392,25 +410,31 @@ Access control is a security technique that regulates who or what can view or us
 
 # Access Control Models
 
-**Discretionary Access Control (DAC):** The owner of a resource determines who can access it. The owner can grant or revoke permissions at their discretion. It is flexible but less secure because users can inadvertently share access. Example: Linux file permissions (rwx for user/group/other).
+**Discretionary Access Control (DAC):** The owner of a resource determines who can access it. The owner can grant or revoke permissions at their discretion. It is flexible but less secure because users can inadvertently share access. An example is Linux file permissions (rwx for user, group, and others).
 
-**Mandatory Access Control (MAC):** A central authority (typically the OS) controls access based on security classification levels. MAC assigns security labels to both subjects (users/processes) and objects (files/resources). Users cannot change these permissions. Used in high-security environments. Example: SELinux, AppArmor.
+**Mandatory Access Control (MAC):** A central authority (typically the OS) controls access based on security classification levels. MAC assigns security labels to both subjects (users or processes) and objects (files or resources). Users cannot change these permissions, which is why it is used in high-security environments. Examples include SELinux and AppArmor.
 
 ---
 
 # Access Control Models
 
-**Role-Based Access Control (RBAC):** Permissions are assigned to roles (e.g., Administrator, Editor, Viewer) rather than to individual users. Users are assigned to appropriate roles. Simplifies management in large organizations. Example: Windows group policies.
+**Role-Based Access Control (RBAC):** Permissions are assigned to roles (e.g., Administrator, Editor, Viewer) rather than to individual users, and users are assigned to appropriate roles. This simplifies management in large organizations. An example is Windows group policies.
 
-**Attribute-Based Access Control (ABAC):** Makes access decisions based on attributes of users, resources, and environmental conditions (e.g., time of day, location, device type).
+**Attribute-Based Access Control (ABAC):** This makes access decisions based on attributes of users, resources, and environmental conditions such as time of day, location, or device type.
 
-**Rule-Based Access Control:** Uses rules defined by the system administrator to determine access. Rules are applied uniformly regardless of identity.
+**Rule-Based Access Control:** This uses rules defined by the system administrator to determine access. The rules are applied uniformly regardless of identity.
 
 ---
 
 # Protection Domain
 
 A protection domain specifies the resources that a process can access and the operations it can perform. Each process operates within a protection domain that defines its access rights. A domain can be thought of as a collection of access rights, where each right is an ordered pair (object, rights-set). Objects can be hardware resources (CPU, memory, printers) or software resources (files, programs, semaphores). Subjects are the active entities that access objects, including users, processes, and procedures.
+
+---
+
+# Protection Domain
+
+![Protection Domain](images/ch_6/protection-domain.png)
 
 ---
 
@@ -422,19 +446,37 @@ A protection domain specifies the resources that a process can access and the op
 
 ---
 
+# Access Control Matrix
+
+![Access Control Matrix](images/ch_6/access-control-matrix.png)
+
+---
+
+# Access Control List
+
+![Access Control List](images/ch_6/access-control-lists.png)
+
+---
+
 # Access Control Mechanisms
 
 **Capability Lists (C-Lists):** Lists associated with subjects that specify which objects they can access. Capability lists store permissions with each user, listing all resources they can access. They make it easy to see all resources a particular user can access. However, finding all users who can access a particular resource requires checking all capability lists.
 
 ---
 
+# Capability List
+
+![Capability List](images/ch_6/capability-lists.png)
+
+---
+
 # OS Support for Access Control
 
-**Linux/Unix:** Uses DAC via user/group/other permission bits (rwx). Supports ACLs for fine-grained access control. Can implement MAC using SELinux or AppArmor.
+**Linux/Unix:** It uses DAC via user, group, and other permission bits (rwx). It supports ACLs for fine-grained access control. It can also implement MAC using SELinux or AppArmor.
 
-**Windows:** Uses ACLs extensively — DACLs (Discretionary ACLs) for allowing/denying access and SACLs (System ACLs) for auditing. Supports RBAC via user roles and group policies. Enforces capability-like security tokens during process execution.
+**Windows:** It uses ACLs extensively. It uses DACLs (Discretionary ACLs) for allowing or denying access and SACLs (System ACLs) for auditing. It supports RBAC via user roles and group policies. It enforces capability-like security tokens during process execution.
 
-**Android:** Uses sandboxing and UID-based permissions. Supports permissions per app, combining DAC and MAC.
+**Android:** It uses sandboxing and UID-based permissions. It supports permissions per app, combining both DAC and MAC.
 
 ---
 
@@ -450,7 +492,7 @@ Operating systems provide a method for creating multiple user accounts on a sing
 
 ## User Account Types
 
-**Standard User Account:** The default type of account that provides basic permissions for common daily tasks. Standard users can launch applications, create documents, modify basic system settings, change personal settings (password, wallpaper, screen saver), access removable media, connect to networks, and personalize display settings. They cannot install system-wide software or modify other users' accounts.
+**Standard User Account:** This is the default type of account that provides basic permissions for common daily tasks. Standard users can launch applications, create documents, modify basic system settings, change personal settings like passwords and wallpapers, access removable media, connect to networks, and personalize display settings. They cannot install system-wide software or modify other users' accounts.
 
 ---
 
@@ -458,7 +500,7 @@ Operating systems provide a method for creating multiple user accounts on a sing
 
 ## User Account Types
 
-**Administrator Account:** Has full permissions on the system, including all standard user permissions plus the ability to install new software and hardware, modify system-wide configuration, access files in secure locations, configure the firewall, perform complete system backup and restore, and create, remove, or modify other user accounts.
+**Administrator Account:** This account has full permissions on the system, including all standard user permissions plus the ability to install new software and hardware, modify system-wide configurations, access files in secure locations, configure the firewall, perform complete system backups and restores, and create, remove, or modify other user accounts.
 
 ---
 
@@ -466,7 +508,7 @@ Operating systems provide a method for creating multiple user accounts on a sing
 
 ## User Account Types
 
-**Guest Account:** Designed for users who require temporary access to a computer. Guest users have a very limited set of permissions — they cannot access other users' files or perform system-wide tasks. The built-in Guest account is disabled by default for security reasons.
+**Guest Account:** This account is designed for users who require temporary access to a computer. Guest users have a very limited set of permissions and cannot access other users' files or perform system-wide tasks. The built-in Guest account is disabled by default for security reasons.
 
 <br>
 
@@ -486,7 +528,7 @@ Administrators can change passwords, change account names, remove passwords, cha
 
 ## Environment Setup for New Users
 
-Setting up an operational environment for a new user involves ensuring the OS and minimum usable application packages and utilities are installed. The required user accounts are created so new users can log in with their username and password. User-friendly modules like user-setup can be created to enable users to change their environment easily — applications can be added or removed without the user having to learn editors or shell languages. New applications can be installed and made accessible to users via such setup utilities.
+Setting up an operational environment for a new user involves ensuring the OS and minimum usable application packages and utilities are installed. The required user accounts are created so new users can log in with their username and password. User-friendly modules like user-setup can be created to enable users to change their environment easily so applications can be added or removed without the user having to learn editors or shell languages. New applications can be installed and made accessible to users via such setup utilities.
 
 ---
 

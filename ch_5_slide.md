@@ -615,6 +615,18 @@ File system performance is crucial for overall system responsiveness since disk 
 
 ---
 
+# 5.4 File System Performance
+
+![Interleaving](images/ch_4/interleaving.png)
+
+---
+
+# 5.4 File System Performance
+
+![Magnetic Disk Platters](images/ch_4/platter.png)
+
+---
+
 # 5.5 Example File Systems
 
 **FAT32 (File Allocation Table 32):** This is a legacy file system designed for compatibility. It uses a file allocation table with linked-list-style allocation to track block order. It offers extremely high cross-platform compatibility, as it is readable by almost every OS including Windows, macOS, Linux, game consoles, and cameras. Its limitations include no journaling, which makes it prone to corruption, no file-level security or permissions, a strict 4 GB maximum file size, and a 2 TB maximum volume size. It is suitable for removable media like USB drives and memory cards, but not for modern system drives.
