@@ -359,7 +359,7 @@ The chain of trust starts from hardware-embedded keys that cannot be modified. I
 
 Sandboxing is a security mechanism that isolates running programs in a restricted environment with limited access to system resources. A sandbox provides a controlled execution environment where untrusted code can run without affecting the rest of the system. It limits what actions a program can perform, even if the program attempts malicious operations.
 
-**Purpose:** Isolate potentially harmful programs or processes, and prevent applications from modifying system files or accessing sensitive data.
+Isolate potentially harmful programs or processes, and prevent applications from modifying system files or accessing sensitive data.
 
 ---
 
