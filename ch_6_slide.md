@@ -555,11 +555,6 @@ AWK supports variables, control flow statements (loops and conditionals), functi
 ```bash
 $ echo -e "Alice 90\nBob 85\nCharlie 78" > scores.txt
 
-$ awk '{print $1}' scores.txt        # print first field (names)
-Alice
-Bob
-Charlie
-
 $ awk '{print $1, $2+10}' scores.txt # print name and score+10
 Alice 100
 Bob 95
@@ -568,14 +563,7 @@ Charlie 88
 $ awk '$2 >= 85 {print $1, $2}' scores.txt  # filter rows where score >= 85
 Alice 90
 Bob 85
-
-$ awk -F":" '{print $1}' /etc/passwd  # use colon as delimiter, print usernames
-root
-student
-...
 ```
-
-The `-F":"` option sets the field separator to colon instead of the default whitespace. A condition before `{...}` like `$2 >= 85` filters which lines to process.
 
 ---
 
@@ -608,3 +596,14 @@ CRON uses a configuration file known as the crontab (cron table), which contains
 Example: `0 2 * * * /usr/local/bin/backup_script.sh` runs a backup script every day at 2:00 AM.
 
 The `crontab -e` command allows editing the personal or system-wide job schedule.
+
+```bash
+nano ~/test_script.sh
+echo "Test run at $(date)"
+chmod +x ~/test_script.sh
+
+crontab -e
+*/2 * * * * ~/test_script.sh >> ~/test_script.log
+
+tail -f ~/test_script.log
+```
