@@ -156,6 +156,10 @@ style: |
   th img, td img {
     max-height: 390pt;
   }
+
+  hr {
+    margin: 30pt 0 20pt 0;
+  }
 ---
 
 <!-- _class: title-slide -->
@@ -510,7 +514,7 @@ Operating systems provide a method for creating multiple user accounts on a sing
 
 **Guest Account:** This account is designed for users who require temporary access to a computer. Guest users have a very limited set of permissions and cannot access other users' files or perform system-wide tasks. The built-in Guest account is disabled by default for security reasons.
 
-<br>
+<hr>
 
 Each user account includes a user profile (OS preferences like wallpaper and shortcuts), application settings, a user data folder, security privileges, and file system permissions that define what actions the user can take on which files.
 
