@@ -225,13 +225,26 @@ Type 2 hypervisors are easier to install and use, making them suitable for deskt
 
 # 7.1 Hypervisors: Type 1 and Type 2
 
-| Feature      | Type 1 (Bare-Metal)             | Type 2 (Hosted)                |
-| ------------ | ------------------------------- | ------------------------------ |
-| Installation | Directly on hardware            | On top of a host OS            |
-| Performance  | High (direct hardware access)   | Moderate (host OS overhead)    |
-| Use case     | Data centers, cloud, enterprise | Desktops, development, testing |
-| Isolation    | Strong                          | Weaker (depends on host OS)    |
-| Examples     | VMware ESXi, Hyper-V, Xen, KVM  | VirtualBox, VMware Workstation |
+![Types of Hypervisor](images/ch_7/types-of-hypervisor.png)
+
+---
+
+# 7.1 Hypervisors: Type 1 and Type 2
+
+| Type 1 (Bare-Metal)                                                                          | Type 2 (Hosted)                                                     |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Type 1 hypervisors are installed directly on the hardware.                                   | Type 2 hypervisors are installed on top of a host operating system. |
+| They offer high performance due to direct hardware access.                                   | They offer moderate performance because of host OS overhead.        |
+| These are typically used in data centers, cloud environments, and enterprise infrastructure. | These are typically used for desktops, development, and testing.    |
+
+---
+
+# 7.1 Hypervisors: Type 1 and Type 2
+
+| Type 1 (Bare-Metal)                                  | Type 2 (Hosted)                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| They provide strong isolation.                       | They provide weaker isolation that depends on the host OS. |
+| Examples include VMware ESXi, Hyper-V, Xen, and KVM. | Examples include VirtualBox and VMware Workstation.        |
 
 ---
 
@@ -261,7 +274,7 @@ A virtual machine (VM) is a software-based emulation of a physical computer. Eac
 
 1. Open the hypervisor application (VirtualBox, VMware, etc.).
 2. Create a new VM and specify the guest OS type and version.
-3. Allocate hardware resources — RAM, CPU cores, and virtual disk size.
+3. Allocate hardware resources such as RAM, CPU cores, and virtual disk size.
 4. Attach an installation ISO image of the desired operating system.
 5. Boot the VM and install the guest OS as you would on physical hardware.
 6. Install guest additions/tools for improved performance and integration (shared folders, clipboard sharing, display scaling).
@@ -272,7 +285,7 @@ A virtual machine (VM) is a software-based emulation of a physical computer. Eac
 
 > **Write a short note on Kubernetes and Docker. [3 marks] (2082 Bhadra, Model Question)**
 
-### Containerization Concepts
+### Containerization
 
 Containerization is OS-level virtualization that creates multiple isolated units called containers in user space. Unlike VMs, containers share the same host kernel but are isolated from each other through private namespaces and resource control mechanisms (cgroups) at the OS level.
 
@@ -280,28 +293,41 @@ Containerization is OS-level virtualization that creates multiple isolated units
 
 # 7.3 Container Virtualization: Docker and Kubernetes
 
-### Containerization Concepts
+### Containerization
 
-In VM-based virtualization, a full operating system runs on top of virtualized hardware in each instance, introducing significant overhead. Containers, in contrast, implement isolation of processes at the OS level, avoiding this overhead. Containers do not require pre-allocated RAM — memory is allocated dynamically during container creation. This results in better resource utilization and much faster boot-up times (milliseconds/seconds vs. minutes for VMs).
+In VM-based virtualization, a full operating system runs on top of virtualized hardware in each instance, introducing significant overhead. Containers, in contrast, implement isolation of processes at the OS level, avoiding this overhead. Containers do not require pre-allocated RAM. Memory is allocated dynamically during container creation. This results in better resource utilization and much faster boot-up times (milliseconds/seconds vs. minutes for VMs).
 
 ---
 
 # Virtual Machines vs. Containers
 
-| Feature              | Virtual Machines             | Containers                          |
-| -------------------- | ---------------------------- | ----------------------------------- |
-| Virtualization layer | Hardware (via hypervisor)    | OS (via container engine)           |
-| OS requirement       | Each VM runs a full guest OS | All containers share host OS kernel |
-| Resource usage       | High (full OS overhead)      | Low (only app and dependencies)     |
-| Startup time         | Minutes (booting full OS)    | Milliseconds to seconds             |
-| Isolation            | Strong (hardware-level)      | Process-level (namespaces, cgroups) |
-| Size                 | Gigabytes                    | Megabytes                           |
+| Virtual Machines                                              | Containers                                                                          |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Virtualization occurs at the hardware layer via a hypervisor. | Virtualization occurs at the OS layer via a container engine.                       |
+| Each virtual machine runs a full guest operating system.      | All containers share the host operating system kernel.                              |
+| Resource usage is high due to the full OS overhead.           | Resource usage is low since they only include the application and its dependencies. |
+| Startup time takes minutes because a full OS must boot.       | Startup time takes only milliseconds to seconds.                                    |
+
+---
+
+# Virtual Machines vs. Containers
+
+| Virtual Machines                                                  | Containers                                                         |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------ |
+| They provide strong isolation at the hardware level.              | They provide process-level isolation using namespaces and cgroups. |
+| The size of a virtual machine is typically measured in gigabytes. | The size of a container is typically measured in megabytes.        |
+
+---
+
+# Virtual Machines vs. Containers
+
+![Virtualization vs Containerization](images/ch_7/virtualization-vs-containerization.png)
 
 ---
 
 # Docker
 
-Docker is an open-source platform that enables developers to package applications along with all their dependencies into containers. A Docker container is a lightweight, standalone, executable package that contains everything needed to run an application — code, runtime, libraries, and system tools.
+Docker is an open-source platform that enables developers to package applications along with all their dependencies into containers. A Docker container is a lightweight, standalone, executable package that contains everything needed to run an application. This package includes code, runtime, libraries, and system tools.
 
 **Components:**
 
@@ -335,7 +361,7 @@ While Docker builds and runs individual containers, Kubernetes manages container
 
 **Importance:**
 
-When applications involve hundreds or thousands of containers distributed across machines, manual management becomes impractical. Kubernetes provides desired-state management — you declare how you want things to be, and Kubernetes continuously works to ensure they stay that way.
+When applications involve hundreds or thousands of containers distributed across machines, manual management becomes impractical. Kubernetes provides desired-state management. You declare how you want things to be, and Kubernetes continuously works to ensure they stay that way.
 
 ---
 
@@ -415,13 +441,3 @@ WSL provides access to the Windows filesystem from Linux via `/mnt/c/` and suppo
 **Image Vulnerabilities:** Pre-built VM or Docker images downloaded from public repositories may contain embedded malware, backdoors, or outdated packages with known vulnerabilities. Images should be scanned and verified before use.
 
 **Insecure Configuration:** Misconfigured network bridges, shared folders, or open management ports can leak data between VMs or expose internal resources. Administrators must follow best practices including the principle of least privilege and avoiding unnecessary exposure.
-
----
-
-# 7.5 Performance Optimization and Security in Virtualized Environments
-
-### Performance and Security Challenges Summary
-
-**Performance challenges** include resource contention (multiple VMs competing for CPU, RAM, disk, and network), virtualization overhead from the hypervisor layer, I/O bottlenecks in shared environments, and inefficient CPU/I/O scheduling reducing throughput.
-
-**Security challenges** include VM escape attacks, hypervisor vulnerabilities exposing all VMs, malicious or insecure images from untrusted sources, and weak isolation due to poor configuration allowing container-to-host access.
