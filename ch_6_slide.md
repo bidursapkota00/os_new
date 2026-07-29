@@ -544,6 +544,31 @@ Shell scripts support input/output redirection and piping, allowing complex work
 
 ---
 
+# Shell Scripting
+
+Create:
+
+```bash
+$ nano hello.sh
+```
+
+Write:
+
+```bash
+#!/bin/bash
+echo "Hello, OS Lab!"
+```
+
+Run:
+
+```bash
+$ chmod +x hello.sh
+$ ./hello.sh
+Hello, OS Lab!
+```
+
+---
+
 # AWK (Text Processing)
 
 AWK is a domain-specific language designed for text processing, typically used as a data extraction and reporting tool. It operates on a per-line basis, dividing each line into fields based on a specified delimiter (default is whitespace) and then executing user-defined actions based on patterns and conditions.
