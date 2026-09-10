@@ -1,6 +1,6 @@
-# 1 Introduction
+## 1 Introduction
 
-# 1.1 Introduction to Operating Systems
+## 1.1 Introduction to Operating Systems
 
 An operating system (OS) is software that manages computer hardware and provides an environment for application programs to run. It acts as an intermediary between the user and the computer hardware. The two primary goals of an OS are convenience (making the computer easy to use) and throughput (maximizing the amount of useful work performed per unit time).
 
@@ -10,7 +10,7 @@ An OS performs two essentially unrelated functions: providing application progra
 
 ---
 
-# 1.2 OS as an Extended Machine and Resource Manager
+## 1.2 OS as an Extended Machine and Resource Manager
 
 > **How does an operating system provide abstraction to user level application from underlying hardware? Explain. [4 marks] (2082 Bhadra)**
 > **How does an operating system act as Extended machine? Explain. [4 marks] (Model Question)**
@@ -36,7 +36,7 @@ The OS manages conflicting requests for resources and keeps track of resource us
 
 ---
 
-# 1.3 History of Operating System
+## 1.3 History of Operating System
 
 ### First Generation (1945–55): Vacuum Tubes
 
@@ -68,7 +68,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 ---
 
-# 1.4 Types of Operating System
+## 1.4 Types of Operating System
 
 **Mainframe OS:** Designed for large-scale, high-capacity computers used by major organizations. These systems handle massive I/O operations and support batch processing, transaction processing, and timesharing for hundreds of simultaneous users. Examples: IBM z/OS, OS/390.
 
@@ -89,7 +89,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 ---
 
-# 1.5 Operating System Components
+## 1.5 Operating System Components
 
 **1. Kernel:** The innermost core of the OS that runs in privileged (kernel) space, giving it direct, unrestricted access to hardware. Unlike other OS components, it does not just coordinate; it controls the CPU, RAM, and devices at the lowest level. It exposes this power to programs through system calls. Core responsibilities include process scheduling, memory allocation, device driver management, and security/access control.
 
@@ -101,7 +101,7 @@ The first real smartphone appeared in the mid-1990s (Nokia N9000). Symbian OS wa
 
 ---
 
-# 1.6 Types of OS Kernel
+## 1.6 Types of OS Kernel
 
 ### Monolithic Kernel
 
@@ -129,7 +129,7 @@ Provides applications direct access to hardware resources. The kernel only handl
 
 ---
 
-# 1.7 System Calls, Shell Commands, Shell Programming
+## 1.7 System Calls, Shell Commands, Shell Programming
 
 ### System Calls
 
@@ -192,7 +192,7 @@ Shell programming (scripting) involves writing a sequence of shell commands in a
 
 ---
 
-# 1.8 POSIX Standard
+## 1.8 POSIX Standard
 
 POSIX (Portable Operating System Interface) is a family of standards specified by the IEEE (IEEE Std 1003) to maintain compatibility between operating systems. Its primary purpose is to ensure application portability, allowing software written for one POSIX-compliant OS to be ported to another with little or no modification.
 
@@ -207,7 +207,7 @@ Linux, macOS, and BSD variants are highly POSIX-compliant. POSIX compliance is e
 
 ---
 
-# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
+## 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
 
 > **Explain the difference between MBR and GPT Partitions. [2 marks] (2082 Bhadra)**
 > **Define Bootloader. Explain any 2 types of boot mechanism. [4 marks] (Model Question)**
@@ -222,10 +222,6 @@ A bootloader is a small program responsible for initiating the system startup pr
 2. **Windows Boot Manager (BOOTMGR):** Standard bootloader for modern Windows (Vista onward). Reads the Boot Configuration Data (BCD) store to identify available operating systems.
 3. **NTLDR:** Legacy bootloader for Windows NT through Windows XP. Used `boot.ini` for configuration. Replaced by BOOTMGR.
 4. **LILO (Linux Loader):** Older Linux bootloader, now largely replaced by GRUB.
-
----
-
-# 1.9 Bootloader, MBR/GPT, UEFI and Legacy Boot
 
 ### MBR vs GPT
 
@@ -279,3 +275,9 @@ MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Ta
 - When you power on a computer, UEFI runs a POST check, reads the EFI System Partition on a GPT disk, executes the bootloader, and loads the operating system.
 
 Many modern UEFI motherboards include a CSM (Compatibility Support Module) that can emulate legacy BIOS mode, allowing them to boot from MBR-partitioned disks.
+
+---
+
+---
+
+---
