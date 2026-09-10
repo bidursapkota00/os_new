@@ -900,7 +900,7 @@ At t = 3; only P2 (arrived at t = 2) is in the queue. It runs to completion (t =
 
 ```text
 Gantt Chart: | P1  | P2  |
-              0     2     9
+              0     3     9
 ```
 
 ---
@@ -1071,7 +1071,7 @@ Gantt Chart: | P1  | P2  | P3  |
 # 2.2 Scheduling Algorithms
 
 Step5:  
-At t = 15; Only P4 remains. It runs to completion (t = 36)
+At t = 27; Only P4 remains. It runs to completion (t = 36)
 
 ```text
 Gantt Chart: | P1  | P2  | P3  | P4  |
