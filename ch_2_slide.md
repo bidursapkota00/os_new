@@ -1052,7 +1052,7 @@ Gantt Chart: | P1  | P2  |
 
 # 2.2 Scheduling Algorithms
 
-Step2:  
+Step3:  
 At t = 20; P4 and P5 are in the queue. Recalculate their Response Ratios:
 P4: RR = $\frac{WT + BT}{BT}$ = $\frac{15 + 7}{7}$ = 3.14 (Winner)
 P5: RR = $\frac{WT + BT}{BT}$ = $\frac{10 + 9}{9}$ = 2.11
@@ -1070,7 +1070,7 @@ Gantt Chart: | P1  | P2  | P3  |
 
 # 2.2 Scheduling Algorithms
 
-Step5:  
+Step4:  
 At t = 27; Only P4 remains. It runs to completion (t = 36)
 
 ```text
