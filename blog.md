@@ -2860,3 +2860,397 @@ crontab -e
 
 tail -f ~/test_script.log
 ```
+
+---
+
+---
+
+---
+
+## 7. Hypervisors and Virtual Systems
+
+### Virtualization
+
+Virtualization is the process of creating a virtual representation of physical hardware such as servers, storage, and networks. It allows multiple virtual machines (VMs) to run on a single physical machine, each with its own operating system and applications. Before virtualization, most computers performed a single task at a time, wasting much of their processing power. Virtualization enables full utilization of hardware resources by running several virtual systems on one physical host.
+
+Virtualization is a key technology for providing Infrastructure as a Service (IaaS) in cloud computing, where users access remote computing resources without owning dedicated hardware. Cloud providers use virtualization to split large servers into many smaller virtual ones, allowing businesses to pay only for the resources they use.
+
+**Importance of Virtualization:**
+
+- **Better Resource Utilization:** Instead of maintaining numerous underused machines, multiple programs or systems run on one computer, maximizing hardware efficiency.
+
+**Importance of Virtualization:**
+
+- **Cost Savings:** Companies reduce spending on hardware, power, cooling, and maintenance by using fewer physical machines.
+- **Flexibility:** Virtual machines can be easily created, relocated, and resized to suit changing requirements without requiring new hardware.
+- **Isolation and Security:** Different applications or systems are isolated from each other, so a failure in one VM does not affect others.
+- **Simple Recovery:** Virtual machines can be easily backed up, snapshotted, and restored, enabling quick recovery after failures.
+
+---
+
+## 7.1 Hypervisors: Type 1 and Type 2
+
+> **Explain about the Type 1 and Type 2 hypervisors in virtualization. [4 marks] (2082 Bhadra)**
+> **Explain Hypervisors and its types with examples? [4 marks] (Model Question)**
+
+A hypervisor (also called a Virtual Machine Monitor or VMM) is the software layer that creates and manages virtual machines. It serves as an intermediary between the physical hardware and the virtual machines, controlling how VMs access and share the physical resources (CPU, memory, storage, network) of the host computer.
+
+### Type 1 Hypervisor (Bare-Metal Hypervisor)
+
+A Type 1 hypervisor is installed directly onto the physical hardware, without a host operating system sitting in between. It acts as the operating system for the machine itself. Because it interacts directly with the CPU, memory, and storage without going through an intermediary OS, it provides high performance and better isolation between VMs.
+
+Type 1 hypervisors are used in data centers, cloud providers, and enterprise server environments where performance and reliability are critical. They are typically managed through remote consoles or management software rather than a local GUI.
+
+**Examples:** VMware ESXi, Microsoft Hyper-V, Xen, KVM (Kernel-based Virtual Machine).
+
+### Type 2 Hypervisor (Hosted Hypervisor)
+
+A Type 2 hypervisor runs as an application on top of an existing host operating system (such as Windows, macOS, or Linux). It relies on the host OS to manage hardware resources. When a VM requests resources, the hypervisor passes the request through the host OS, which then interacts with the hardware. This additional layer introduces overhead, resulting in lower performance compared to Type 1 hypervisors.
+
+Type 2 hypervisors are easier to install and use, making them suitable for desktops, laptops, development, and testing environments where running multiple operating systems on a personal computer is needed.
+
+**Examples:** Oracle VM VirtualBox, VMware Workstation (Windows/Linux), VMware Fusion (macOS), Parallels Desktop (macOS).
+
+![Types of Hypervisor](images/ch_7/types-of-hypervisor.png)
+
+| Type 1 (Bare-Metal)                                                                          | Type 2 (Hosted)                                                     |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Type 1 hypervisors are installed directly on the hardware.                                   | Type 2 hypervisors are installed on top of a host operating system. |
+| They offer high performance due to direct hardware access.                                   | They offer moderate performance because of host OS overhead.        |
+| These are typically used in data centers, cloud environments, and enterprise infrastructure. | These are typically used for desktops, development, and testing.    |
+| They provide strong isolation.                                                               | They provide weaker isolation that depends on the host OS.          |
+| Examples include VMware ESXi, Hyper-V, Xen, and KVM.                                         | Examples include VirtualBox and VMware Workstation.                 |
+
+---
+
+## 7.2 Virtual Machines: Creating Virtual Machine
+
+A virtual machine (VM) is a software-based emulation of a physical computer. Each VM runs its own full operating system (guest OS) and applications, completely isolated from other VMs on the same host. The hypervisor allocates CPU, memory, storage, and network resources to each VM.
+
+### Common VM Management Tools
+
+**QEMU (Quick Emulator):** An open-source machine emulator and virtualizer. QEMU can emulate different hardware architectures (e.g., running ARM software on x86 hardware). When combined with KVM on Linux, it provides near-native performance. It is commonly used in Linux environments and for embedded system development.
+
+**VirtualBox:** A free, open-source, cross-platform Type 2 hypervisor by Oracle. It supports a wide range of guest operating systems and provides a user-friendly GUI. VirtualBox is popular for personal use, learning, and development environments.
+
+**VMware Workstation/Fusion:** Commercial Type 2 hypervisors by VMware. VMware Workstation runs on Windows and Linux, while VMware Fusion runs on macOS. They offer advanced features such as snapshots, cloning, shared virtual networks, and integration with VMware's enterprise products.
+
+### General Steps to Create a Virtual Machine
+
+1. Open the hypervisor application (VirtualBox, VMware, etc.).
+2. Create a new VM and specify the guest OS type and version.
+3. Allocate hardware resources such as RAM, CPU cores, and virtual disk size.
+4. Attach an installation ISO image of the desired operating system.
+5. Boot the VM and install the guest OS as you would on physical hardware.
+6. Install guest additions/tools for improved performance and integration (shared folders, clipboard sharing, display scaling).
+
+---
+
+## 7.3 Container Virtualization: Docker and Kubernetes
+
+> **Write a short note on Kubernetes and Docker. [3 marks] (2082 Bhadra, Model Question)**
+
+### Containerization
+
+Containerization is OS-level virtualization that creates multiple isolated units called containers in user space. Unlike VMs, containers share the same host kernel but are isolated from each other through private namespaces and resource control mechanisms (cgroups) at the OS level.
+
+In VM-based virtualization, a full operating system runs on top of virtualized hardware in each instance, introducing significant overhead. Containers, in contrast, implement isolation of processes at the OS level, avoiding this overhead. Containers do not require pre-allocated RAM. Memory is allocated dynamically during container creation. This results in better resource utilization and much faster boot-up times (milliseconds/seconds vs. minutes for VMs).
+
+| Virtual Machines                                                  | Containers                                                                          |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Virtualization occurs at the hardware layer via a hypervisor.     | Virtualization occurs at the OS layer via a container engine.                       |
+| Each virtual machine runs a full guest operating system.          | All containers share the host operating system kernel.                              |
+| Resource usage is high due to the full OS overhead.               | Resource usage is low since they only include the application and its dependencies. |
+| Startup time takes minutes because a full OS must boot.           | Startup time takes only milliseconds to seconds.                                    |
+| They provide strong isolation at the hardware level.              | They provide process-level isolation using namespaces and cgroups.                  |
+| The size of a virtual machine is typically measured in gigabytes. | The size of a container is typically measured in megabytes.                         |
+
+![Virtualization vs Containerization](images/ch_7/virtualization-vs-containerization.png)
+
+### Docker
+
+Docker is an open-source platform that enables developers to package applications along with all their dependencies into containers. A Docker container is a lightweight, standalone, executable package that contains everything needed to run an application. This package includes code, runtime, libraries, and system tools.
+
+**Components:**
+
+- **Containers:** Running instances of Docker images. Each container is isolated and has its own filesystem, networking, and process space.
+- **Images:** Read-only templates used to create containers. An image includes the application code, dependencies, and configuration. Images are built in layers for efficiency.
+- **Docker Engine:** The core runtime that creates and runs containers on the host operating system. It has a client-server architecture.
+- **Docker Hub:** A public registry (repository) where developers can share and pull pre-built container images.
+
+<br>
+
+**Docker Architecture:** Docker uses a client-server architecture. The Docker client communicates with the Docker Daemon (running on the Docker Host) using REST APIs. The `docker build` command tells the Daemon to build an image from a Dockerfile. The `docker pull` command pulls an image from Docker Hub. The `docker run` command creates and starts a container from an image.
+
+### Kubernetes (K8s)
+
+Kubernetes is an open-source container orchestration system for automating the deployment, scaling, and management of containerized applications. Originally developed by Google, it is now maintained by the Cloud Native Computing Foundation (CNCF).
+
+While Docker builds and runs individual containers, Kubernetes manages containers at scale across clusters of machines. It acts as a control plane that monitors container health, performs self-healing (restarting crashed containers), handles load balancing, manages rolling updates, and performs auto-scaling based on the desired state defined in configuration files (YAML).
+
+**Importance:**
+
+When applications involve hundreds or thousands of containers distributed across machines, manual management becomes impractical. Kubernetes provides desired-state management. You declare how you want things to be, and Kubernetes continuously works to ensure they stay that way.
+
+---
+
+## 7.4 PowerShell and Windows Subsystem for Linux (WSL)
+
+> **Write a short note on PowerShell. [3 marks] (2082 Bhadra)**
+> **Write a short note on WSL. [2 marks] (Model Question)**
+
+### PowerShell
+
+PowerShell is a cross-platform task automation and configuration management framework developed by Microsoft. It combines a command-line shell, a scripting language built on the .NET Framework, and a configuration management framework.
+
+Unlike traditional shells that work with plain text, PowerShell works with .NET objects, making it more powerful for system administration. It can automate the full VM lifecycle (creation, configuration, snapshots, deletion), perform bulk operations on system resources, and integrate into DevOps pipelines. PowerShell is faster and more powerful than GUI-based tools for advanced administrative tasks.
+
+PowerShell is available on Windows, Linux, and macOS. On Windows, it provides deep integration with the operating system and can manage Active Directory, Windows services, registry, file systems, and network configuration through a consistent scripting interface.
+
+### Windows Subsystem for Linux (WSL)
+
+WSL lets you run a full Linux environment inside Windows without using a traditional virtual machine or dual-boot setup. It enables developers and users to access Linux command-line tools, utilities, and applications alongside their Windows applications with minimal overhead.
+
+**WSL 1:** Acted as a compatibility/translation layer. When a Linux binary made a system call (e.g., `open`, `fork`), the WSL driver intercepted it and translated it into the equivalent Windows NT kernel system call. Linux binaries ran in special "pico processes" that allowed direct interaction with the Windows kernel via this translation driver. WSL 1 had limitations with full system call compatibility.
+
+**WSL 2:** Uses a lightweight utility virtual machine running a genuine Linux kernel. Because it runs a real Linux kernel, all Linux system calls are handled natively, providing full system call compatibility and significantly better performance for file I/O and networking. Despite using a VM, WSL 2 provides a lightweight, seamless experience with fast startup times.
+
+<br>
+
+WSL provides access to the Windows filesystem from Linux via `/mnt/c/` and supports running both Windows and Linux commands together. Output can be piped between PowerShell and Linux utilities.
+
+---
+
+## 7.5 Performance Optimization and Security in Virtualized Environments
+
+### Factors Affecting Performance
+
+**Hardware Resources:** CPU overcommitment (allocating more virtual CPUs than physical cores) can lead to contention. RAM bottlenecks cause swapping or crashes. Shared I/O (disk, network) introduces latency when multiple VMs compete for the same physical resources.
+
+**Hypervisor Overhead:** Type 2 hypervisors have more overhead due to their dependence on the host OS layer. Type 1 hypervisors perform closer to native hardware since they access resources directly.
+
+**Storage I/O Latency:** VMs using virtual disks on HDDs perform poorly compared to SSDs. Use of NVMe storage significantly improves disk I/O performance in virtualized environments.
+
+**Nested Virtualization:** Running a VM inside another VM introduces additional delay and overhead. It is not recommended unless explicitly supported by the hypervisor and hardware.
+
+### Security Concerns
+
+**VM Escape:** A critical vulnerability where a malicious process inside a VM breaks out of the virtual environment and gains access to the host system or other VMs. Example: VENOM vulnerability (CVE-2015-3456) exploited a flaw in the virtual floppy drive controller.
+
+**Hypervisor Exploits:** If the hypervisor itself is compromised, all VMs running under it become vulnerable. The hypervisor software must be kept updated, minimal, and hardened.
+
+**Image Vulnerabilities:** Pre-built VM or Docker images downloaded from public repositories may contain embedded malware, backdoors, or outdated packages with known vulnerabilities. Images should be scanned and verified before use.
+
+**Insecure Configuration:** Misconfigured network bridges, shared folders, or open management ports can leak data between VMs or expose internal resources. Administrators must follow best practices including the principle of least privilege and avoiding unnecessary exposure.
+
+---
+
+---
+
+---
+
+## 8. Overview of Contemporary OS
+
+## 8.1 Windows and Linux-based OS
+
+> **List any 2 key features of the OS you studied as a case study and explain how they contribute to its performance or usability. [3 marks] (2082 Bhadra)**
+> **Explain any one functions of OS you studied as case study with its contributions. [3 marks] (Model Question)**
+
+### Windows Operating System
+
+Windows is a family of proprietary operating systems developed by Microsoft. Modern versions (Windows 10/11) are built on the Windows NT architecture and use a hybrid kernel. Windows is the most widely used desktop OS in the world, known for its graphical user interface and broad hardware/software compatibility.
+
+**Architecture:** The Windows architecture is divided into two processor access modes:
+
+1. **User Mode:** Where user applications (browsers, word processors) run with restricted access to system resources and memory. Applications cannot directly interact with hardware.
+2. **Kernel Mode:** Where the OS core, device drivers, and the kernel reside with unrestricted access to system memory and CPU instructions.
+
+**Architectural Components:**
+
+- **Windows Kernel:** Manages low-level operations such as thread scheduling, interrupt handling, and multiprocessor synchronization.
+- **Windows Executive:** A set of kernel-mode services that handle memory management, process/thread management, security, and I/O.
+- **Hardware Abstraction Layer (HAL):** A software layer that hides differences between hardware platforms, allowing the kernel to remain consistent across different hardware.
+- **Environment Subsystems:** Allow Windows to support different types of applications (e.g., Win32, POSIX) by providing the necessary APIs to interact with the kernel.
+
+**Features of Windows:**
+
+1. **NTFS File System:** NTFS (New Technology File System) is a journaling file system that maintains a log of changes via the Master File Table (MFT), enabling quick recovery after crashes. It supports access control lists (ACLs) for per-file/folder permissions, transparent compression, file-level encryption (EFS), disk quotas, and alternate data streams (ADS). It supports very large volumes and file sizes.
+2. **Plug and Play (PnP):** Windows automatically detects and configures newly connected hardware devices without requiring manual driver installation or system restarts, greatly improving usability.
+3. **Windows Registry:** A centralized hierarchical database that stores configuration settings for the OS, hardware, installed applications, and user preferences.
+4. **Preemptive Multitasking:** Windows uses preemptive scheduling where the OS decides when to switch between processes, ensuring no single process monopolizes the CPU.
+
+### Linux Operating System
+
+Linux is a free, open-source, Unix-like operating system originally created by Linus Torvalds in 1991, inspired by Andrew Tanenbaum's MINIX. Linux refers specifically to the kernel, while complete systems (Ubuntu, Fedora, Debian, Arch Linux) are called Linux distributions.
+
+**History:** UNIX was born at Bell Labs when Ken Thompson wrote a stripped-down version of MULTICS for a PDP-7. Dennis Ritchie joined the effort and designed the C language, in which UNIX was rewritten. AT&T distributed UNIX to universities; UC Berkeley ported it to the VAX (4BSD) and implemented virtual memory, TCP/IP, vi editor, and csh shell. In 1987, Tanenbaum released MINIX for OS classes. In 1991, Linus Torvalds added features to MINIX and released Linux, a full-blown UNIX clone.
+
+**Architecture:** The Linux system is organized in layers:
+
+1. **Hardware Layer:** Physical components (CPU, RAM, storage devices, peripherals).
+2. **Kernel:** The monolithic kernel follows a modular design where the entire core OS service runs in a single address space (kernel space) for high performance, but it also supports dynamically loadable kernel modules (LKM), allowing drivers and features to be added or removed at runtime without rebooting.
+3. **System Libraries:** Predefined functions (e.g., GNU C Library, glibc) that allow applications to access kernel services without needing direct kernel-level access.
+4. **Shell and Utilities:** The interface (CLI or GUI) through which users interact with the system.
+
+**Kernel Subsystems:**
+
+- **Process Management:** Handles task scheduling using the Completely Fair Scheduler (CFS). Processes are created using `fork()` and programs executed using `exec()`. Child processes that exit before parents collect their status enter the zombie state.
+- **Memory Management:** Implements virtual memory with four-level page tables. Distinguishes between three memory zones: ZONE_DMA, ZONE_NORMAL, and ZONE_HIGHMEM. Uses the buddy algorithm for memory allocation.
+- **Virtual File System (VFS):** Provides a standard abstraction layer so that different file systems (ext4, XFS, NFS) present a uniform interface to user programs.
+- **I/O and Device Drivers:** All devices are treated as files. The major device table maps device operations to appropriate driver functions.
+- **Networking:** Supports reliable connection-oriented byte/packet streams and unreliable packet transmission via the socket interface.
+
+**Linux Scheduling:** Three classes of threads exist for scheduling purposes:
+
+- Real-time FIFO (priorities 0–99, non-preemptive)
+- Real-time Round Robin (priorities 0–99, preemptive)
+- Timesharing (priorities 100–139, normal user processes)
+
+Highest priority = 0, Lowest priority = 140.
+
+**Linux File System:** Uses the ext2/ext4 file system structure. Each disk partition is organized into block groups, each containing a superblock, group descriptor, block bitmap, inode bitmap, inode table, and data blocks. Directories map file names to inode numbers. Inodes store file metadata and pointers to data blocks. Linux supports hard links (multiple names for the same inode) and mounting (attaching file systems to the directory tree).
+
+**Linux Security:** Uses a permission model based on owner, group, and others, with read (r), write (w), and execute (x) permissions for each. Security system calls control user IDs, file permissions, and access control.
+
+**Shells in Linux:** sh (Bourne Shell), csh (C Shell with C-like operators), ksh (Korn Shell combining sh and csh features), bash (Bourne-Again Shell, default on most Linux systems, POSIX-conforming).
+
+---
+
+## 8.2 Embedded and Mobile OS
+
+### Embedded Operating Systems
+
+An embedded OS is a specialized operating system designed to run on embedded systems, which are dedicated hardware devices with specific, fixed functions. Unlike general-purpose OS, an embedded OS is optimized for a particular task and typically operates under constraints of limited memory, processing power, and energy.
+
+**Characteristics:**
+
+- Small memory footprint and minimal resource usage.
+- Fast boot times and deterministic behavior.
+- Typically do not allow user-installed applications; functionality is fixed at manufacturing.
+- High reliability is essential because the system must run continuously without failure (e.g., medical monitors, automotive controllers).
+- Often have no user interface or only a minimal one (LEDs, simple displays).
+
+**Examples:** Embedded Linux, Windows IoT, VxWorks, QNX, ThreadX.
+
+**Applications:** Automotive ECUs (Engine Control Units), home appliances (washing machines, microwaves), ATMs, medical devices, networking routers, and industrial automation controllers.
+
+### Mobile Operating Systems
+
+A mobile OS is designed specifically for smartphones, tablets, and other handheld devices. It balances rich functionality with power efficiency, limited hardware resources, and touch-based user interfaces. Unlike traditional embedded OS, mobile OS supports general-purpose use with third-party application support.
+
+### Android
+
+Android is an open-source, Linux-based mobile OS developed by Google. It is the most widely used mobile OS globally.
+
+**Architecture (layered):**
+
+1. **Linux Kernel:** Foundation layer providing drivers, memory management, process management, power management, and security.
+2. **Hardware Abstraction Layer (HAL):** Interfaces that allow the framework to access hardware capabilities without knowing the specific underlying hardware implementation.
+3. **Native Libraries:** C/C++ libraries (e.g., WebKit for web rendering, SQLite for databases, OpenGL for graphics).
+4. **Android Runtime (ART):** Provides the execution environment for apps using Ahead-Of-Time (AOT) compilation for improved performance. Replaced the older Dalvik virtual machine.
+5. **Application Framework:** High-level Java/Kotlin APIs used by developers (Activity Manager, Notification Manager, Content Providers, Window Manager).
+6. **Applications:** Pre-installed and user-downloaded apps at the top layer.
+
+**Features:** Open-source nature allows extensive customization by manufacturers; supports multitasking; rich notification system; Google Play Store for app distribution.
+
+### iOS
+
+iOS is a proprietary, Unix-derived (Darwin/XNU kernel) mobile OS developed by Apple exclusively for its devices (iPhone, iPad).
+
+**Architecture (layered):**
+
+1. **Core OS Layer:** Contains the Darwin/XNU kernel (a hybrid kernel combining Mach microkernel with BSD components), managing hardware, memory, filesystems, and low-level security.
+2. **Core Services Layer:** Provides fundamental system services and frameworks (iCloud, Core Data, networking, location services).
+3. **Media Layer:** Contains technologies for graphics (Core Graphics, Metal), audio (Core Audio), and video processing.
+4. **Cocoa Touch Layer:** The highest layer, providing essential frameworks (UIKit, SwiftUI) for building user interfaces, handling touch input, and managing app lifecycle.
+
+**Features:** Tight hardware-software integration for optimized performance; strong security model with app sandboxing; consistent user experience across devices; App Store with curated app review process.
+
+---
+
+## 8.3 IoT and RT Operating System
+
+### IoT Operating Systems
+
+An IoT (Internet of Things) OS is a lightweight operating system designed to run on resource-constrained, connected devices such as sensors, actuators, smart home devices, and wearables. IoT devices typically have limited memory (a few KB to a few MB), low processing power, and must operate on minimal energy (often battery-powered for years).
+
+**Requirements of IoT OS:**
+
+- Ultra-small memory footprint (often < 10 KB kernel).
+- Low power consumption for battery-operated devices.
+- Built-in support for networking protocols (Wi-Fi, Bluetooth, Zigbee, MQTT, CoAP).
+- Security features (secure boot, encrypted communication, OTA updates).
+- Real-time or near-real-time task responsiveness.
+
+**Examples:**
+
+- **FreeRTOS:** Open-source, market-leading IoT RTOS with a very small footprint (< 10 KB). Supports preemptive and cooperative scheduling, modular design (include only needed features), and integrated AWS IoT cloud connectivity. Ported to 40+ processor architectures. Ideal for simple sensors, wearables, and cost-sensitive consumer devices.
+- **Contiki:** Lightweight open-source OS for networked IoT devices, designed for low-power microcontrollers with IPv6 networking support.
+- **Zephyr:** A Linux Foundation project providing a small, scalable RTOS for resource-constrained devices with built-in Bluetooth, Wi-Fi, and networking stacks.
+
+### Real-Time Operating Systems (RTOS)
+
+An RTOS is designed for systems where correctness depends not only on the logical result of computation but also on the time at which the results are produced. The primary metric is determinism, which means guaranteeing that tasks complete within a specific deadline.
+
+**Hard Real-Time vs Soft Real-Time:**
+
+- **Hard Real-Time:** Missing a deadline is catastrophic and may cause system failure or endanger lives. Examples: airbag deployment systems, pacemakers, missile guidance, aircraft flight control systems, nuclear reactor controllers.
+- **Soft Real-Time:** Deadlines are important but occasional misses are tolerable with degraded performance. Examples: multimedia streaming, video conferencing, online gaming, live sensor dashboards.
+
+**Features of RTOS:**
+
+- **Deterministic Scheduling:** Guarantees that high-priority tasks execute within predictable time bounds. Uses priority-based preemptive scheduling where the highest-priority ready task always runs.
+- **Minimal Interrupt Latency:** Time between an interrupt occurring and the OS responding is minimized and bounded.
+- **Task Management:** Supports creation, deletion, suspension, and resumption of tasks with priority levels.
+- **Inter-Task Communication:** Provides mechanisms like message queues, semaphores, and mutexes for synchronization.
+- **Memory Protection:** Prevents tasks from corrupting each other's memory space.
+
+**Examples:**
+
+- **VxWorks:** A proprietary, high-performance commercial RTOS by Wind River for mission-critical and safety-certified systems. Supports symmetric and asymmetric multiprocessing, Type 1 hypervisor virtualization, secure boot, and encryption. Widely used in aerospace (Mars rovers), defense, medical devices, and industrial automation. Provides extensive middleware for networking, file systems, and graphics.
+- **QNX:** A microkernel-based commercial RTOS known for high reliability. Used extensively in automotive infotainment systems (e.g., BlackBerry QNX in vehicles), medical devices, and industrial control.
+- **FreeRTOS:** Also serves as a general-purpose RTOS for embedded and IoT applications (described above).
+
+---
+
+## 8.4 Robot and Smart Card Operating System
+
+### Robot Operating System (ROS)
+
+ROS (Robot Operating System) is not a traditional operating system but an open-source middleware framework designed for building complex robotic applications. It runs on top of a host OS, typically Linux (Ubuntu). ROS provides the infrastructure for different parts of a robot (sensors, actuators, planning algorithms) to communicate and work together.
+
+**Features:**
+
+- **Message-Passing Architecture:** ROS uses a publish-subscribe model where software components (nodes) communicate by publishing messages to topics and subscribing to topics of interest. This decouples components and allows modularity.
+- **Hardware Abstraction:** Provides device drivers and standard interfaces for common robot hardware (cameras, LIDARs, motors), allowing developers to write hardware-independent code.
+- **Tools and Libraries:** Includes powerful tools for visualization (RViz), simulation (Gazebo), data logging (rosbag), and algorithm libraries for navigation, perception, and manipulation.
+- **Package Management:** Software is organized into packages that can be easily shared and reused across the robotics community.
+- **Language Support:** Primarily supports C++ and Python, with community-supported bindings for Java (rosjava, used for Android robotics) and other languages.
+
+**ROS 2:** The newer version of ROS designed for production use with real-time capabilities, improved security, support for multi-robot systems, and the DDS (Data Distribution Service) communication middleware replacing the original ROS master architecture.
+
+**Applications:** Autonomous vehicles, industrial robotic arms, drones, humanoid robots, surgical robots, and research platforms.
+
+### Smart Card Operating System
+
+A smart card OS is the most constrained type of operating system, running on a tiny microprocessor chip embedded in smart cards (credit/debit cards, SIM cards, national ID cards, security badges, ePassports). These chips have extremely limited resources, typically consisting of a few kilobytes of RAM, tens of kilobytes of ROM, and an 8/16/32-bit processor running at a few MHz.
+
+**Functions of a Smart Card OS:**
+
+- Manages communication between the card and the card reader using the APDU (Application Protocol Data Unit) protocol.
+- Provides secure storage and controlled access to sensitive data (cryptographic keys, PINs, personal information).
+- Supports cryptographic operations (encryption, decryption, digital signatures) on-card.
+- Enables loading and execution of multiple independent applications (applets) on a single card, each isolated from the others by firewalls.
+
+**Major Smart Card OS Platforms:**
+
+1. **Java Card:** The globally dominant smart card platform based on a subset of the Java programming language. It runs a Java Card Virtual Machine (JCVM) on the chip, allowing developers to write portable applets in Java. Applications are isolated by a firewall mechanism that prevents one applet from accessing another's data. Java Card uses the GlobalPlatform standard for card management (loading, deleting, and managing applets). Widely used in SIM cards, EMV payment cards, and government ID cards.
+
+2. **MULTOS:** A multi-application smart card OS with a formally proven secure kernel. Applications are written in MEL (MULTOS Executable Language), C, or Java and run on the MULTOS Executive virtual machine. It uses a certificate-based loading model (applications must be signed by the MULTOS Certificate Authority before loading onto the card), providing strong security assurance. MULTOS is prominent in UK and European banking applications.
+
+**Characteristics Common to Smart Card OS:**
+
+- **Extreme Resource Constraints:** Operate within a few KB of RAM and tens of KB of persistent storage.
+- **Security-First Design:** Security is the primary design goal. Both platforms meet rigorous Common Criteria security evaluations.
+- **Multi-Application Support:** Multiple independent applets can coexist on a single chip, isolated by hardware and software firewalls.
+- **Standardized Communication:** Use the ISO 7816 standard for communication between the card and the reader.
