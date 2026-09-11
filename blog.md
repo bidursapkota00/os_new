@@ -1,3 +1,22 @@
+# Operating System
+
+![Bidur Sapkota](https://www.bidursapkota.com.np/images/gravatar.webp "Bidur Sapkota - Developer")&nbsp;[Bidur Sapkota](https://www.bidursapkota.com.np/)
+
+![Operating System by Bidur Sapkota](images/operating-system-1200.webp "Operating System – Blog by Bidur Sapkota")
+
+## Table of Contents
+
+1. [Introduction](#1-introduction)
+2. [Process Management](#2-process-management)
+3. [Process Communication and Synchronization](#3-process-communication-and-synchronization)
+4. [I/O and Memory Management](#4-io-and-memory-management)
+5. [File Systems](#5-file-systems)
+6. [Security and System Administration](#6-security-and-system-administration)
+7. [Hypervisors and Virtual Systems](#7-hypervisors-and-virtual-systems)
+8. [Overview of Contemporary OS](#8-overview-of-contemporary-os)
+
+---
+
 ## 1 Introduction
 
 ## 1.1 Introduction to Operating Systems
