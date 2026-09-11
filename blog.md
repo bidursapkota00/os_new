@@ -6,7 +6,7 @@ An operating system (OS) is software that manages computer hardware and provides
 
 An OS performs two essentially unrelated functions: providing application programmers a clean abstract set of resources instead of the messy hardware ones, and managing these hardware resources. Examples include Windows, Linux, macOS, Android, iOS, and Unix.
 
-![Operating System](images/ch_1/os.png)
+![Operating System](images/ch_1/os.webp)
 
 ---
 
@@ -151,7 +151,7 @@ A system call is how a user program requests a service from the OS kernel. It pr
 - `nbytes`: Number of bytes the program wants to read.
 - The call returns the number of bytes actually read, which may be smaller than `nbytes` if end-of-file is encountered.
 
-![System Call](images/ch_1/system-call.png)
+![System Call](images/ch_1/system-call.webp)
 
 **System Call Mechanism (Steps):**
 
@@ -235,7 +235,7 @@ MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Ta
 | Corruption of the single data sector can make the entire drive unbootable            | Includes CRC error-checking and backup headers for high reliability     |
 | An older standard introduced in 1983                                                 | A modern standard that is part of the UEFI specification                |
 
-![MBR](images/ch_1/mbr.png)
+![MBR](images/ch_1/mbr.webp)
 
 ### MBR
 
@@ -254,7 +254,7 @@ MBR (Master Boot Record) and GPT (GUID(Globally Unique Identifiers) Partition Ta
 - Super block contains information like file system type (ext4, ntfs,), individual block size, etc.
 - Free space management block contains information like bitmap vector, linked list.
 
-![GPT](images/ch_1/gpt.png)
+![GPT](images/ch_1/gpt.webp)
 
 ### UEFI vs Legacy BIOS Boot
 
@@ -298,7 +298,7 @@ A program is a passive entity (an executable file stored on disk), while a proce
 
 **Two-State Process Model:** The simplest model considers two states: **Running** (process is executing on CPU) and **Not Running** (process is waiting in a queue). A dispatcher gives CPU control to a process (Not Running → Running), and a higher-priority process or I/O request can preempt the current process (Running → Not Running).
 
-![Two State Process Model](images/ch_2/two-state-process-model.png)
+![Two State Process Model](images/ch_2/two-state-process-model.webp)
 
 **Five-State Process Model:** A more practical model defines five states:
 
@@ -308,7 +308,7 @@ A program is a passive entity (an executable file stored on disk), while a proce
 - **Blocked (Waiting):** Process cannot execute until some event occurs, such as completion of an I/O operation, availability of a resource, or a signal from another process.
 - **Exit (Terminated):** Process has been released from the pool of executable processes. It either completed successfully or terminated due to an error. Resources are being deallocated.
 
-![Five State Process Model](images/ch_2/five-state-process-model.png)
+![Five State Process Model](images/ch_2/five-state-process-model.webp)
 
 ### Process Control Block (PCB)
 
@@ -327,7 +327,7 @@ The PCB is a data structure maintained by the OS for each process. It stores all
 - **List of Open Files:** Files the process is currently using, so the OS can close them properly if the process finishes or crashes.
 - **I/O Status Information:** List of I/O devices allocated to the process and status of pending I/O requests.
 
-![PCB](images/ch_2/pcb.png)
+![PCB](images/ch_2/pcb.webp)
 
 ### Context Switching
 
@@ -915,15 +915,15 @@ A thread is a single sequence of execution within a process. Multiple threads ca
 
 **Many-to-One:** Multiple user threads map to a single kernel thread. Thread management happens in user space. Only one thread can access kernel functionality at a time. A blocking system call blocks all threads. True parallelism is impossible. Example: Green threads.
 
-![Many to One](images/ch_2/many-to-one.png)
+![Many to One](images/ch_2/many-to-one.webp)
 
 **One-to-One:** Each user thread maps directly to a separate kernel thread. Provides true parallelism on multiprocessors and independent thread execution. Blocking one thread does not affect others. Thread creation overhead is higher. Examples: Windows, Linux (NPTL).
 
-![One to One](images/ch_2/one-to-one.png)
+![One to One](images/ch_2/one-to-one.webp)
 
 **Many-to-Many:** Multiple user threads map to multiple kernel threads (equal or smaller number). Applications create as many user threads as needed, and the kernel schedules available kernel threads on processors. Blocking system calls do not necessarily block all threads. Provides flexibility balancing concurrency with resource usage.
 
-![Many to Many](images/ch_2/many-to-many.png)
+![Many to Many](images/ch_2/many-to-many.webp)
 
 ### Thread Scheduling
 
@@ -976,11 +976,11 @@ IPC refers to mechanisms that allow processes to exchange data and information. 
 
 **Shared Memory:** Processes share a common memory region to exchange information. The shared memory resides in the address space of the creating process; other processes must attach it to their own address spaces. This is fast but requires explicit synchronization to avoid race conditions. One process can accidentally corrupt data used by another.
 
-![Shared Memory](images/ch_3/shared-memory.png)
+![Shared Memory](images/ch_3/shared-memory.webp)
 
 **Message Passing:** Processes communicate by exchanging messages through the OS, so no shared memory is needed. Processes must first establish a communication link. The sending process calls `send(destination, message)` and the receiving process calls `receive(sender, message)`. The OS handles transmission. Message passing is ideal for distributed systems.
 
-![Message Passing](images/ch_3/message-passing.png)
+![Message Passing](images/ch_3/message-passing.webp)
 
 **Buffering:** Messages reside in temporary queues. Zero capacity means the sender must wait for receiver (synchronous/blocking). Bounded capacity means the sender blocks when the queue is full, and the receiver blocks when empty. Unbounded capacity means the sender never blocks (asynchronous/non-blocking).
 
@@ -992,7 +992,7 @@ A race condition occurs when two or more processes access shared data simultaneo
 
 **Print Spooler Example:** Two shared variables exist: `out` (next file to print) and `in` (next free slot). Process A reads `in` as 7 and stores it locally. Before A can update `in`, a clock interrupt switches to process B, which also reads `in` as 7. B writes its filename into slot 7 and sets `in` to 8. When A resumes, it overwrites slot 7 with its own filename and also sets `in` to 8. The spooler appears consistent, but B's file will never be printed.
 
-![Print Spooler](images/ch_3/print-spooler.png)
+![Print Spooler](images/ch_3/print-spooler.webp)
 
 **Counter Variable of Buffer Size Example:** If `counter = 5` and producer executes `counter++` while consumer concurrently executes `counter--`, the result could be 4, 5, or 6 instead of the correct value 5. This happens because each high-level statement translates to multiple machine instructions (load, modify, store) that can interleave.
 
@@ -1041,7 +1041,7 @@ do {
 } while(true)
 ```
 
-![Mutual exclusion using critical regions](images/ch_3/exclusion-in-critical.png)
+![Mutual exclusion using critical regions](images/ch_3/exclusion-in-critical.webp)
 
 ---
 
@@ -1224,7 +1224,7 @@ monitor monitor_name
 }
 ```
 
-![Monitor](images/ch_3/monitor.png)
+![Monitor](images/ch_3/monitor.webp)
 
 ---
 
@@ -1340,7 +1340,7 @@ Five philosophers sit around a table, each alternating between thinking and eati
 
 **Semaphore-Based Solution:** Each fork is represented by a semaphore initialized to 1. A philosopher calls `wait(fork[i])` and `wait(fork[(i+1)%5])` to pick up forks, and `signal()` on both to put them down.
 
-![Dining Philosophers Problem](images/ch_3/dining-philisophers.png)
+![Dining Philosophers Problem](images/ch_3/dining-philisophers.webp)
 
 ```c
 // The structure of philosopher i
@@ -1415,7 +1415,7 @@ monitor dp {
 
 A deadlock is a situation where a set of processes is permanently blocked because each process is holding a resource and waiting for a resource held by another process in the set. It represents a circular wait condition where no process can proceed.
 
-![Deadlock](images/ch_3/deadlock.png)
+![Deadlock](images/ch_3/deadlock.webp)
 
 **Starvation vs Deadlock:** Starvation occurs when a process waits indefinitely because other processes are continuously given preference. The process could potentially run, but the scheduler never selects it. A starved process might eventually proceed (e.g., through aging), while a deadlocked process will never proceed without external intervention.
 
@@ -1489,7 +1489,7 @@ Current Need
 
 <br>
 
-![Bankers Numerical Solution 1](images/ch_3/bankers-1.png)
+![Bankers Numerical Solution 1](images/ch_3/bankers-1.webp)
 
 <br>
 
@@ -1520,7 +1520,7 @@ Maximum Claim
 
 <br>
 
-![Bankers Numerical Solution 2](images/ch_3/bankers-2.png)
+![Bankers Numerical Solution 2](images/ch_3/bankers-2.webp)
 
 <br>
 
@@ -1547,7 +1547,7 @@ Current Need
 
 <br>
 
-![Bankers Numerical Solution 3](images/ch_3/bankers-3.png)
+![Bankers Numerical Solution 3](images/ch_3/bankers-3.webp)
 
 ### Deadlock Detection
 
@@ -1559,13 +1559,13 @@ When neither prevention nor avoidance is used, the system must detect deadlocks 
 - If each resource type has exactly one instance, a cycle is both a necessary and sufficient condition for deadlock.
 - If resource types have multiple instances, a cycle is a necessary condition for deadlock but not a sufficient condition; a more sophisticated deadlock detection algorithm is required.
 
-![Resource Allocation Graph 1](images/ch_3/rag1.png)
+![Resource Allocation Graph 1](images/ch_3/rag1.webp)
 
-![Resource Allocation Graph 2](images/ch_3/rag2.png)
+![Resource Allocation Graph 2](images/ch_3/rag2.webp)
 
 **Wait-For Graph:** A simplified version of the RAG for single-instance resources. Remove all resource nodes and create a direct edge from Pᵢ to Pⱼ if Pᵢ is waiting for a resource held by Pⱼ. A cycle in the wait-for graph indicates deadlock.
 
-![Wait For Graph](images/ch_3/wait-for-graph.png)
+![Wait For Graph](images/ch_3/wait-for-graph.webp)
 
 Deadlock detection can be invoked whenever a resource request cannot be granted immediately, at regular intervals, or when CPU utilization falls below a specified threshold.
 
@@ -1658,7 +1658,7 @@ I/O software is organized in four layers from bottom to top:
 
 **4. User-Level I/O Software:** Runs in user space. Includes library routines (C library functions like `printf`, `scanf`, `fread`, `fwrite` built on top of system calls). They provide formatting, parsing, user level buffering, and other conveniences.
 
-![I/O Software Layers](images/ch_4/io-software-layers.png)
+![I/O Software Layers](images/ch_4/io-software-layers.webp)
 
 ### 4.1.3 Disk Technologies: Magnetic Disk
 
@@ -1666,9 +1666,9 @@ I/O software is organized in four layers from bottom to top:
 
 **Tracks, Cylinders, Sectors:** Data is recorded on concentric circles called tracks. The set of all tracks at the same radial position on all surfaces is a cylinder. Each track is divided into fixed-size sectors (512 bytes or 4096 bytes), which is the smallest readable/writable unit. Outer tracks can hold more sectors (zone bit recording). Each sector has a preamble (cylinder/head/sector numbers), data field, and ECC (Error Correcting Code) field.
 
-![Magnetic Disk](images/ch_4/magnetic-disk.png)
+![Magnetic Disk](images/ch_4/magnetic-disk.webp)
 
-![Magnetic Disk Platters](images/ch_4/platter.png)
+![Magnetic Disk Platters](images/ch_4/platter.webp)
 
 **Disk Capacity:** `Capacity = Surfaces × Tracks/surface × Sectors/track × Bytes/sector`.
 
@@ -1680,7 +1680,7 @@ Seek time (moving heads to desired track) dominates and is typically 3–15 ms. 
 
 Low-level (physical) formatting creates tracks and sectors, and this is done at the factory. It creates tracks and sectors on each disk surface. It writes the preamble, data area, and ECC for each sector. Interleaving places logical sectors with gaps between them so the controller has enough time to process one sector before the next required sector passes under the read/write head.
 
-![Sector](images/ch_4/sector.png)
+![Sector](images/ch_4/sector.webp)
 
 <br>
 
@@ -1688,7 +1688,7 @@ High-level (logical) formatting creates file system structures (boot block, supe
 
 **Disk Formatting:**
 
-![Interleaving](images/ch_4/interleaving.png)
+![Interleaving](images/ch_4/interleaving.webp)
 
 ### 4.1.3 Disk Technologies: Disk Arm Scheduling
 
@@ -1722,7 +1722,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![First Come First Serve](images/ch_4/fcfs.png)
+![First Come First Serve](images/ch_4/fcfs.webp)
 
 Total Distance travelled = 45+85+146+85+108+110+59+2 = 640 cylinders
 Average distance travelled = 640/8 = 80 cylinders
@@ -1735,7 +1735,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![Shortest Seek Time First](images/ch_4/sstf.png)
+![Shortest Seek Time First](images/ch_4/sstf.webp)
 
 Total Distance travelled = 236 cylinders
 Average distance travelled = 29.5 cylinders
@@ -1748,7 +1748,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![Scan (Elevator Algorithm)](images/ch_4/scan.png)
+![Scan (Elevator Algorithm)](images/ch_4/scan.webp)
 
 Total Distance travelled = 208 cylinders
 Average distance travelled = 26 cylinders
@@ -1761,7 +1761,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![Circular Scan (C-SCAN)](images/ch_4/cscan.png)
+![Circular Scan (C-SCAN)](images/ch_4/cscan.webp)
 
 Total Distance travelled = 382 cylinders
 Average distance travelled = 47.75 cylinders
@@ -1774,7 +1774,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![LOOK Algorithm](images/ch_4/look.png)
+![LOOK Algorithm](images/ch_4/look.webp)
 
 Total Distance travelled = 194 cylinders
 Average distance travelled = 24.25 cylinders
@@ -1787,7 +1787,7 @@ Q. Suppose that a disk drive has 200 cylinders, numbered from 0 to 199. The driv
 Queue: 98, 183, 37, 122, 14, 124, 65, 67
 Head Pos: 53
 
-![Circular LOOK (C-LOOK)](images/ch_4/clook.png)
+![Circular LOOK (C-LOOK)](images/ch_4/clook.webp)
 
 Total Distance travelled = 352 cylinders
 Average distance travelled = 44 cylinders
@@ -1950,7 +1950,7 @@ Memory address is a number that identifies a location in memory.
 
 **Base and Limit Registers:** Ensure each process has a separate, protected memory space. The base register holds the smallest legal physical address; the limit register specifies the range size. Any access outside this range traps to the OS.
 
-![Base and Limit Registers](images/ch_4/base-limit.png)
+![Base and Limit Registers](images/ch_4/base-limit.webp)
 
 ### Swapping
 
@@ -1961,7 +1961,7 @@ Moving a process out to disk to release its memory. When active again, the OS re
 - **Bitmaps:** Memory is divided into allocation units. Each unit has a corresponding bit (0 = free, 1 = occupied). Simple but searching for contiguous free space can be slow.
 - **Linked Lists:** A linked list of allocated and free memory segments. Each entry specifies hole (H) or process (P), starting address, length, and a pointer to the next entry. Sorted by address. When a process terminates, adjacent holes are coalesced into a larger hole.
 
-![Managing Free Memory](images/ch_4/free-mem.png)
+![Managing Free Memory](images/ch_4/free-mem.webp)
 
 <br>
 
@@ -1973,17 +1973,17 @@ Moving a process out to disk to release its memory. When active again, the OS re
 
 **Multiprogramming with Fixed Partitions:** Memory is divided into several fixed-size partitions. Each holds one process. The number of partitions limits the degree of multiprogramming. Equal-size partitions are simple but wasteful; unequal-size partitions assign processes to the smallest adequate partition. Suffers from internal fragmentation, which is wasted space within a partition when the process is smaller than the partition.
 
-![Fixed and Dynamic Partitioning](images/ch_4/mem-partitioning.png)
+![Fixed and Dynamic Partitioning](images/ch_4/mem-partitioning.webp)
 
 **Multiprogramming with Variable Partitions (Dynamic Partitioning):** A process is allocated exactly the memory it needs with no fixed divisions. Eliminates internal fragmentation. However, over time, loading and unloading creates scattered free holes, causing external fragmentation, where enough total free memory exists but it is not contiguous.
 
-![Dynamic Partitioning Example](images/ch_4/dynamic-partitioning.png)
+![Dynamic Partitioning Example](images/ch_4/dynamic-partitioning.webp)
 
 **Internal Fragmentation:** It is the wasted space within a fixed-size partition when a process is smaller than the allocated partition size. This memory is internal to a partition and cannot be used by other processes.
 
 **External Fragmentation:** It occurs when there is enough total free memory to satisfy a memory request, but the available spaces are not contiguous, meaning the memory is fragmented into small holes scattered throughout the physical memory.
 
-![Memory Allocation Techniques](images/ch_4/mem-alloc.png)
+![Memory Allocation Techniques](images/ch_4/mem-alloc.webp)
 
 **Memory Allocation Policies:**
 
@@ -2012,9 +2012,9 @@ Moving a process out to disk to release its memory. When active again, the OS re
 
 **Coalescing and Compaction:** Coalescing merges adjacent holes into a single larger hole when a process terminates. Compaction combines all holes into one by moving all processes together. This eliminates external fragmentation but requires significant CPU time, and the system must stop during compaction.
 
-| ![Coalescing](images/ch_4/coalescing.png) | ![Compaction](images/ch_4/compaction.png) |
-| ----------------------------------------- | ----------------------------------------- |
-| Coalescing                                | Compaction                                |
+| ![Coalescing](images/ch_4/coalescing.webp) | ![Compaction](images/ch_4/compaction.webp) |
+| ------------------------------------------ | ------------------------------------------ |
+| Coalescing                                 | Compaction                                 |
 
 ---
 
@@ -2044,13 +2044,13 @@ Memory can be shared between processes efficiently.
 
 Let, Process size = 4 Byte. Page size = 2 Byte. Main memory size = 16 Byte.
 
-| Always: Frame size = Page size = 2 Byte<br>So, Number of pages =<br>Process size / Page size = 4 / 2 = 2.<br>So, Number of frames =<br>Main memory size / Frame size = 16 / 2 = 8. | ![Paging](images/ch_4/paging-1.png) |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
+| Always: Frame size = Page size = 2 Byte<br>So, Number of pages =<br>Process size / Page size = 4 / 2 = 2.<br>So, Number of frames =<br>Main memory size / Frame size = 16 / 2 = 8. | ![Paging](images/ch_4/paging-1.webp) |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 
 Number inside table are byte numbers
 Number outside table are page/frame numbers
 
-![Paging](images/ch_4/paging-2.png)
+![Paging](images/ch_4/paging-2.webp)
 
 > Consider logical address spaces of eight pages of 1024 words, each mapped onto a physical memory of 32 frames then,
 > a) How many bits are in logical address and physical address?
@@ -2400,19 +2400,19 @@ A directory is a node in the file system that contains entries for files and sub
 
 The simplest form is a single directory containing all the files, known as the root directory. Its advantage is simplicity, which means files can be located quickly. The disadvantage is that naming conflicts occur when many users or many files exist, and there is no support for grouping related files. This structure is common on early personal computers and simple embedded devices.
 
-![Single Level Directory](images/ch_5/single_level_directory.png)
+![Single Level Directory](images/ch_5/single_level_directory.webp)
 
 ### Two-Level Directory
 
 Each user gets a private directory. A root directory contains entries pointing to individual user directories. Eliminates name conflicts between users, but users still cannot create subdirectories to group their files.
 
-![Two Level Directory](images/ch_5/two_level_directory.png)
+![Two Level Directory](images/ch_5/two_level_directory.webp)
 
 ### Hierarchical Directory (Directory Tree)
 
 Users can create an arbitrary number of subdirectories to any depth. This structure is now almost universally used. For example, UNIX, Linux, Windows, and macOS all support hierarchical directories. Files with logical relationships can be grouped together.
 
-![Hierarchical Directory](images/ch_5/hierarchical_directory.png)
+![Hierarchical Directory](images/ch_5/hierarchical_directory.webp)
 
 ### Path Names
 
@@ -2449,11 +2449,11 @@ A directory maps file names to storage information. Two approaches: storing file
 
 File systems are stored on disks. Most disks can be divided into one or more partitions, each with an independent file system. Sector 0 of the disk is the MBR (Master Boot Record), used to boot the computer. The MBR's end contains the partition table with starting/ending addresses of each partition, one marked as active. Each partition starts with a boot block. The super block contains file system metadata (type, block size, etc.). The free space management block tracks available space using bitmaps or linked lists.
 
-![Magnetic Disk](images/ch_4/magnetic-disk.png)
+![Magnetic Disk](images/ch_4/magnetic-disk.webp)
 
-![Magnetic Disk Platters](images/ch_4/platter.png)
+![Magnetic Disk Platters](images/ch_4/platter.webp)
 
-![MBR](images/ch_1/mbr.png)
+![MBR](images/ch_1/mbr.webp)
 
 ### Block Size
 
@@ -2469,7 +2469,7 @@ Large blocks require fewer I/O operations, which results in a higher effective d
 
 - **Small blocks:** Using small blocks causes files to span many blocks, requiring more disk I/O operations and seeks, which reduces performance.
 
-![Block Size vs Performance](images/ch_5/block_size_vs_performance.png)
+![Block Size vs Performance](images/ch_5/block_size_vs_performance.webp)
 
 ### Allocation Methods
 
@@ -2480,7 +2480,7 @@ Each file is stored as a contiguous run of disk blocks. Only two numbers need to
 - **Disadvantages:** It suffers from external fragmentation. As files are deleted, gaps form that may be too small for new files, wasting space even though total free space may be sufficient. Compaction can fix this but is extremely time-consuming. File size must be known at creation time; if too little space is allocated, the file cannot grow; if too much, space is wasted.
 - **Use case:** CD-ROMs/DVDs (written once, read-only) and real-time systems where file sizes are known in advance.
 
-![Contiguous Allocation](images/ch_5/contiguous_allocation.png)
+![Contiguous Allocation](images/ch_5/contiguous_allocation.webp)
 
 **B. Linked List Allocation:**
 Each file is a linked list of disk blocks. The first word of each block is a pointer to the next block; the rest is for data. The directory entry stores only the first block's address.
@@ -2488,7 +2488,7 @@ Each file is a linked list of disk blocks. The first word of each block is a poi
 - **Advantages:** There is no external fragmentation, as any free block can be used. Files can grow easily.
 - **Disadvantages:** Random access is extremely slow, as it must follow the chain from the beginning to reach block n. The pointer in each block reduces usable data space, meaning it is no longer a power of two. It is vulnerable to disk errors. If one pointer is corrupted, the rest of the file is lost.
 
-![Linked List Allocation](images/ch_5/linked_list_allocation.png)
+![Linked List Allocation](images/ch_5/linked_list_allocation.webp)
 
 **C. Linked List Allocation Using a Table in Memory (FAT):**
 The pointer from each disk block is stored in a File Allocation Table (FAT) in main memory. The FAT has one entry per disk block; each entry contains the number of the next block in the file (with a special end-of-file value). The directory entry stores only the starting block number.
@@ -2496,7 +2496,7 @@ The pointer from each disk block is stored in a File Allocation Table (FAT) in m
 - **Advantages:** The entire block is available for data (no embedded pointers). The chain can be followed quickly in memory without disk references.
 - **Disadvantages:** The entire FAT must be in memory at all times. For a 200 GB disk with 1 KB blocks, the table needs 200 million entries (600–800 MB of RAM).
 
-![Linked List Allocation using Table in Memory](images/ch_5/linked_list_allocation_using_table_in_memory.png)
+![Linked List Allocation using Table in Memory](images/ch_5/linked_list_allocation_using_table_in_memory.webp)
 
 **D. Inode-based Allocation:**
 Each file has an inode containing attributes and block pointers.
@@ -2516,7 +2516,7 @@ Pointer structure (with 4 KB blocks and 4-byte pointers, each indirect block hol
 
 **Advantages:** Very efficient for small files (block addresses stored directly in inode, no extra disk accesses). Good support for both sequential and random access (any block located with at most 3 disk accesses). Unlike FAT, the inode needs to be in memory only when the file is open.
 
-![Inode based Allocation](images/ch_5/inode_based_allocation.png)
+![Inode based Allocation](images/ch_5/inode_based_allocation.webp)
 
 ### Impact of Allocation Policy on Fragmentation
 
@@ -2541,9 +2541,9 @@ File system performance is crucial for overall system responsiveness since disk 
 
 **Block Size Optimization:** Choosing an appropriate block size (commonly 4 KB) balances space utilization and I/O performance, as discussed in Section 5.3.
 
-![Interleaving](images/ch_4/interleaving.png)
+![Interleaving](images/ch_4/interleaving.webp)
 
-![Magnetic Disk Platters](images/ch_4/platter.png)
+![Magnetic Disk Platters](images/ch_4/platter.webp)
 
 ---
 
@@ -2595,7 +2595,7 @@ Symmetric encryption uses a single shared key for both encryption and decryption
 
 The sender encrypts the plaintext using a secret key, the ciphertext is transmitted, the receiver decrypts the ciphertext using the same secret key, and the original plaintext is recovered.
 
-![Symmetric Key Cryptography](images/ch_6/symmetric-key-cryptography.png)
+![Symmetric Key Cryptography](images/ch_6/symmetric-key-cryptography.webp)
 
 ### Asymmetric Encryption (Public Key Cryptography)
 
@@ -2603,7 +2603,7 @@ Asymmetric encryption uses two mathematically related keys: a public key (shared
 
 The sender encrypts the plaintext using the receiver's public key, the ciphertext is transmitted, the receiver decrypts the ciphertext using their private key, and the original plaintext is recovered. Only the holder of the corresponding private key can decrypt data encrypted with the public key.
 
-![Assymetric Key Cryptography](images/ch_6/assymetric-key-cryptographt.png)
+![Assymetric Key Cryptography](images/ch_6/assymetric-key-cryptographt.webp)
 
 ### Hash Functions
 
@@ -2619,7 +2619,7 @@ A digital signature is an electronic equivalent of a handwritten signature that 
 
 **Example:** Verifying the authenticity of software downloads (e.g., Windows updates, Linux package managers use GPG signatures).
 
-![Digital Signature](images/ch_6/digital-signature.png)
+![Digital Signature](images/ch_6/digital-signature.webp)
 
 ### Classification of Attacks
 
@@ -2728,21 +2728,21 @@ Access control is a security technique that regulates who or what can view or us
 
 A protection domain specifies the resources that a process can access and the operations it can perform. Each process operates within a protection domain that defines its access rights. A domain can be thought of as a collection of access rights, where each right is an ordered pair (object, rights-set). Objects can be hardware resources (CPU, memory, printers) or software resources (files, programs, semaphores). Subjects are the active entities that access objects, including users, processes, and procedures.
 
-![Protection Domain](images/ch_6/protection-domain.png)
+![Protection Domain](images/ch_6/protection-domain.webp)
 
 ### Access Control Mechanisms
 
 **Access Control Matrix:** A theoretical concept that represents all access permissions as a matrix with subjects as rows and objects as columns. Each cell contains the access rights that the subject has for the object. It is rarely implemented directly due to its large size but serves as a conceptual model. ACLs and capability lists are different ways of sparsely representing this matrix.
 
-![Access Control Matrix](images/ch_6/access-control-matrix.png)
+![Access Control Matrix](images/ch_6/access-control-matrix.webp)
 
 **Access Control Lists (ACLs):** Lists associated with objects that specify which subjects can access them and what operations they can perform. ACLs store permissions with each resource, listing all users and their allowed actions. They are easy to manage for systems with many users and few resources. However, finding all resources a particular user can access requires checking ACLs on all resources.
 
-![Access Control List](images/ch_6/access-control-lists.png)
+![Access Control List](images/ch_6/access-control-lists.webp)
 
 **Capability Lists (C-Lists):** Lists associated with subjects that specify which objects they can access. Capability lists store permissions with each user, listing all resources they can access. They make it easy to see all resources a particular user can access. However, finding all users who can access a particular resource requires checking all capability lists.
 
-![Capability List](images/ch_6/capability-lists.png)
+![Capability List](images/ch_6/capability-lists.webp)
 
 ### OS Support for Access Control
 
@@ -2911,7 +2911,7 @@ Type 2 hypervisors are easier to install and use, making them suitable for deskt
 
 **Examples:** Oracle VM VirtualBox, VMware Workstation (Windows/Linux), VMware Fusion (macOS), Parallels Desktop (macOS).
 
-![Types of Hypervisor](images/ch_7/types-of-hypervisor.png)
+![Types of Hypervisor](images/ch_7/types-of-hypervisor.webp)
 
 | Type 1 (Bare-Metal)                                                                          | Type 2 (Hosted)                                                     |
 | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -2965,7 +2965,7 @@ In VM-based virtualization, a full operating system runs on top of virtualized h
 | They provide strong isolation at the hardware level.              | They provide process-level isolation using namespaces and cgroups.                  |
 | The size of a virtual machine is typically measured in gigabytes. | The size of a container is typically measured in megabytes.                         |
 
-![Virtualization vs Containerization](images/ch_7/virtualization-vs-containerization.png)
+![Virtualization vs Containerization](images/ch_7/virtualization-vs-containerization.webp)
 
 ### Docker
 
