@@ -14,14 +14,14 @@ Windows is a family of proprietary operating systems developed by Microsoft. Mod
 1. **User Mode:** Where user applications (browsers, word processors) run with restricted access to system resources and memory. Applications cannot directly interact with hardware.
 2. **Kernel Mode:** Where the OS core, device drivers, and the kernel reside with unrestricted access to system memory and CPU instructions.
 
-**Key Architectural Components:**
+**Architectural Components:**
 
 - **Windows Kernel:** Manages low-level operations such as thread scheduling, interrupt handling, and multiprocessor synchronization.
 - **Windows Executive:** A set of kernel-mode services that handle memory management, process/thread management, security, and I/O.
 - **Hardware Abstraction Layer (HAL):** A software layer that hides differences between hardware platforms, allowing the kernel to remain consistent across different hardware.
 - **Environment Subsystems:** Allow Windows to support different types of applications (e.g., Win32, POSIX) by providing the necessary APIs to interact with the kernel.
 
-**Key Features of Windows:**
+**Features of Windows:**
 
 1. **NTFS File System:** NTFS (New Technology File System) is a journaling file system that maintains a log of changes via the Master File Table (MFT), enabling quick recovery after crashes. It supports access control lists (ACLs) for per-file/folder permissions, transparent compression, file-level encryption (EFS), disk quotas, and alternate data streams (ADS). It supports very large volumes and file sizes.
 2. **Plug and Play (PnP):** Windows automatically detects and configures newly connected hardware devices without requiring manual driver installation or system restarts, greatly improving usability.
@@ -39,11 +39,11 @@ Linux is a free, open-source, Unix-like operating system originally created by L
 **Architecture:** The Linux system is organized in layers:
 
 1. **Hardware Layer:** Physical components (CPU, RAM, storage devices, peripherals).
-2. **Kernel:** The monolithic kernel with modular design — the entire core OS service runs in a single address space (kernel space) for high performance, but supports dynamically loadable kernel modules (LKM), allowing drivers and features to be added/removed at runtime without rebooting.
+2. **Kernel:** The monolithic kernel follows a modular design where the entire core OS service runs in a single address space (kernel space) for high performance, but it also supports dynamically loadable kernel modules (LKM), allowing drivers and features to be added or removed at runtime without rebooting.
 3. **System Libraries:** Predefined functions (e.g., GNU C Library, glibc) that allow applications to access kernel services without needing direct kernel-level access.
 4. **Shell and Utilities:** The interface (CLI or GUI) through which users interact with the system.
 
-**Key Kernel Subsystems:**
+**Kernel Subsystems:**
 
 - **Process Management:** Handles task scheduling using the Completely Fair Scheduler (CFS). Processes are created using `fork()` and programs executed using `exec()`. Child processes that exit before parents collect their status enter the zombie state.
 - **Memory Management:** Implements virtual memory with four-level page tables. Distinguishes between three memory zones: ZONE_DMA, ZONE_NORMAL, and ZONE_HIGHMEM. Uses the buddy algorithm for memory allocation.
@@ -71,14 +71,14 @@ Highest priority = 0, Lowest priority = 140.
 
 ### Embedded Operating Systems
 
-An embedded OS is a specialized operating system designed to run on embedded systems — dedicated hardware devices with specific, fixed functions. Unlike general-purpose OS, an embedded OS is optimized for a particular task and typically operates under constraints of limited memory, processing power, and energy.
+An embedded OS is a specialized operating system designed to run on embedded systems, which are dedicated hardware devices with specific, fixed functions. Unlike general-purpose OS, an embedded OS is optimized for a particular task and typically operates under constraints of limited memory, processing power, and energy.
 
 **Characteristics:**
 
 - Small memory footprint and minimal resource usage.
 - Fast boot times and deterministic behavior.
 - Typically do not allow user-installed applications; functionality is fixed at manufacturing.
-- High reliability — must run continuously without failure (e.g., medical monitors, automotive controllers).
+- High reliability is essential because the system must run continuously without failure (e.g., medical monitors, automotive controllers).
 - Often have no user interface or only a minimal one (LEDs, simple displays).
 
 **Examples:** Embedded Linux, Windows IoT, VxWorks, QNX, ThreadX.
@@ -102,7 +102,7 @@ Android is an open-source, Linux-based mobile OS developed by Google. It is the 
 5. **Application Framework:** High-level Java/Kotlin APIs used by developers (Activity Manager, Notification Manager, Content Providers, Window Manager).
 6. **Applications:** Pre-installed and user-downloaded apps at the top layer.
 
-**Key Features:** Open-source nature allows extensive customization by manufacturers; supports multitasking; rich notification system; Google Play Store for app distribution.
+**Features:** Open-source nature allows extensive customization by manufacturers; supports multitasking; rich notification system; Google Play Store for app distribution.
 
 ### iOS
 
@@ -115,7 +115,7 @@ iOS is a proprietary, Unix-derived (Darwin/XNU kernel) mobile OS developed by Ap
 3. **Media Layer:** Contains technologies for graphics (Core Graphics, Metal), audio (Core Audio), and video processing.
 4. **Cocoa Touch Layer:** The highest layer, providing essential frameworks (UIKit, SwiftUI) for building user interfaces, handling touch input, and managing app lifecycle.
 
-**Key Features:** Tight hardware-software integration for optimized performance; strong security model with app sandboxing; consistent user experience across devices; App Store with curated app review process.
+**Features:** Tight hardware-software integration for optimized performance; strong security model with app sandboxing; consistent user experience across devices; App Store with curated app review process.
 
 ---
 
@@ -141,14 +141,14 @@ An IoT (Internet of Things) OS is a lightweight operating system designed to run
 
 ### Real-Time Operating Systems (RTOS)
 
-An RTOS is designed for systems where correctness depends not only on the logical result of computation but also on the time at which the results are produced. The primary metric is determinism — guaranteeing that tasks complete within a specific deadline.
+An RTOS is designed for systems where correctness depends not only on the logical result of computation but also on the time at which the results are produced. The primary metric is determinism, which means guaranteeing that tasks complete within a specific deadline.
 
 **Hard Real-Time vs Soft Real-Time:**
 
 - **Hard Real-Time:** Missing a deadline is catastrophic and may cause system failure or endanger lives. Examples: airbag deployment systems, pacemakers, missile guidance, aircraft flight control systems, nuclear reactor controllers.
 - **Soft Real-Time:** Deadlines are important but occasional misses are tolerable with degraded performance. Examples: multimedia streaming, video conferencing, online gaming, live sensor dashboards.
 
-**Key Features of RTOS:**
+**Features of RTOS:**
 
 - **Deterministic Scheduling:** Guarantees that high-priority tasks execute within predictable time bounds. Uses priority-based preemptive scheduling where the highest-priority ready task always runs.
 - **Minimal Interrupt Latency:** Time between an interrupt occurring and the OS responding is minimized and bounded.
@@ -170,7 +170,7 @@ An RTOS is designed for systems where correctness depends not only on the logica
 
 ROS (Robot Operating System) is not a traditional operating system but an open-source middleware framework designed for building complex robotic applications. It runs on top of a host OS, typically Linux (Ubuntu). ROS provides the infrastructure for different parts of a robot (sensors, actuators, planning algorithms) to communicate and work together.
 
-**Key Features:**
+**Features:**
 
 - **Message-Passing Architecture:** ROS uses a publish-subscribe model where software components (nodes) communicate by publishing messages to topics and subscribing to topics of interest. This decouples components and allows modularity.
 - **Hardware Abstraction:** Provides device drivers and standard interfaces for common robot hardware (cameras, LIDARs, motors), allowing developers to write hardware-independent code.
@@ -184,7 +184,7 @@ ROS (Robot Operating System) is not a traditional operating system but an open-s
 
 ### Smart Card Operating System
 
-A smart card OS is the most constrained type of operating system, running on a tiny microprocessor chip embedded in smart cards (credit/debit cards, SIM cards, national ID cards, security badges, ePassports). These chips have extremely limited resources — typically a few kilobytes of RAM, tens of kilobytes of ROM, and an 8/16/32-bit processor running at a few MHz.
+A smart card OS is the most constrained type of operating system, running on a tiny microprocessor chip embedded in smart cards (credit/debit cards, SIM cards, national ID cards, security badges, ePassports). These chips have extremely limited resources, typically consisting of a few kilobytes of RAM, tens of kilobytes of ROM, and an 8/16/32-bit processor running at a few MHz.
 
 **Functions of a Smart Card OS:**
 
@@ -199,7 +199,7 @@ A smart card OS is the most constrained type of operating system, running on a t
 
 2. **MULTOS:** A multi-application smart card OS with a formally proven secure kernel. Applications are written in MEL (MULTOS Executable Language), C, or Java and run on the MULTOS Executive virtual machine. It uses a certificate-based loading model (applications must be signed by the MULTOS Certificate Authority before loading onto the card), providing strong security assurance. MULTOS is prominent in UK and European banking applications.
 
-**Key Characteristics Common to Smart Card OS:**
+**Characteristics Common to Smart Card OS:**
 
 - **Extreme Resource Constraints:** Operate within a few KB of RAM and tens of KB of persistent storage.
 - **Security-First Design:** Security is the primary design goal. Both platforms meet rigorous Common Criteria security evaluations.
