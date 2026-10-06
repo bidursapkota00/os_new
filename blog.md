@@ -2063,8 +2063,13 @@ Memory can be shared between processes efficiently.
 
 Let, Process size = 4 Byte. Page size = 2 Byte. Main memory size = 16 Byte.
 
-| Always: Frame size = Page size = 2 Byte<br>So, Number of pages =<br>Process size / Page size = 4 / 2 = 2.<br>So, Number of frames =<br>Main memory size / Frame size = 16 / 2 = 8. | ![Paging](images/ch_4/paging-1.webp) |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+Always: Frame size = Page size = 2 Byte
+
+So, Number of pages = Process size / Page size = 4 / 2 = 2.
+
+So, Number of frames = Main memory size / Frame size = 16 / 2 = 8.
+
+![Paging](images/ch_4/paging-1.webp)
 
 Number inside table are byte numbers
 Number outside table are page/frame numbers
